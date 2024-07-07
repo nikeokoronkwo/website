@@ -4,7 +4,7 @@ import { assertExists } from "jsr:@std/assert/assert-exists";
 import { assertThrows } from "jsr:@std/assert/assert-throws";
 
 // test
-import { resolvePath } from "../lib/router.ts"
+import { resolvePath, getRouterParams } from "../lib/router.ts"
 
 Deno.test({
     name: "Testing the route generator"
@@ -40,4 +40,28 @@ Deno.test({
 
         assertEquals(resolvePath("foo/[...qux].ts"), "/foo/**");
     })
+});
+
+Deno.test({
+    name: "Testing the route tester"
+}, async (t) => {
+
+    await t.step("Basic cases", (st) => {
+        assertEquals(getRouterParams(resolvePath("foo/[qux].ts") ?? "", "foo/[qux].ts", "/foo/feee"), {
+            "qux": "feee"
+        });
+        assertEquals(getRouterParams(resolvePath("foo/[bar]/qux.ts") ?? "", "foo/[bar]/qux.ts", "/foo/mdx/qux"), {
+            "bar": "mdx"
+        });
+        assertEquals(getRouterParams(resolvePath("a/[b]/c/[d].ts") ?? "", "a/[b]/c/[d].ts", "/a/bb/c/dddd"), {
+            "b": "bb",
+            "d": "dddd"
+        });
+    });
+
+    await t.step("Catch-All Cases", () => {
+        assertEquals(getRouterParams(resolvePath("foo/[...bar].ts") ?? "", "foo/[...bar].ts", "/foo/mdx/qux"), {
+            "bar": ["mdx","qux"]
+        });
+    });
 });

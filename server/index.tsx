@@ -1,33 +1,55 @@
-import {
-
-} from "https://deno.land/x/nano_jsx@v0.1.0/mod.ts";
+/** @jsx h */
 import { extname } from "jsr:@std/path/extname";
 import { exists } from "jsr:@std/fs/exists";
 import { walk } from "jsr:@std/fs/walk";
 import { InternalError } from "../internal/lib/errors.ts";
 import { join } from "jsr:@std/path/join";
 
+import { buildRouter, getRouterParams } from "../internal/lib/router.ts"
+import { renderSSR } from "https://deno.land/x/nano_jsx@v0.1.0/ssr.ts";
+import { render } from "https://deno.land/x/nano_jsx@v0.1.0/core.ts";
+import { h } from "https://deno.land/x/nano_jsx@v0.1.0/core.ts";
+
 const cwd = Deno.cwd();
 const publicPath = "./public";
+
+const routerMap = buildRouter(cwd);
 
 Deno.serve({
     handler: async (req) => {
         const url = new URL(req.url);
-        const pathname = url.pathname; 
-        const body = await req.json();
-        const text = await req.text();
-        const method = req.method;
+        const pathname = url.pathname;
+        // const body = await req.json();
+        // const text = await req.text();
+        // const method = req.method;
         
-        if (Deno.readDirSync(join(Deno.cwd()))) { /** client routes */ }
-        else if (await exists(join(Deno.cwd(), 'pages'))) { /** */ }
+        const match = Array.from(routerMap.entries()).find((v) => {
+            console.log(v[0], pathname)
+            return v[0].test(pathname);
+        });
+
+        if (match) {
+            const routeInfo = match[1];
+            const reqObj = {
+                path: pathname,
+                hash: url.hash,
+                params: getRouterParams(routeInfo.original, routeInfo.raw, pathname),
+                query: convertSearchParams(url.searchParams),
+                fullPath: pathname + url.search + url.hash,
+                meta: {}
+            };
+
+            console.log(reqObj);
+
+            const pagefile = await import(join(cwd, 'pages', routeInfo.raw));
+            
+            const Page = pagefile.handler(reqObj);
+
+            const pageOut = renderSSR(<Page />);
+            return new Response(pageOut);
+        }
         
-        const reqObj = {
-            path: pathname,
-            hash: url.hash,
-            query: convertSearchParams(url.searchParams),
-            fullPath: pathname + url.search + url.hash,
-            meta: req.json()
-        };
+        
 
         
         return new Response("Hello World");
