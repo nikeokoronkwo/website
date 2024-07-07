@@ -1,0 +1,12 @@
+{ 
+    "tasks": {
+        "dev": "deno run -A --watch server/index.tsx", 
+        "deploy": "", 
+        "build": ""
+    },
+    "compilerOptions": {
+        "jsx": "react-jsx",
+        "jsxImportSource": "npm:react",
+        "jsxImportSourceTypes": "npm:@types/react"
+    }
+}
