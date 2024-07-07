@@ -1,5 +1,5 @@
 interface StatusError {
-    statusCode: number;
+  statusCode: number;
 }
 
 interface ErrorOptions {
@@ -9,13 +9,13 @@ interface ErrorOptions {
 }
 
 export class BaseError extends Error implements StatusError {
-    statusCode: number;
+  statusCode: number;
 
-    constructor(options: ErrorOptions) {
-        super(options.message);
-        this.statusCode = options.statusCode ?? 500;
-        this.name = options.name ?? "Unknown Error";
-    }
+  constructor(options: ErrorOptions) {
+    super(options.message);
+    this.statusCode = options.statusCode ?? 500;
+    this.name = options.name ?? "Unknown Error";
+  }
 }
 
 export class InternalError extends BaseError {}
@@ -23,5 +23,5 @@ export class InternalError extends BaseError {}
 export class RepresentableError extends BaseError {}
 
 export function createError(options: ErrorOptions): RepresentableError {
-    return new RepresentableError(options);
+  return new RepresentableError(options);
 }
