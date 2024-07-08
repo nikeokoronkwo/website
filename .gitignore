@@ -4,3 +4,4 @@
 
 **/*.lock
 private/
+internal/templates/**/*.js
