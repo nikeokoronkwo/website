@@ -3,10 +3,11 @@ export interface ServerProdOptions {
     main: string;
     error: string;
   };
-  ejs: {
+  ejs?: {
     [k: string]: string;
   };
-  mdx: {
+  mdx?: {
     [k: string]: string;
   };
+  renderedPages?: Record<string, any>;
 }

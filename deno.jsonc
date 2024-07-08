@@ -1,9 +1,9 @@
 {
   "tasks": {
     "gen": "deno run -A internal/scripts/gen.js",
-    "dev": "deno run -A --watch server/index.tsx",
+    "dev": "deno run -A --watch internal/commands/dev.js",
     "deploy": "",
-    "build": "",
+    "build": "deno run -A --watch internal/commands/build.js",
     "test": "deno test --allow-read --allow-sys",
     "format": "deno fmt ."
   },

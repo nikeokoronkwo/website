@@ -2,9 +2,14 @@ import { watchConfig } from "npm:c12";
 import { defaultConfig } from "../lib/config.ts"
 import { mergeConfig } from "../lib/config.ts";
 import { serveApp } from "../lib/server.tsx"
+import { buildRouter } from "../lib/router.ts";
+import { delay } from "jsr:@std/async/delay"
 
 const cwd = Deno.cwd();
 const dev = true;
+
+/** @type {Deno.HttpServer} */
+let server;
 // get config
 const config = await watchConfig({
     name: "dyte",
@@ -25,9 +30,15 @@ const config = await watchConfig({
       config = mergeConfig(newConfig.config, defaultConfig(), 'a');
       console.log("Config updated:\n" + diff.map((i) => i.toJSON()).join("\n"));
 
-      
+      server.shutdown();
+      delay(800).then(() => {
+        const routerMap = buildRouter(cwd);
+        server = serveApp(cwd, config.config, routerMap, true);
+      })
     },
 });
 
+const routerMap = buildRouter(cwd);
+
 // run server
-serveApp(config.config, true)
+server = serveApp(cwd, config.config, routerMap, true);
