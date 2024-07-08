@@ -1,7 +1,9 @@
-import { h } from "https://deno.land/x/nano_jsx@v0.1.0/core.ts";
+import { definePage, h } from "#client";
 
-export default {
-  handler: (req) => {
-    return <div>Homepage</div>;
-  },
-};
+export default definePage({
+  handler: (req) => (
+    <div>
+      Hello My guys
+    </div>
+  ),
+});
