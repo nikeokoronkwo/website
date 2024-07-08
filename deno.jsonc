@@ -1,8 +1,11 @@
 {
   "tasks": {
+    "gen": "deno run -A internal/scripts/gen.js",
     "dev": "deno run -A --watch server/index.tsx",
     "deploy": "",
-    "build": ""
+    "build": "",
+    "test": "deno test --allow-read --allow-sys",
+    "format": "deno fmt ."
   },
   "compilerOptions": {
     "lib": [
@@ -13,5 +16,10 @@
     ],
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment"
+  },
+  "imports": {
+    "#client": "./internal/exports/client.ts",
+    "#lib": "./internal/exports/lib.ts",
+    "#module": "./internal/exports/module.ts"
   }
 }
