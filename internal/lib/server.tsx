@@ -5,6 +5,8 @@ import { InternalError } from "./errors.ts";
 import { join } from "jsr:@std/path/join";
 import { toFileUrl } from "jsr:@std/path/to-file-url";
 import { serve, serveDir } from "jsr:@std/http"
+// @deno-types="npm:@types/ejs"
+import { render as ejsRender } from "npm:ejs";
 
 import { buildRouter, getRouterParams, RouteInfo } from "./router.ts";
 import { renderSSR } from "https://deno.land/x/nano_jsx@v0.1.0/ssr.ts";
@@ -43,8 +45,8 @@ export function serveApp(cwd: string, config: NikeConfig, routerMap: RouterMap, 
               return pagefile.default(req);
             });
         } else {
-          const response = import(
-            toFileUrl(join(cwd, "pages", routeInfo.raw)).href
+          let response = import(
+            dev ? toFileUrl(join(cwd, "pages", routeInfo.raw)).href : (isAbsolute(routeInfo.fullPath) ? toFileUrl(routeInfo.fullPath).href : routeInfo.fullPath)
           )
             .then((pagefile) => {
               const Page = pagefile.default.handler;
@@ -53,6 +55,25 @@ export function serveApp(cwd: string, config: NikeConfig, routerMap: RouterMap, 
 
               return pageOut;
             });
+          if (dev) {
+          const mainTemplateOptions = {
+            title: config.app?.title ?? "My App",
+            meta: config.app?.head?.meta ?? [],
+            link: config.app?.head?.link ?? [],
+            style: config.app?.head?.style ?? [],
+            script: config.app?.head?.script ?? [],
+            noscript: config.app?.head?.noscript ?? [],
+            bodyAttrs: config.app?.bodyAttrs ?? [],
+            bodyScript: config.app?.script ?? [],
+            body: await response,
+          };
+            const newResponse = ejsRender(await Deno.readTextFile("./internal/templates/main.ejs"), mainTemplateOptions);
+            return new Response(newResponse, {
+              headers: {
+                "content-type": "text/html",
+              },
+            });
+          }
           return new Response(await response, {
             headers: {
               "content-type": "text/html",
@@ -61,7 +82,7 @@ export function serveApp(cwd: string, config: NikeConfig, routerMap: RouterMap, 
         }
       }
 
-      const publicDir = join(cwd, config.publicDir ?? "public");
+      const publicDir = join(dev ? cwd : join(prodOptions?.outDir ?? "out", "client"), config.publicDir ?? "public");
       if (existsSync(join(publicDir, pathname.startsWith('/') ? pathname.replace('/', '') : pathname))) {
         return await serveDir(req, {
           fsRoot: publicDir

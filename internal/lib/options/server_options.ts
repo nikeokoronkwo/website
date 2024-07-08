@@ -10,4 +10,6 @@ export interface ServerProdOptions {
     [k: string]: string;
   };
   renderedPages?: Record<string, any>;
+  /** The output directory */
+  outDir: string;
 }

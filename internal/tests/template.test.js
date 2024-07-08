@@ -23,7 +23,7 @@ Deno.test({
   await t.step("Basic usage", async () => {
     await assertMLSEquals(
       ejs.render(fileContent, {
-        title: [],
+        title: "",
         meta: [],
         link: [],
         style: [],
