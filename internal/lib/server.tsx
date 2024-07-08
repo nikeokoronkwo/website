@@ -1,26 +1,24 @@
 import { extname } from "jsr:@std/path/extname";
-import { exists } from "jsr:@std/fs/exists";
+import { exists, existsSync } from "jsr:@std/fs/exists";
 import { walk } from "jsr:@std/fs/walk";
 import { InternalError } from "./errors.ts";
 import { join } from "jsr:@std/path/join";
 import { toFileUrl } from "jsr:@std/path/to-file-url";
+import { serve, serveDir } from "jsr:@std/http"
 
-import { buildRouter, getRouterParams } from "./router.ts";
+import { buildRouter, getRouterParams, RouteInfo } from "./router.ts";
 import { renderSSR } from "https://deno.land/x/nano_jsx@v0.1.0/ssr.ts";
 import { h } from "https://deno.land/x/nano_jsx@v0.1.0/core.ts";
 import { NikeConfig } from "#module";
 import { ServerProdOptions } from "./options/server_options.ts";
+import { isAbsolute } from "jsr:@std/path/is-absolute";
 
-const cwd = Deno.cwd();
-const publicPath = "./public";
+type RouterMap = Map<RegExp, RouteInfo>;
 
-const routerMap = buildRouter(cwd);
-
-const appConfig = {};
-const dev = true;
-
-export function serveApp(config: NikeConfig, dev: boolean = true, prodOptions?: ServerProdOptions) {
-  Deno.serve({
+export function serveApp(cwd: string, config: NikeConfig, routerMap: RouterMap, dev: boolean = true, prodOptions?: ServerProdOptions) {
+  return Deno.serve({
+    hostname: config.server?.host ?? "localhost",
+    port: config.server?.port ?? 3000,
     handler: async (req) => {
       const url = new URL(req.url);
       const pathname = url.pathname;
@@ -40,7 +38,7 @@ export function serveApp(config: NikeConfig, dev: boolean = true, prodOptions?: 
         };
 
         if (routeInfo.server) {
-          return await import(toFileUrl(join(cwd, "pages", routeInfo.raw)).href)
+          return await import(dev ? toFileUrl(join(cwd, "pages", routeInfo.raw)).href : (isAbsolute(routeInfo.fullPath) ? toFileUrl(routeInfo.fullPath).href : routeInfo.fullPath))
             .then((pagefile) => {
               return pagefile.default(req);
             });
@@ -61,6 +59,13 @@ export function serveApp(config: NikeConfig, dev: boolean = true, prodOptions?: 
             },
           });
         }
+      }
+
+      const publicDir = join(cwd, config.publicDir ?? "public");
+      if (existsSync(join(publicDir, pathname.startsWith('/') ? pathname.replace('/', '') : pathname))) {
+        return await serveDir(req, {
+          fsRoot: publicDir
+        });
       }
 
       return new Response("Hello World");

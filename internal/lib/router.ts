@@ -6,7 +6,7 @@ import { relative } from "jsr:@std/path/relative";
 import { SEPARATOR } from "jsr:@std/path/constants";
 import { basename } from "jsr:@std/path/basename";
 
-interface RouteInfo {
+export interface RouteInfo {
   /** The name of the file/path route */
   name: string;
   /** The raw, unedited file for this path */
@@ -19,6 +19,9 @@ interface RouteInfo {
   server: boolean;
   /** The original route path */
   original: string;
+
+  /** The path of the file, either relative to the router or absolute mainly used during production */
+  fullPath: string;
 }
 
 export function buildRouter(cwd: string) {
@@ -42,6 +45,7 @@ export function buildRouter(cwd: string) {
         type: filetype,
         server: isServer,
         original: path,
+        fullPath: file.path
       });
     }
   }
