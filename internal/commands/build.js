@@ -9,7 +9,7 @@ import { blue, bold, dim, green } from "jsr:@std/fmt/colors";
 import { relative } from "jsr:@std/path/relative";
 import { exists } from "jsr:@std/fs/exists";
 import { walk } from "jsr:@std/fs/walk";
-import { extname } from "jsr:@std/path";
+import { basename, extname } from "jsr:@std/path";
 import { loadConfig } from "npm:c12";
 import { defaultConfig } from "../lib/config.ts";
 import renderEjs from "../scripts/render_ejs.js";
@@ -91,6 +91,14 @@ logger.fine("EJS Rendered!");
 
 // run other scripts
 
+// tailwind
+logger.info("Bundling Tailwind Classes")
+logger.warn("NOTE: Future uses of this tool will make use of PostCSS")
+const tailwindOutput = "./styles/output.min.css"
+const success = await runner.run(Deno.execPath(), ["run", "-A", "npm:tailwindcss", "-i", config.tailwind.path ?? "./styles/tailwind.css", "-o", tailwindOutput, "--minify"]);
+
+
+
 // build router map
 logger.info("Building Router")
 const routerMap = buildRouter(cwd);
@@ -120,6 +128,7 @@ const stringProdOptions = `{
   ).map((e) => `${e[0]}: ${e[1]}`).join(", ")
 }},
     outDir: ".",
+    tailwind: "${tailwindOutput}"
 }`;
 
 // write to files
@@ -189,12 +198,25 @@ logger.fine("Bundled Pages!");
 logger.info(green(`Total Size -- ${bold(totalSize.toFixed(2))}KB`));
 // if not then create imports and import into server file
 
+// public dir
+logger.info("Bundling Public files")
+await Deno.mkdir(join(outClientDir, "public"))
+for await (const item of walk(config.publicDir ?? "./public", { includeDirs: false, includeSymlinks: false })) {
+    logger.info(dim(`Copying ${item.path} to ${join(outClientDir, "public", basename(item.path))}`));
+    await Deno.copyFile(item.path, join(outClientDir, "public", basename(item.path)));
+}
+
 // build server
 logger.info("Building Server");
 const serverFile = join(runnersDir, "prod_server.js");
 const { code } = await bundle(serverFile, {
   minify: true,
-  compilerOptions: deno.compilerOptions
+  compilerOptions: deno.compilerOptions,
+  importMap: {
+    imports: {
+      "npm:ejs": "https://unpkg.com/ejs@3.1.10/ejs.min.js"
+    }
+  }
 });
 
 await Deno.writeTextFile(join(outDir, "server.js"), code);

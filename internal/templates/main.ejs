@@ -29,6 +29,7 @@
             <%_ entry.children ?? "" %>
         </noscript>
     <% }) %>
+    <link href="<%= tailwind ?? "./output.css" %>" rel="stylesheet">
 </head>
 <body <%- Object.entries(bodyAttrs).map(e => `${e[0]}="${e[1]}"`).join(" ") _%> >
     <%# BodyScript Tags %>

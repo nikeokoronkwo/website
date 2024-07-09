@@ -9,4 +9,7 @@ export default {
     singleBundle: false,
     minify: true,
   },
+  server: {
+    host: "localhost"
+  }
 };

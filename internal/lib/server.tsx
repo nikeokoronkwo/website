@@ -8,7 +8,7 @@ import { toFileUrl } from "jsr:@std/path/to-file-url";
 import { serveDir, serveFile } from "jsr:@std/http";
 
 // @deno-types="npm:@types/ejs"
-import { render as ejsRender } from "https://unpkg.com/ejs@3.1.10/ejs.min.js";
+import { render as ejsRender } from "npm:ejs";
 
 import { buildRouter, getRouterParams, RouteInfo } from "./router.ts";
 import { renderSSR } from "https://deno.land/x/nano_jsx@v0.1.0/ssr.ts";
@@ -16,6 +16,7 @@ import { h } from "https://deno.land/x/nano_jsx@v0.1.0/core.ts";
 import { NikeConfig } from "./config.ts";
 import { ServerProdOptions } from "./options/server_options.ts";
 import { isAbsolute } from "jsr:@std/path/is-absolute";
+import { MainTemplate } from "../types/ejs.ts";
 
 type RouterMap = Map<RegExp, RouteInfo>;
 
@@ -26,6 +27,8 @@ export function serveApp(
   dev: boolean = true,
   prodOptions?: ServerProdOptions,
 ) {
+  const tailwind = "./output.css";
+  const tailwindOutput = "./styles/output.css";
   return Deno.serve({
     hostname: config.server?.host ?? "localhost",
     port: config.server?.port ?? 3000,
@@ -33,10 +36,16 @@ export function serveApp(
       const url = new URL(req.url);
       const pathname = url.pathname;
 
+      // serve tailwind css
+      if (pathname === tailwind || pathname === `/${tailwind}`) {
+        return serveFile(req, "./styles/output.css");
+      }
+
       const match = Array.from(routerMap.entries()).find((v) => {
         return v[0].test(pathname);
       });
 
+      // serve page routes
       if (match) {
         const routeInfo = match[1];
         const reqObj = {
@@ -48,6 +57,7 @@ export function serveApp(
         };
 
         if (routeInfo.server) {
+          // serve server route
           return await import(
             dev
               ? toFileUrl(join(cwd, "pages", routeInfo.raw)).href
@@ -62,6 +72,7 @@ export function serveApp(
               return pagefile.default(req);
             });
         } else {
+          // serve client route with nanojsx
           let response = import(
             dev
               ? toFileUrl(join(cwd, "pages", routeInfo.raw)).href
@@ -79,20 +90,22 @@ export function serveApp(
 
               return pageOut;
             });
-          if (dev) {
-            const mainTemplateOptions = {
+
+            const mainTemplateOptions: MainTemplate = {
               title: config.app?.title ?? "My App",
               meta: config.app?.head?.meta ?? [],
               link: config.app?.head?.link ?? [],
               style: config.app?.head?.style ?? [],
               script: config.app?.head?.script ?? [],
               noscript: config.app?.head?.noscript ?? [],
-              bodyAttrs: config.app?.bodyAttrs ?? [],
+              bodyAttrs: config.app?.bodyAttrs ?? {},
               bodyScript: config.app?.script ?? [],
               body: await response,
+              tailwind: "./output.css"
             };
+            
             const newResponse = ejsRender(
-              await Deno.readTextFile("./internal/templates/main.ejs"),
+              dev ? await Deno.readTextFile("./internal/templates/main.ejs") : prodOptions?.pages.main ?? "<%= body %>",
               mainTemplateOptions,
             );
             return new Response(newResponse, {
@@ -100,12 +113,6 @@ export function serveApp(
                 "content-type": "text/html",
               },
             });
-          }
-          return new Response(await response, {
-            headers: {
-              "content-type": "text/html",
-            },
-          });
         }
       }
 

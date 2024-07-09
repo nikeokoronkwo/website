@@ -11,6 +11,9 @@ export interface NikeConfig {
     singleBundle?: boolean;
     minify?: boolean;
   };
+  tailwind?: {
+    path: string;
+  }
 }
 
 export function defaultConfig(): NikeConfig {
@@ -33,6 +36,9 @@ export function defaultConfig(): NikeConfig {
       port: 3000,
       host: "localhost",
     },
+    tailwind: {
+      path: "./styles/tailwind.css"
+    }
   };
 }
 

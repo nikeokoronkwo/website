@@ -12,7 +12,7 @@ const dev = true;
 let server;
 // get config
 const config = await watchConfig({
-  name: "dyte",
+  name: "nike",
   defaultConfig: defaultConfig(),
   cwd,
   onWatch: (event) => {
@@ -39,6 +39,11 @@ const config = await watchConfig({
 });
 
 const routerMap = buildRouter(cwd);
+
+const tailwindOutput = "./styles/output.css";
+
+const cmd = new Deno.Command(Deno.execPath(), { args: ["run", "-A", "npm:tailwindcss", "-i", config.config.tailwind.path ?? "./styles/tailwind.css", "-o", tailwindOutput, "--watch"] });
+const process = cmd.spawn();
 
 // run server
 server = serveApp(cwd, config.config, routerMap, true);
