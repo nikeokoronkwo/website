@@ -33,7 +33,7 @@ export interface ClientRequest {
 
 export interface ClientRoute {
   /** Page Metadata Configuration */
-  pageMeta: object;
+  pageMeta?: object;
   /** The function handler for the route, used to render the page */
   handler: (req: ClientRequest) => any;
 }

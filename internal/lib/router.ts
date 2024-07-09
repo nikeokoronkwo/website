@@ -45,7 +45,7 @@ export function buildRouter(cwd: string) {
         type: filetype,
         server: isServer,
         original: path,
-        fullPath: file.path
+        fullPath: file.path,
       });
     }
   }

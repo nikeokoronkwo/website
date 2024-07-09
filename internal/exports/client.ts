@@ -1,1 +1,1 @@
-export { definePage, h } from "../lib/client.ts"
+export { definePage, h } from "../lib/client.ts";
