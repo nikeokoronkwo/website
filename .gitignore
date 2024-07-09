@@ -5,3 +5,9 @@
 **/*.lock
 private/
 internal/templates/**/*.js
+
+**/out
+**/build
+
+internal/runners
+!internal/runners/prod_server.js
