@@ -3,7 +3,8 @@
     "gen": "deno run -A internal/scripts/gen.js",
     "dev": "deno run -A --watch internal/commands/dev.js",
     "deploy": "",
-    "build": "deno run -A --watch internal/commands/build.js",
+    "build": "deno run -A internal/commands/build.js",
+    "prod": "deno task build && deno run -A ./out/server.js",
     "test": "deno test --allow-read --allow-sys",
     "format": "deno fmt ."
   },
@@ -20,6 +21,7 @@
   "imports": {
     "#client": "./internal/exports/client.ts",
     "#lib": "./internal/exports/lib.ts",
-    "#module": "./internal/exports/module.ts"
+    "#module": "./internal/exports/module.ts",
+    "~/": "./"
   }
 }

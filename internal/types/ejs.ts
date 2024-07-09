@@ -5,7 +5,8 @@ export interface MainTemplate {
   style: Record<string, string>[];
   script: Record<string, string>[];
   noscript: Record<string, string>[];
-  bodyAttrs: Record<string, string>[];
+  bodyAttrs: Record<string, string>;
   bodyScript: Record<string, string>[];
   body: string;
+  tailwind: string;
 }

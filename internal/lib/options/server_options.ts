@@ -12,4 +12,5 @@ export interface ServerProdOptions {
   renderedPages?: Record<string, any>;
   /** The output directory */
   outDir: string;
+  tailwind: string;
 }
