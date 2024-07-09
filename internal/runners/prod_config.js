@@ -1,1 +1,1 @@
-export default {}
+export default {"app":{"title":"Nike Okoronkwo","head":{"meta":[{"charset":"UTF-8"},{"name":"viewport","content":"width=device-width, initial-scale=1.0"}]}},"server":{"port":3000,"host":"localhost"},"build":{"singleBundle":false,"minify":true}};
