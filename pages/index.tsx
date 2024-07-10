@@ -4,7 +4,7 @@ export default definePage({
   handler: (req) => (
     <div>
       <header>
-        <nav>
+        <nav className="flex flex-row justify-center px-10 space-x-10">
           <div>Homepage</div>
           <div>Projects</div>
         </nav>

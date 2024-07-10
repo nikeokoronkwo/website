@@ -27,7 +27,7 @@ export function serveApp(
   dev: boolean = true,
   prodOptions?: ServerProdOptions,
 ) {
-  const tailwind = "./output.css";
+  const tailwind = "output.css";
   const tailwindOutput = "./styles/output.css";
   return Deno.serve({
     hostname: config.server?.host ?? "localhost",
@@ -38,7 +38,7 @@ export function serveApp(
 
       // serve tailwind css
       if (pathname === tailwind || pathname === `/${tailwind}`) {
-        return serveFile(req, "./styles/output.css");
+        return new Response(await Deno.readTextFile("./styles/output.css"), { headers: { "content-type": "text/css" }});
       }
 
       const match = Array.from(routerMap.entries()).find((v) => {
