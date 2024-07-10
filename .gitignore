@@ -11,3 +11,6 @@ internal/templates/**/*.js
 
 internal/runners
 !internal/runners/prod_server.js
+
+styles/output.css
+styles/output.*.css
