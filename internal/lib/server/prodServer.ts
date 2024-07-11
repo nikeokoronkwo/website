@@ -5,8 +5,8 @@ import { getRouterParams } from "../router.ts";
 import { RouterMap } from "../RouterMap.ts";
 import { existsSync } from "jsr:@std/fs/exists";
 import { serveDir } from "jsr:@std/http/file-server";
-import { InternalError } from "../errors.ts";
-import { renderServerPage, renderClientPage, convertSearchParams } from "./utils.tsx";
+import { renderServerPage, renderClientPage, convertSearchParams, errorHandler  } from "./utils.tsx";
+import { createError } from "../errors.ts";
 
 export default function serve(
     options: ServerProdOptions,
@@ -66,20 +66,15 @@ export default function serve(
             
           // }
     
-          return new Response("Hello World");
+          throw createError({
+            statusCode: 404,
+            message: "Page not Found"
+          });
         },
         onListen({ port, hostname }) {
           console.log(`Server started at http://${hostname}:${port}`);
         },
-        onError(err) {
-          const sysError = err instanceof InternalError;
-          const error = sysError ? err as InternalError : new InternalError({});
-    
-          return new Response(error.message, {
-            status: error.statusCode,
-            statusText: error.name,
-          });
-        },
+        onError: errorHandler(),
     });
 }
 

@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import { toFileUrl } from "jsr:@std/path/to-file-url";
 import { RouteInfo, getRouterParams } from "../router.ts";
 import { ServerProdOptions } from "./options.ts";
@@ -10,7 +11,7 @@ import { h } from "https://deno.land/x/nano_jsx@v0.1.0/core.ts";
 import { MainTemplate } from "../../types/ejs.ts";
 // @deno-types="npm:@types/ejs"
 import { render as ejsRender } from "npm:ejs";
-import { StringArraySupportOption } from "npm:prettier";
+import { InternalError } from "../errors.ts";
 
 interface ServerPageOptions {
     routeInfo: RouteInfo;
@@ -127,5 +128,21 @@ async function renderServerPageFunc(path: string, req: Request): Promise<Respons
     }
   
     return obj;
+  }
+  
+export function errorHandler(): ((error: unknown) => Response | Promise<Response>) | undefined {
+    return (err) => {
+      const sysError = err instanceof InternalError;
+      const error = sysError ? err as InternalError : new InternalError({
+        statusCode: 500,
+        name: "Unknown Error",
+        message: "An unknown error occured"
+      });
+  
+      return new Response(error.message, {
+        status: error.statusCode,
+        statusText: error.name,
+      });
+    };
   }
   

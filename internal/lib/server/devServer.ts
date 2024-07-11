@@ -1,12 +1,12 @@
 import { existsSync } from "jsr:@std/fs/exists";
-import { InternalError } from "../errors.ts";
+import { createError } from "../errors.ts";
 import { join } from "jsr:@std/path";
 import { serveDir } from "jsr:@std/http";
 
 import { getRouterParams } from "../router.ts";
 import { NikeConfig } from "../config.ts";
 import { RouterMap } from "../RouterMap.ts";
-import { renderServerPage, renderClientPage, convertSearchParams } from "./utils.tsx";
+import { renderServerPage, renderClientPage, convertSearchParams, errorHandler } from "./utils.tsx";
 
 export default function serveApp(
   cwd: string,
@@ -67,25 +67,20 @@ export default function serveApp(
         });
       }
 
-      // if (pathname.replace("/", "").endsWith(".css")) {
-      //   const path = pathname.replace("/", "");
-        
-      // }
+      if (pathname.replace("/", "").endsWith(".css")) {
+        const path = pathname.replace("/", "");
+        const absPath = join(cwd, path);
+      }
 
-      return new Response("Hello World");
+      throw createError({
+        statusCode: 404,
+        message: "Page not Found"
+      })
     },
     onListen({ port, hostname }) {
       console.log(`Server started at http://${hostname}:${port}`);
     },
-    onError(err) {
-      const sysError = err instanceof InternalError;
-      const error = sysError ? err as InternalError : new InternalError({});
-
-      return new Response(error.message, {
-        status: error.statusCode,
-        statusText: error.name,
-      });
-    },
+    onError: errorHandler(),
   });
 }
 
