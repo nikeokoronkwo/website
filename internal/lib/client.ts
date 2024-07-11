@@ -1,4 +1,3 @@
-export { h } from "https://deno.land/x/nano_jsx@v0.1.0/core.ts";
 export interface ClientRequest {
   /** The path of the given route */
   path: string;
@@ -28,7 +27,7 @@ export interface ClientRequest {
    * Any metadata passed
    * @unused
    */
-  meta: any;
+  meta?: any;
 }
 
 export interface ClientRoute {
@@ -36,6 +35,10 @@ export interface ClientRoute {
   pageMeta?: object;
   /** The function handler for the route, used to render the page */
   handler: (req: ClientRequest) => any;
+  /** The styles to apply for that page (scoped) @default undefined */
+  style?: string;
+  /** Whether to override global styles @default false */
+  overrideGlobal?: boolean;
 }
 
 /**

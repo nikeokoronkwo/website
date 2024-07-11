@@ -7,11 +7,19 @@ import { isAbsolute } from "jsr:@std/path/is-absolute";
 import { relative } from "jsr:@std/path/relative";
 import { NikeConfig } from "../config.ts";
 import { renderSSR } from "https://deno.land/x/nano_jsx@v0.1.0/ssr.ts";
-import { h } from "https://deno.land/x/nano_jsx@v0.1.0/core.ts";
+import { withStyles } from "https://deno.land/x/nano_jsx@v0.1.0/withStyles.ts"
 import { MainTemplate } from "../../types/ejs.ts";
 // @deno-types="npm:@types/ejs"
 import { render as ejsRender } from "npm:ejs";
 import { InternalError } from "../errors.ts";
+import { ClientModule } from "~/internal/types/pages.ts";
+
+const pageCss = `
+body {
+  width: 100%;
+  height: 100%;
+}
+`
 
 interface ServerPageOptions {
     routeInfo: RouteInfo;
@@ -75,10 +83,11 @@ async function renderServerPageFunc(path: string, req: Request): Promise<Respons
 
   async function renderClientPageFunc(path: string, reqObj: { path: string; hash: string; params: { [k: string]: string | string[]; }; query: Record<string, any>; fullPath: string; }, config: NikeConfig, tailwindPath: string, ejsPath: string) {
     const response = import(path)
-      .then((pagefile) => {
+      .then((pagefile: ClientModule) => {
         const Page = pagefile.default.handler;
+        const styles = (pagefile.default.overrideGlobal ? "" : pageCss) + (pagefile.default.style ?? "");
   
-        const pageOut = renderSSR(() => <Page {...reqObj} />);
+        const pageOut = renderSSR(() => withStyles(styles)( <Page {...reqObj} /> ));
   
         return pageOut;
       });
