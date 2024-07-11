@@ -2,33 +2,11 @@ import { definePage, h } from "#client";
 
 export default definePage({
   handler: (req) => (
-    <div>
-      <header>
-        <nav className="flex flex-row justify-center px-10 space-x-10">
-          <div>Homepage</div>
-          <div>Projects</div>
-        </nav>
-      </header>
-      <main>
-        <div>
-          <div>About Me</div>
-          <div>
-            <div>
-              <div>Who</div>
-              <div>Nikechukwu Okoronkwo</div>
-            </div>
-            <div>
-              <div>What</div>
-              <div>Website</div>
-            </div>
-            <div>
-              <div>Where</div>
-              <div>United States of America</div>
-            </div>
-          </div>
-        </div>
-      </main>
-      <footer></footer>
+    <div className="flex bg-slate-900 text-white">
+      <div className="fixed top-0 left-0 h-16 w-screen flex flex-row bg-slate-700 shadow-lg">
+        <i>Homepage</i>
+        <i>Projects</i>
+      </div>
     </div>
-  ),
+  ), 
 });

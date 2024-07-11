@@ -1,7 +1,7 @@
 import { watchConfig } from "npm:c12";
 import { defaultConfig } from "../lib/config.ts";
 import { mergeConfig } from "../lib/config.ts";
-import { serveApp } from "../lib/server.tsx";
+import serve from "../lib/server/devServer.ts"
 import { buildRouter } from "../lib/router.ts";
 import { delay } from "jsr:@std/async/delay";
 
@@ -46,4 +46,4 @@ const cmd = new Deno.Command(Deno.execPath(), { args: ["run", "-A", "npm:tailwin
 const process = cmd.spawn();
 
 // run server
-server = serveApp(cwd, config.config, routerMap, true);
+server = serve(cwd, config.config, routerMap);

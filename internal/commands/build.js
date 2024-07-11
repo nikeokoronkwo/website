@@ -15,15 +15,14 @@ import { defaultConfig } from "../lib/config.ts";
 import renderEjs from "../scripts/render_ejs.js";
 import { buildRouter } from "../lib/router.ts";
 import deno from "../../deno.json" with { type: "json" };
-import { bundle } from "https://deno.land/x/emit/mod.ts";
+import { bundle } from /* "https://deno.land/x/emit/mod.ts" */ "jsr:@deno/emit";
+import { delay } from "jsr:@std/async/delay";
+import { encodeHex } from "jsr:@std/encoding/hex"
 
 async function hash(message) {
   const data = new TextEncoder().encode(message);
   const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join(
-    "",
-  );
+  const hashHex = encodeHex(hashBuffer);
   return hashHex;
 }
 
@@ -35,6 +34,7 @@ console.log(bold("Building the Production Server"));
 logger.info("Setting up");
 const cwd = Deno.cwd();
 const outDir = join(cwd, "out");
+const outClientDir = join(outDir, "client");
 const filePath = import.meta.filename ??
   join(cwd, "internal", "commands", "build.js");
 
@@ -47,6 +47,8 @@ if (await exists(outDir)) {
   await Deno.remove(outDir, { recursive: true });
 }
 await Deno.mkdir(outDir, { recursive: true });
+
+await Deno.mkdir(outClientDir, { recursive: true });
 
 // get config
 logger.info(`Loading config`);
@@ -94,24 +96,11 @@ logger.fine("EJS Rendered!");
 // tailwind
 logger.info("Bundling Tailwind Classes")
 logger.warn("NOTE: Future uses of this tool will make use of PostCSS")
-const tailwindOutput = "./styles/output.min.css"
-const success = await runner.run(Deno.execPath(), ["run", "-A", "npm:tailwindcss", "-i", config.tailwind.path ?? "./styles/tailwind.css", "-o", tailwindOutput, "--minify"]);
-
-
-
-// build router map
-logger.info("Building Router")
-const routerMap = buildRouter(cwd);
-const routerMapString = Array.from(routerMap.entries()).map(e => `[${e[0]}, {
-  name: "${e[1].name}",
-  raw: "${e[1].raw}",
-  type: "${e[1].type}",
-  server: ${e[1].server ? "true" : "false"},
-  original: "${e[1].original}",
-  fullPath: "${e[1].fullPath}",
-}]`).join(", ")
-Deno.writeTextFile("./internal/runners/prod_router.js", `export default new Map([${routerMapString}])`)
-logger.fine("Router built")
+let tailwindOutput = "./styles/output.min.css"
+await runner.run(Deno.execPath(), ["run", "-A", "npm:tailwindcss", "-i", config.tailwind.path ?? "./styles/tailwind.css", "-o", tailwindOutput, "--minify"]);
+const newTailwindOutput = `${(await hash(tailwindOutput)).slice(0, 10)}.css`;
+Deno.copyFileSync(join(cwd, tailwindOutput), join(outClientDir, newTailwindOutput));
+tailwindOutput = newTailwindOutput;
 
 // build production options
 const stringProdOptions = `{
@@ -151,8 +140,8 @@ await Deno.writeTextFile(
 
 // if prerendering is set to true then bundle files
 logger.info("Bundling Code for Production");
+const routerMap = buildRouter(cwd);
 
-const outClientDir = join(outDir, "client");
 await Deno.mkdir(outClientDir, { recursive: true });
 
 let totalSize = 0;
@@ -160,7 +149,7 @@ let totalSize = 0;
 if (!(config.build.singleBundle ?? false)) {
   // prerender
   logger.info("Bundling Page Chunks");
-  for (const v of Array.from(routerMap.values())) {
+  for (const [k, v] of Array.from(routerMap.entries())) {
     const path = v.fullPath;
     const { code, map } = await bundle(path, {
       minify: true,
@@ -190,13 +179,31 @@ if (!(config.build.singleBundle ?? false)) {
     totalSize += fileSize;
 
     await Deno.writeTextFile(join(outClientDir, `${newFileName}.js`), code);
+    const newV = v;
+    newV.fullPath = join(".", "client", `${newFileName}.js`)
+    routerMap.set(k, newV);
 
-    v.fullPath = `${join(".", "client", `${newFileName}.js`)}`;
+    // v.fullPath = `${join(".", "client", `${newFileName}.js`)}`;
   }
 }
 logger.fine("Bundled Pages!");
 logger.info(green(`Total Size -- ${bold(totalSize.toFixed(2))}KB`));
 // if not then create imports and import into server file
+
+// build router map
+logger.info("Building Router")
+const routerMapString = Array.from(routerMap.entries()).map(e => `[${e[0]}, {
+  name: "${e[1].name}",
+  raw: "${e[1].raw}",
+  type: "${e[1].type}",
+  server: ${e[1].server ? "true" : "false"},
+  original: "${e[1].original}",
+  fullPath: "${e[1].fullPath.replaceAll("\\", "\\\\")}",
+}]`).join(", ")
+await Deno.writeTextFile("./internal/runners/prod_router.js", `export default new Map([${routerMapString}])`)
+logger.fine("Router built");
+
+await delay(800);
 
 // public dir
 logger.info("Bundling Public files")
