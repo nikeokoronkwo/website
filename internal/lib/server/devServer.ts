@@ -6,8 +6,7 @@ import { serveDir } from "jsr:@std/http";
 import { getRouterParams } from "../router.ts";
 import { NikeConfig } from "../config.ts";
 import { RouterMap } from "../RouterMap.ts";
-import { convertSearchParams } from "./serverUtils.ts";
-import { renderServerPage, renderClientPage } from "./utils.tsx";
+import { renderServerPage, renderClientPage, convertSearchParams } from "./utils.tsx";
 
 export default function serveApp(
   cwd: string,

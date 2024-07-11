@@ -3,11 +3,10 @@ import { NikeConfig } from "../config.ts";
 import { ServerProdOptions } from "./options.ts";
 import { getRouterParams } from "../router.ts";
 import { RouterMap } from "../RouterMap.ts";
-import { convertSearchParams } from "./serverUtils.ts";
 import { existsSync } from "jsr:@std/fs/exists";
 import { serveDir } from "jsr:@std/http/file-server";
 import { InternalError } from "../errors.ts";
-import { renderServerPage, renderClientPage } from "./utils.tsx";
+import { renderServerPage, renderClientPage, convertSearchParams } from "./utils.tsx";
 
 export default function serve(
     options: ServerProdOptions,

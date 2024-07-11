@@ -10,6 +10,7 @@ import { h } from "https://deno.land/x/nano_jsx@v0.1.0/core.ts";
 import { MainTemplate } from "../../types/ejs.ts";
 // @deno-types="npm:@types/ejs"
 import { render as ejsRender } from "npm:ejs";
+import { StringArraySupportOption } from "npm:prettier";
 
 interface ServerPageOptions {
     routeInfo: RouteInfo;
@@ -40,47 +41,39 @@ interface ProdClientPageOptions extends ClientPageOptions {
 
 export async function renderServerPage(options: DevServerPageOptions | ProdServerPageOptions) {
     if ("cwd" in options) {
-        return await renderDevServerPage(options.cwd, options.routeInfo,  options.req);
+        return await renderServerPageFunc(toFileUrl(join(options.cwd, "pages", options.routeInfo.raw)).href, options.req);
     } else {
-        return await renderProdServerPage(options.routeInfo, options.options, options.req);
+        return await renderServerPageFunc(isAbsolute(options.routeInfo.fullPath)
+        ? relative(
+          options.options.outDir,
+          toFileUrl(options.routeInfo.fullPath).href
+        )
+        : options.routeInfo.fullPath, options.req);
     }
 }
 
 export async function renderClientPage(options: DevClientPageOptions | ProdClientPageOptions) {
     if ("cwd" in options) {
-        return await renderDevClientPage(options.cwd, options.routeInfo, options.reqObj, options.config);
+        return await renderClientPageFunc(toFileUrl(join(options.cwd, "pages", options.routeInfo.raw)).href, options.reqObj, options.config, "./output.css", await Deno.readTextFile("./internal/templates/main.ejs"));
     } else {
-        return await renderProdClientPage(options.routeInfo, options.options, options.reqObj, options.config);
+        return await renderClientPageFunc(isAbsolute(options.routeInfo.fullPath)
+        ? relative(
+          options.options.outDir,
+          toFileUrl(options.routeInfo.fullPath).href
+        )
+        : options.routeInfo.fullPath, options.reqObj, options.config, join(options.options.outDir, "client", options.options.tailwind), options.options.pages.main);
     }
 }
 
-async function renderDevServerPage(cwd: string, routeInfo: RouteInfo, req: Request): Promise<Response> {
-    return await import(
-      toFileUrl(join(cwd, "pages", routeInfo.raw)).href
-    )
+async function renderServerPageFunc(path: string, req: Request): Promise<Response> {
+    return await import(path)
       .then((pagefile) => {
         return pagefile.default(req);
       });
 }
 
-async function renderProdServerPage(routeInfo: RouteInfo, options: ServerProdOptions, req: Request): Promise<Response> {
-    return await import(
-      isAbsolute(routeInfo.fullPath)
-        ? relative(
-          options.outDir,
-          toFileUrl(routeInfo.fullPath).href
-        )
-        : routeInfo.fullPath
-    )
-      .then((pagefile) => {
-        return pagefile.default(req);
-      });
-}
-
-async function renderDevClientPage(cwd: string, routeInfo: RouteInfo, reqObj: { path: string; hash: string; params: { [k: string]: string | string[]; }; query: Record<string, any>; fullPath: string; }, config: NikeConfig) {
-    const response = import(
-      toFileUrl(join(cwd, "pages", routeInfo.raw)).href
-    )
+  async function renderClientPageFunc(path: string, reqObj: { path: string; hash: string; params: { [k: string]: string | string[]; }; query: Record<string, any>; fullPath: string; }, config: NikeConfig, tailwindPath: string, ejsPath: string) {
+    const response = import(path)
       .then((pagefile) => {
         const Page = pagefile.default.handler;
   
@@ -99,11 +92,11 @@ async function renderDevClientPage(cwd: string, routeInfo: RouteInfo, reqObj: { 
       bodyAttrs: config.app?.bodyAttrs ?? {},
       bodyScript: config.app?.script ?? [],
       body: await response,
-      tailwind: "./output.css"
+      tailwind: tailwindPath
     };
   
     const newResponse = ejsRender(
-      await Deno.readTextFile("./internal/templates/main.ejs"),
+      ejsPath,
       mainTemplateOptions
     );
     return new Response(newResponse, {
@@ -113,43 +106,26 @@ async function renderDevClientPage(cwd: string, routeInfo: RouteInfo, reqObj: { 
     });
   }
 
-  async function renderProdClientPage(routeInfo: RouteInfo, options: ServerProdOptions, reqObj: { path: string; hash: string; params: { [k: string]: string | string[]; }; query: Record<string, any>; fullPath: string; }, config: NikeConfig) {
-    const response = import(
-      isAbsolute(routeInfo.fullPath)
-        ? relative(
-          options.outDir,
-          toFileUrl(routeInfo.fullPath).href
-        )
-        : routeInfo.fullPath
-    )
-      .then((pagefile) => {
-        const Page = pagefile.default.handler;
+  export function convertSearchParams(searchParams: URLSearchParams) {
+    const obj: Record<string, any> = {};
+    for (const p of searchParams) {
+      const key = p[0];
+      let value: any = p[1];
+      if (value === "") value = "";
+      if (value === "true") value = true;
+      if (value === "false") value = false;
+      else {
+        try {
+          value = parseInt(value);
+        } catch (_) {
+          try {
+            value = parseFloat(value);
+          } catch (_) { /* Do nothing */ }
+        }
+      }
+      Object.defineProperty(obj, key, { value, writable: false });
+    }
   
-        const pageOut = renderSSR(() => <Page {...reqObj} />);
-  
-        return pageOut;
-      });
-  
-    const mainTemplateOptions: MainTemplate = {
-      title: config.app?.title ?? "My App",
-      meta: config.app?.head?.meta ?? [],
-      link: config.app?.head?.link ?? [],
-      style: config.app?.head?.style ?? [],
-      script: config.app?.head?.script ?? [],
-      noscript: config.app?.head?.noscript ?? [],
-      bodyAttrs: config.app?.bodyAttrs ?? {},
-      bodyScript: config.app?.script ?? [],
-      body: await response,
-      tailwind: join(options.outDir, "client", options.tailwind)
-    };
-  
-    const newResponse = ejsRender(
-      options.pages.main,
-      mainTemplateOptions
-    );
-    return new Response(newResponse, {
-      headers: {
-        "content-type": "text/html",
-      },
-    });
+    return obj;
   }
+  
