@@ -6,7 +6,13 @@ import { serveDir } from "jsr:@std/http";
 import { getRouterParams } from "../router.ts";
 import { NikeConfig } from "../config.ts";
 import { RouterMap } from "../RouterMap.ts";
-import { renderServerPage, renderClientPage, convertSearchParams, errorHandler } from "./utils.tsx";
+import {
+  convertSearchParams,
+  errorHandler,
+  renderClientPage,
+  renderServerPage,
+} from "./utils.tsx";
+import { serveFile } from "jsr:@std/http/file-server";
 
 export default function serveApp(
   cwd: string,
@@ -23,7 +29,9 @@ export default function serveApp(
 
       // serve tailwind css
       if (pathname === tailwind || pathname === `/${tailwind}`) {
-        return new Response(await Deno.readTextFile("./styles/output.css"), { headers: { "content-type": "text/css" }});
+        return new Response(await Deno.readTextFile("./styles/output.css"), {
+          headers: { "content-type": "text/css" },
+        });
       }
 
       const match = Array.from(routerMap.entries()).find((v) => {
@@ -67,15 +75,24 @@ export default function serveApp(
         });
       }
 
-      if (pathname.replace("/", "").endsWith(".css")) {
-        const path = pathname.replace("/", "");
-        const absPath = join(cwd, path);
+      if (
+        existsSync(
+          join(
+            cwd,
+            pathname.startsWith("/") ? pathname.replace("/", "") : pathname,
+          ),
+        )
+      ) {
+        return await serveFile(req, join(
+          cwd,
+          pathname.startsWith("/") ? pathname.replace("/", "") : pathname,
+        ));
       }
 
       throw createError({
         statusCode: 404,
-        message: "Page not Found"
-      })
+        message: "Page not Found",
+      });
     },
     onListen({ port, hostname }) {
       console.log(`Server started at http://${hostname}:${port}`);
@@ -83,4 +100,3 @@ export default function serveApp(
     onError: errorHandler(),
   });
 }
-

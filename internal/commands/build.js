@@ -17,7 +17,7 @@ import { buildRouter } from "../lib/router.ts";
 import deno from "../../deno.json" with { type: "json" };
 import { bundle } from /* "https://deno.land/x/emit/mod.ts" */ "jsr:@deno/emit";
 import { delay } from "jsr:@std/async/delay";
-import { encodeHex } from "jsr:@std/encoding/hex"
+import { encodeHex } from "jsr:@std/encoding/hex";
 
 async function hash(message) {
   const data = new TextEncoder().encode(message);
@@ -65,7 +65,12 @@ if (!config) config = generateConfig(options, args);
 // run scripts
 logger.info("Running Scripts");
 logger.info("Components...");
-await runner.run(Deno.execPath(), ["run", "--allow-read", "--allow-write", "internal/scripts/gen_components.js"]);
+await runner.run(Deno.execPath(), [
+  "run",
+  "--allow-read",
+  "--allow-write",
+  "internal/scripts/gen_components.js",
+]);
 logger.fine("Done");
 
 // render ejs
@@ -97,12 +102,24 @@ logger.fine("EJS Rendered!");
 // run other scripts
 
 // tailwind
-logger.info("Bundling Tailwind Classes")
-logger.warn("NOTE: Future uses of this tool will make use of PostCSS")
-let tailwindOutput = "./styles/output.min.css"
-await runner.run(Deno.execPath(), ["run", "-A", "npm:tailwindcss", "-i", config.tailwind.path ?? "./styles/tailwind.css", "-o", tailwindOutput, "--minify"]);
+logger.info("Bundling Tailwind Classes");
+logger.warn("NOTE: Future uses of this tool will make use of PostCSS");
+let tailwindOutput = "./styles/output.min.css";
+await runner.run(Deno.execPath(), [
+  "run",
+  "-A",
+  "npm:tailwindcss",
+  "-i",
+  config.tailwind.path ?? "./styles/tailwind.css",
+  "-o",
+  tailwindOutput,
+  "--minify",
+]);
 const newTailwindOutput = `${(await hash(tailwindOutput)).slice(0, 10)}.css`;
-Deno.copyFileSync(join(cwd, tailwindOutput), join(outClientDir, newTailwindOutput));
+Deno.copyFileSync(
+  join(cwd, tailwindOutput),
+  join(outClientDir, newTailwindOutput),
+);
 tailwindOutput = newTailwindOutput;
 
 // build production options
@@ -183,7 +200,7 @@ if (!(config.build.singleBundle ?? false)) {
 
     await Deno.writeTextFile(join(outClientDir, `${newFileName}.js`), code);
     const newV = v;
-    newV.fullPath = join(".", "client", `${newFileName}.js`)
+    newV.fullPath = join(".", "client", `${newFileName}.js`);
     routerMap.set(k, newV);
 
     // v.fullPath = `${join(".", "client", `${newFileName}.js`)}`;
@@ -194,26 +211,45 @@ logger.info(green(`Total Size -- ${bold(totalSize.toFixed(2))}KB`));
 // if not then create imports and import into server file
 
 // build router map
-logger.info("Building Router")
-const routerMapString = Array.from(routerMap.entries()).map(e => `[${e[0]}, {
+logger.info("Building Router");
+const routerMapString = Array.from(routerMap.entries()).map((e) =>
+  `[${e[0]}, {
   name: "${e[1].name}",
   raw: "${e[1].raw}",
   type: "${e[1].type}",
   server: ${e[1].server ? "true" : "false"},
   original: "${e[1].original}",
   fullPath: "${e[1].fullPath.replaceAll("\\", "\\\\")}",
-}]`).join(", ")
-await Deno.writeTextFile("./internal/runners/prod_router.js", `export default new Map([${routerMapString}])`)
+}]`
+).join(", ");
+await Deno.writeTextFile(
+  "./internal/runners/prod_router.js",
+  `export default new Map([${routerMapString}])`,
+);
 logger.fine("Router built");
 
 await delay(800);
 
 // public dir
-logger.info("Bundling Public files")
-await Deno.mkdir(join(outClientDir, "public"))
-for await (const item of walk(config.publicDir ?? "./public", { includeDirs: false, includeSymlinks: false })) {
-    logger.info(dim(`Copying ${item.path} to ${join(outClientDir, "public", basename(item.path))}`));
-    await Deno.copyFile(item.path, join(outClientDir, "public", basename(item.path)));
+logger.info("Bundling Public files");
+await Deno.mkdir(join(outClientDir, "public"));
+for await (
+  const item of walk(config.publicDir ?? "./public", {
+    includeDirs: false,
+    includeSymlinks: false,
+  })
+) {
+  logger.info(
+    dim(
+      `Copying ${item.path} to ${
+        join(outClientDir, "public", basename(item.path))
+      }`,
+    ),
+  );
+  await Deno.copyFile(
+    item.path,
+    join(outClientDir, "public", basename(item.path)),
+  );
 }
 
 // build server
@@ -224,9 +260,9 @@ const { code } = await bundle(serverFile, {
   compilerOptions: deno.compilerOptions,
   importMap: {
     imports: {
-      "npm:ejs": "https://unpkg.com/ejs@3.1.10/ejs.min.js"
-    }
-  }
+      "npm:ejs": "https://unpkg.com/ejs@3.1.10/ejs.min.js",
+    },
+  },
 });
 
 await Deno.writeTextFile(join(outDir, "server.js"), code);

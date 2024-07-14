@@ -2,11 +2,11 @@
 import * as THREE from "npm:three";
 
 class CardElement extends HTMLElement {
-    constructor() {
-        super();
+  constructor() {
+    super();
 
-        const shadowRoot = this.attachShadow({ mode: "open" });
-        
-        let scene = new THREE.Scene();
-    }
+    const shadowRoot = this.attachShadow({ mode: "open" });
+
+    let scene = new THREE.Scene();
+  }
 }

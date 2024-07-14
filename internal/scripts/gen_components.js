@@ -16,28 +16,36 @@ if (await exists(componentExportFile)) await Deno.remove(componentExportFile);
 let componentExportFileData = ``;
 
 // walk over files
-for await (const component of walk(componentDir, { includeDirs: false, includeSymlinks: false })) {
-    if (basename(component.path) === "index.tsx") continue;
+for await (
+  const component of walk(componentDir, {
+    includeDirs: false,
+    includeSymlinks: false,
+  })
+) {
+  if (basename(component.path) === "index.tsx") continue;
 
-    const relPath = relative(componentDir, component.path);
-    const content = await Deno.readTextFile(component.path);
-    if (content.includes("export default ")) {
-        componentExportFileData += `export { default as ${pascalCase(relPath)} } from "./${relPath}";\n`
-    }
-    componentExportFileData += `export * from "./${relPath}";`
-    componentExportFileData += "\n";
+  const relPath = relative(componentDir, component.path);
+  const content = await Deno.readTextFile(component.path);
+  if (content.includes("export default ")) {
+    componentExportFileData += `export { default as ${
+      pascalCase(relPath)
+    } } from "./${relPath}";\n`;
+  }
+  componentExportFileData += `export * from "./${relPath}";`;
+  componentExportFileData += "\n";
 }
 
 await Deno.writeTextFile(componentExportFile, componentExportFileData);
 
 /**
- * 
- * @param {string} src 
+ * @param {string} src
  */
 function pascalCase(src) {
-    return normalize(src).replace(extname(src), "").split(SEPARATOR).filter(p => p !== ".." && p !== ".").map((segment, index) => {
-        const v = segment.split("");
-        v[0] = v[0].toUpperCase();
-        return v.join("");
-    }).join("");
+  return normalize(src).replace(extname(src), "").split(SEPARATOR).filter((p) =>
+    p !== ".." && p !== "."
+  ).map((segment, index) => {
+    const v = segment.split("");
+    v[0] = v[0].toUpperCase();
+    return v.join("");
+  }).join("");
 }

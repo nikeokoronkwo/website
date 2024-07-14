@@ -13,7 +13,7 @@ export interface NikeConfig {
   };
   tailwind?: {
     path: string;
-  }
+  };
 }
 
 export function defaultConfig(): NikeConfig {
@@ -37,8 +37,8 @@ export function defaultConfig(): NikeConfig {
       host: "localhost",
     },
     tailwind: {
-      path: "./styles/tailwind.css"
-    }
+      path: "./styles/tailwind.css",
+    },
   };
 }
 

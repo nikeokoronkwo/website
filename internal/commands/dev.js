@@ -1,7 +1,7 @@
 import { watchConfig } from "npm:c12";
 import { defaultConfig } from "../lib/config.ts";
 import { mergeConfig } from "../lib/config.ts";
-import serve from "../lib/server/devServer.ts"
+import serve from "../lib/server/devServer.ts";
 import { buildRouter } from "../lib/router.ts";
 import { delay } from "jsr:@std/async/delay";
 
@@ -42,7 +42,18 @@ const routerMap = buildRouter(cwd);
 
 const tailwindOutput = "./styles/output.css";
 
-const cmd = new Deno.Command(Deno.execPath(), { args: ["run", "-A", "npm:tailwindcss", "-i", config.config.tailwind.path ?? "./styles/tailwind.css", "-o", tailwindOutput, "--watch"] });
+const cmd = new Deno.Command(Deno.execPath(), {
+  args: [
+    "run",
+    "-A",
+    "npm:tailwindcss",
+    "-i",
+    config.config.tailwind.path ?? "./styles/tailwind.css",
+    "-o",
+    tailwindOutput,
+    "--watch",
+  ],
+});
 const process = cmd.spawn();
 
 // run server

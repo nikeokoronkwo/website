@@ -10,6 +10,6 @@ export default {
     minify: true,
   },
   server: {
-    host: "localhost"
-  }
+    host: "localhost",
+  },
 };
