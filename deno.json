@@ -21,8 +21,9 @@
   "imports": {
     "nano_jsx/jsx-runtime": "https://deno.land/x/nano_jsx@v0.1.0/jsx-runtime/index.ts",
     "#client": "./internal/exports/client.ts",
-    "#lib": "./internal/exports/lib.ts",
+    "#lib": "./lib/index.ts",
     "#module": "./internal/exports/module.ts",
+    "#components": "./components/index.tsx",
     "~/": "./"
   }
 }

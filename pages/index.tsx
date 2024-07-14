@@ -1,4 +1,5 @@
 import { definePage } from "#client";
+import { Layout } from "#components";
 
 const headerItems: {
   name: string;
@@ -13,24 +14,12 @@ const headerItems: {
 
 export default definePage({
   handler: (req) => (
-    <div className="flex flex-col bg-primary-900 text-white body">
-      {/* Header */}
-      <div className=" h-16 w-screen flex flex-row justify-center items-center bg-slate-700 shadow-lg space-x-10">
-        <div className="flex flex-row justify-center items-center pt-6">
-          {headerItems.map(h => <div className="px-5 h-16 text-center">{h.name}</div>)}
-        </div>
-      </div>
-      {/* Body */}
+    <Layout>
       <div>
-        <section>
-          <div></div>
+        <section className="flex flex-col min-h-svh">
+
         </section>
       </div>
-    </div>
+    </Layout>
   ),
-  style: `
-    .body {
-      height: 100vh;
-    }
-  `
 });

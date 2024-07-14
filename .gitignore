@@ -14,3 +14,5 @@ internal/runners
 
 styles/output.css
 styles/output.*.css
+
+components/index.tsx

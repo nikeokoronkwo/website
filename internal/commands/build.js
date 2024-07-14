@@ -64,6 +64,9 @@ if (!config) config = generateConfig(options, args);
 
 // run scripts
 logger.info("Running Scripts");
+logger.info("Components...");
+await runner.run(Deno.execPath(), ["run", "--allow-read", "--allow-write", "internal/scripts/gen_components.js"]);
+logger.fine("Done");
 
 // render ejs
 logger.info("Rendering EJS Templates");
