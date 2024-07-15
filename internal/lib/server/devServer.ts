@@ -83,10 +83,13 @@ export default function serveApp(
           ),
         )
       ) {
-        return await serveFile(req, join(
-          cwd,
-          pathname.startsWith("/") ? pathname.replace("/", "") : pathname,
-        ));
+        return await serveFile(
+          req,
+          join(
+            cwd,
+            pathname.startsWith("/") ? pathname.replace("/", "") : pathname,
+          ),
+        );
       }
 
       throw createError({

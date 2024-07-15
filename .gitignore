@@ -5,6 +5,8 @@
 **/*.lock
 private/
 internal/templates/**/*.js
+error
+errors
 
 **/out
 **/build

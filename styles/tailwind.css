@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    @font-face {
+        font-family: "OCR-B";
+        src: url(../assets/fonts/OCR-B.otf);
+    }
+
+    @font-face {
+        font-family: "MyriadPro";
+        src: url(../assets/fonts/MyriadPro.otf);
+    }
+}

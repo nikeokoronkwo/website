@@ -4,9 +4,13 @@ import { mergeConfig } from "../lib/config.ts";
 import serve from "../lib/server/devServer.ts";
 import { buildRouter } from "../lib/router.ts";
 import { delay } from "jsr:@std/async/delay";
+import { Runner } from "../lib/runner.ts";
+import { Logger } from "../lib/logger.ts";
 
 const cwd = Deno.cwd();
 const dev = true;
+const logger = new Logger();
+const runner = new Runner(logger);
 
 /** @type {Deno.HttpServer} */
 let server;
@@ -37,6 +41,12 @@ const config = await watchConfig({
     });
   },
 });
+
+await runner.run(Deno.execPath(), [
+  "run",
+  "-A",
+  "./internal/scripts/gen_components.js",
+]);
 
 const routerMap = buildRouter(cwd);
 
