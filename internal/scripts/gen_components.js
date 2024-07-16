@@ -29,9 +29,9 @@ for await (
   if (content.includes("export default ")) {
     componentExportFileData += `export { default as ${
       pascalCase(relPath)
-    } } from "./${relPath}";\n`;
+    } } from "./${relPath.replaceAll("\\", "\\\\")}";\n`;
   }
-  componentExportFileData += `export * from "./${relPath}";`;
+  componentExportFileData += `export * from "./${relPath.replaceAll("\\", "\\\\")}";`;
   componentExportFileData += "\n";
 }
 
