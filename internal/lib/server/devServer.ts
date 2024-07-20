@@ -13,6 +13,8 @@ import {
   renderServerPage,
 } from "./utils.tsx";
 import { serveFile } from "jsr:@std/http/file-server";
+import { ClientRequest } from "../../lib/client.ts";
+import { APIRequest } from "../../lib/api.ts";
 
 export default function serveApp(
   cwd: string,
@@ -28,7 +30,7 @@ export default function serveApp(
       const pathname = url.pathname;
 
       // serve tailwind css
-      if (pathname === tailwind || pathname === `/${tailwind}`) {
+      if (pathname === tailwind || pathname === `/${tailwind}` || pathname === `./${tailwind}`) {
         return new Response(await Deno.readTextFile("./styles/output.css"), {
           headers: { "content-type": "text/css" },
         });
@@ -41,7 +43,7 @@ export default function serveApp(
       // serve page routes
       if (match) {
         const routeInfo = match[1];
-        const reqObj = {
+        const reqObj: ClientRequest = {
           path: pathname,
           hash: url.hash,
           params: getRouterParams(routeInfo.original, routeInfo.raw, pathname),
@@ -50,8 +52,12 @@ export default function serveApp(
         };
 
         if (routeInfo.server) {
+          const serverReqObj: APIRequest = {
+            req,
+            ...reqObj
+          }
           // serve server route
-          return await renderServerPage({ cwd, routeInfo, req });
+          return await renderServerPage({ cwd, routeInfo, reqObj: serverReqObj });
         } else {
           // serve client route with nanojsx
           const v = await renderClientPage({ cwd, routeInfo, reqObj, config });

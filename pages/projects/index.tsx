@@ -7,13 +7,13 @@ const projects: Project[] = [{
   directs: [
     {id: "github", url: "https://github.com/nikeokoronkwo/dyte"}
   ],
-  route: "dyte",
   languages: ["deno", "typescript"]
 }, {
   name: "Pheasant",
   description: () => <div>A modern, progressive web framework implemented in the Dart that <i>gets the job done</i></div>,
   directs: [
-    {id: "github", url: "https://github.com/pheasantframework/pheasant"}
+    {id: "github", url: "https://github.com/pheasantframework/pheasant"},
+    {id: "pub", url: "https://pub.dev/packages/pheasant"}
   ],
   languages: ['dart']
 }, {

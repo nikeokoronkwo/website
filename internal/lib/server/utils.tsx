@@ -12,7 +12,9 @@ import { MainTemplate } from "../../types/ejs.ts";
 // @deno-types="npm:@types/ejs"
 import { render as ejsRender } from "npm:ejs";
 import { InternalError } from "../errors.ts";
-import { ClientModule } from "~/internal/types/pages.ts";
+import { ClientModule, ServerModule } from "../../types/pages.ts";
+import { ClientRequest } from "../../lib/client.ts";
+import { APIRequest } from "../../lib/api.ts";
 
 const pageCss = `
 body {
@@ -23,7 +25,7 @@ body {
 
 interface ServerPageOptions {
   routeInfo: RouteInfo;
-  req: Request;
+  reqObj: APIRequest
 }
 
 interface DevServerPageOptions extends ServerPageOptions {
@@ -37,13 +39,7 @@ interface ProdServerPageOptions extends ServerPageOptions {
 interface ClientPageOptions {
   routeInfo: RouteInfo;
   config: NikeConfig;
-  reqObj: {
-    path: string;
-    hash: string;
-    params: { [k: string]: string | string[] };
-    query: Record<string, any>;
-    fullPath: string;
-  };
+  reqObj: ClientRequest;
 }
 
 interface DevClientPageOptions extends ClientPageOptions {
@@ -60,7 +56,7 @@ export async function renderServerPage(
   if ("cwd" in options) {
     return await renderServerPageFunc(
       toFileUrl(join(options.cwd, "pages", options.routeInfo.raw)).href,
-      options.req,
+      options.reqObj,
     );
   } else {
     return await renderServerPageFunc(
@@ -70,7 +66,7 @@ export async function renderServerPage(
           toFileUrl(options.routeInfo.fullPath).href,
         )
         : options.routeInfo.fullPath,
-      options.req,
+      options.reqObj,
     );
   }
 }
@@ -84,7 +80,7 @@ export async function renderClientPage(
       toFileUrl(join(options.cwd, "pages", options.routeInfo.raw)).href,
       options.reqObj,
       options.config,
-      "./output.css",
+      "/output.css",
       await Deno.readTextFile("./internal/templates/main.ejs"),
     );
   } else {
@@ -106,11 +102,11 @@ export async function renderClientPage(
 
 async function renderServerPageFunc(
   path: string,
-  req: Request,
+  reqObj: APIRequest
 ): Promise<Response> {
   return await import(path)
-    .then((pagefile) => {
-      return pagefile.default(req);
+    .then((pagefile: ServerModule) => {
+      return pagefile.default(reqObj);
     });
 }
 

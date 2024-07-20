@@ -10,7 +10,7 @@ const Icons: FC<{ list: RedirectObject[]; iconSize?: string }> = ({ list, iconSi
   <>
     {list.map((l) => (
       <a href={l.url} target="_blank">
-        <img src={`/assets/svg/${l.id}.svg`} className={"aspect-square " + (iconSize ?? "h-10")} />
+        <img src={`/assets/svg/${l.id === "pub" ? "dart" : l.id}.svg`} className={"aspect-square " + (iconSize ?? "h-10")} />
       </a>
     ))}
   </>
