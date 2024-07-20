@@ -28,7 +28,7 @@ export interface APIRequest {
 
 
 export interface APIRoute {
-    (req: Request): PromiseLike<Response>;
+    (req: Request): Promise<Response> | Response;
 }
 
 export function defineRoute(options: APIRoute) {

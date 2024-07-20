@@ -30,6 +30,30 @@ export function defaultConfig(): NikeConfig {
             content: "width=device-width, initial-scale=1.0",
           },
         ],
+        link: [
+          // <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+          // <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+          {
+            rel: "icon",
+            type: "image/svg+xml",
+            href: "/favicon.svg"
+          },
+          {
+            rel: "icon",
+            type: "image/png",
+            href: "/favicon.png"
+          },
+          {
+            rel: "apple-touch-icon",
+            type: "image/svg+xml",
+            href: "/favicon.svg"
+          },
+          {
+            rel: "apple-touch-icon",
+            type: "image/png",
+            href: "/favicon.png"
+          },
+        ]
       },
     },
     server: {

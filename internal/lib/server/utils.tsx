@@ -11,7 +11,7 @@ import { withStyles } from "https://deno.land/x/nano_jsx@v0.1.0/withStyles.ts";
 import { MainTemplate } from "../../types/ejs.ts";
 // @deno-types="npm:@types/ejs"
 import { render as ejsRender } from "npm:ejs";
-import { InternalError } from "../errors.ts";
+import { BaseError, InternalError } from "../errors.ts";
 import { ClientModule, ServerModule } from "../../types/pages.ts";
 import { ClientRequest } from "../../lib/client.ts";
 import { APIRequest } from "../../lib/api.ts";
@@ -121,7 +121,7 @@ async function renderClientPageFunc(
   },
   config: NikeConfig,
   tailwindPath: string,
-  ejsPath: string,
+  ejs: string,
 ) {
   const response = import(path)
     .then((pagefile: ClientModule) => {
@@ -148,7 +148,7 @@ async function renderClientPageFunc(
   };
 
   const newResponse = ejsRender(
-    ejsPath,
+    ejs,
     mainTemplateOptions,
   );
   return new Response(newResponse, {
@@ -181,20 +181,27 @@ export function convertSearchParams(searchParams: URLSearchParams) {
   return obj;
 }
 
-export function errorHandler():
+export function errorHandler(ejs: string):
   | ((error: unknown) => Response | Promise<Response>)
   | undefined {
   return (err) => {
-    const sysError = err instanceof InternalError;
-    const error = sysError ? err as InternalError : new InternalError({
+    const sysError = err instanceof BaseError;
+    const error = sysError ? err as BaseError : new InternalError({
       statusCode: 500,
       name: "Unknown Error",
       message: "An unknown error occured",
     });
 
-    return new Response(error.message, {
+    const resp = ejsRender(ejs, {
+      error
+    });
+
+    return new Response(resp, {
       status: error.statusCode,
       statusText: error.name,
+      headers: {
+        "content-type": "text/html",
+      }
     });
   };
 }

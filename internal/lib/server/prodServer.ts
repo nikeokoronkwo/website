@@ -41,8 +41,12 @@ export default function serve(
         };
 
         if (routeInfo.server) {
+          const serverReqObj = {
+            req,
+            ...reqObj
+          }
           // serve server route
-          return await renderServerPage({ routeInfo, options, req });
+          return await renderServerPage({ routeInfo, options, reqObj: serverReqObj });
         } else {
           // serve client route with nanojsx
           return await renderClientPage({ routeInfo, options, reqObj, config });
@@ -79,6 +83,6 @@ export default function serve(
     onListen({ port, hostname }) {
       console.log(`Server started at http://${hostname}:${port}`);
     },
-    onError: errorHandler(),
+    onError: errorHandler(options.pages.error),
   });
 }

@@ -108,6 +108,6 @@ export default function serveApp(
     onListen({ port, hostname }) {
       console.log(`Server started at http://${hostname}:${port}`);
     },
-    onError: errorHandler(),
+    onError: errorHandler(Deno.readTextFileSync("./internal/templates/error.ejs")),
   });
 }
