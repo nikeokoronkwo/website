@@ -19,6 +19,8 @@ import { bundle } from /* "https://deno.land/x/emit/mod.ts" */ "jsr:@deno/emit";
 import { delay } from "jsr:@std/async/delay";
 import { encodeHex } from "jsr:@std/encoding/hex";
 
+import "../lib/meta/dev.js";
+
 async function hash(message) {
   const data = new TextEncoder().encode(message);
   const hashBuffer = await crypto.subtle.digest("SHA-256", data);

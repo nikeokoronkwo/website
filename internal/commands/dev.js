@@ -7,6 +7,8 @@ import { delay } from "jsr:@std/async/delay";
 import { Runner } from "../lib/runner.ts";
 import { Logger } from "../lib/logger.ts";
 
+import "../lib/meta/dev.js";
+
 const cwd = Deno.cwd();
 const dev = true;
 const logger = new Logger();
