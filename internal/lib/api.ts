@@ -28,9 +28,9 @@ export interface APIRequest {
 
 
 export interface APIRoute {
-    (req: Request): Promise<Response> | Response;
+    (req: APIRequest): Promise<Response> | Response;
 }
 
 export function defineRoute(options: APIRoute) {
-
+  return options;
 }

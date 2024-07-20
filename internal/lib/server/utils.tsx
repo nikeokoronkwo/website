@@ -15,6 +15,7 @@ import { BaseError, InternalError } from "../errors.ts";
 import { ClientModule, ServerModule } from "../../types/pages.ts";
 import { ClientRequest } from "../../lib/client.ts";
 import { APIRequest } from "../../lib/api.ts";
+import { AppEntryOptions } from "~/internal/types/templates.ts";
 
 const pageCss = `
 body {
@@ -123,9 +124,11 @@ async function renderClientPageFunc(
   tailwindPath: string,
   ejs: string,
 ) {
+  let pageMeta: AppEntryOptions | undefined = config.app;
   const response = import(path)
     .then((pagefile: ClientModule) => {
       const Page = pagefile.default.handler;
+      pageMeta = {...pageMeta, ...(pagefile.default.pageMeta)};
       const styles = (pagefile.default.overrideGlobal ? "" : pageCss) +
         (pagefile.default.style ?? "");
 
@@ -134,15 +137,21 @@ async function renderClientPageFunc(
       return pageOut;
     });
 
+  const meta = (pageMeta?.head?.meta ?? []);
+  if (config.seo?.description) meta.push({
+    name: "description",
+    content: config.seo.description
+  });
+
   const mainTemplateOptions: MainTemplate = {
-    title: config.app?.title ?? "My App",
-    meta: config.app?.head?.meta ?? [],
-    link: config.app?.head?.link ?? [],
-    style: config.app?.head?.style ?? [],
-    script: config.app?.head?.script ?? [],
-    noscript: config.app?.head?.noscript ?? [],
-    bodyAttrs: config.app?.bodyAttrs ?? {},
-    bodyScript: config.app?.script ?? [],
+    title: pageMeta?.title ?? "My App",
+    meta,
+    link: pageMeta?.head?.link ?? [],
+    style: pageMeta?.head?.style ?? [],
+    script: pageMeta?.head?.script ?? [],
+    noscript: pageMeta?.head?.noscript ?? [],
+    bodyAttrs: pageMeta?.bodyAttrs ?? {},
+    bodyScript: pageMeta?.script ?? [],
     body: await response,
     tailwind: tailwindPath,
   };

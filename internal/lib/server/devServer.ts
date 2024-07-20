@@ -102,7 +102,7 @@ export default function serveApp(
 
       throw createError({
         statusCode: 404,
-        message: "Page not Found",
+        name: "Page not Found",
       });
     },
     onListen({ port, hostname }) {

@@ -1,5 +1,5 @@
 export interface AppEntryOptions {
-  title: string;
+  title?: string;
   head?: HeadEntryOptions;
   bodyAttrs?: Record<string, string>;
   script?: Record<string, string>[];

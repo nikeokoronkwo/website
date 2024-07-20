@@ -2,6 +2,9 @@ import { AppEntryOptions } from "../types/templates.ts";
 
 export interface NikeConfig {
   app?: AppEntryOptions;
+  seo?: {
+    description?: string;
+  }
   server?: {
     host?: string;
     port?: number;

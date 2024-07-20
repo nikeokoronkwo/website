@@ -1,3 +1,5 @@
+import { AppEntryOptions } from "../types/templates.ts"
+
 export interface ClientRequest {
   /** The path of the given route */
   path: string;
@@ -30,9 +32,10 @@ export interface ClientRequest {
   meta?: any;
 }
 
+/** @todo migrate options here away and make interface a function interface */
 export interface ClientRoute {
   /** Page Metadata Configuration */
-  pageMeta?: object;
+  pageMeta?: AppEntryOptions;
   /** The function handler for the route, used to render the page */
   handler: (req: ClientRequest) => any;
   /** The styles to apply for that page (scoped) @default undefined */
