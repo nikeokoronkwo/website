@@ -79,6 +79,7 @@ export async function renderClientPage(
   options: DevClientPageOptions | ProdClientPageOptions,
 ) {
   if ("cwd" in options) {
+    // development
     return await renderClientPageFunc(
       toFileUrl(join(options.cwd, "pages", options.routeInfo.raw)).href,
       options.reqObj,
@@ -87,6 +88,7 @@ export async function renderClientPage(
       await Deno.readTextFile("./internal/templates/main.ejs"),
     );
   } else {
+    // production
     return await renderClientPageFunc(
       isAbsolute(options.routeInfo.fullPath)
         ? relative(

@@ -54,7 +54,9 @@ export default function serveApp(
           return await renderServerPage({ cwd, routeInfo, req });
         } else {
           // serve client route with nanojsx
-          return await renderClientPage({ cwd, routeInfo, reqObj, config });
+          const v = await renderClientPage({ cwd, routeInfo, reqObj, config });
+          console.log(v.body);
+          return v;
         }
       }
 
