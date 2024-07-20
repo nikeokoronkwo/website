@@ -1,5 +1,5 @@
 import { definePage } from "#client";
-import { Card, Layout, ProjectSummary, Project } from "#components";
+import { Card, Layout, Project, ProjectSummary } from "#components";
 
 const projects: Project[] = [{
   name: "Dyte",
@@ -9,7 +9,7 @@ const projects: Project[] = [{
   name: "Quetzal",
 }, {
   name: "Scud",
-  inProgress: true
+  inProgress: true,
 }];
 
 export default definePage({
@@ -18,7 +18,10 @@ export default definePage({
       <div className="flex flex-col items-center justify-center">
         <section className="flex flex-col items-center justify-center min-h-screen space-y-10 w-screen">
           <div className="flex flex-col justify-between items-center space-y-10">
-            <div className="text-6xl font-bold">WHAT IS <span className="text-secondary font-extrabold italic">THIS</span></div>
+            <div className="text-6xl font-bold">
+              WHAT IS{" "}
+              <span className="text-secondary font-extrabold italic">THIS</span>
+            </div>
             <div className="text-sm">
               Scroll Down for more
             </div>
@@ -34,7 +37,7 @@ export default definePage({
             Projects
           </div>
           <div className="grid grid-cols-3 gap-5 w-screen px-5">
-            {projects.map((project) => ( <ProjectSummary project={project} /> ))}
+            {projects.map((project) => <ProjectSummary project={project} />)}
           </div>
         </section>
       </div>

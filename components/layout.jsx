@@ -12,7 +12,7 @@ const layoutStyles = {
   layout: {
     "background-image": "url(/assets/svg/bg.svg)",
     "background-attachment": "fixed",
-    "background-position": "center"
+    "background-position": "center",
   },
 };
 
@@ -22,24 +22,23 @@ const layoutCss = `
 .major-font {
   font-family: "Beiruti", sans-serif;
 }
-`
-
+`;
 
 function Layout({ children }) {
   return withStyles(layoutCss)(
-    <div
-      className="flex flex-col bg-transparent h-screen"
-    >
-      {/* <div className="fixed top-0 left-0 m-0 -z-10 w-screen">
+    <div className="flex flex-col bg-transparent h-screen">
+      {
+        /* <div className="fixed top-0 left-0 m-0 -z-10 w-screen">
         <img src="/assets/svg/bg.svg" className="aspect-square w-screen" />
-      </div> */}
+      </div> */
+      }
       <Header />
       <div>
         {/* Body */}
         {children}
       </div>
       <Footer />
-    </div>
+    </div>,
   );
 }
 

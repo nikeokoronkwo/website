@@ -64,10 +64,12 @@ function Card() {
             <p class="text-lg tracking-widest font-atm-digits text-left justify-start pb-10">
               **** **** **** 1234
             </p>
-            {/* <div class="flex justify-between items-center mt-4">
+            {
+              /* <div class="flex justify-between items-center mt-4">
               <p>Card Holder</p>
               <p>Expiry Date</p>
-            </div> */}
+            </div> */
+            }
             <div class="flex justify-between items-center mt-2">
               <p class="text-lg font-atm">Nikechukwu Okoronkwo</p>
               <p class="text-lg font-atm">12/34</p>

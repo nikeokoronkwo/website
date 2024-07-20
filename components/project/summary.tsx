@@ -1,7 +1,7 @@
-import { withStyles, FC, Route } from "#client";
+import { FC, Route, withStyles } from "#client";
 
 const styles = `
-`
+`;
 
 export interface Project {
   name: string;
@@ -12,16 +12,26 @@ export interface Project {
 }
 
 const ProjectSummary: FC<{ project: Project }> = ({ project }) => {
-    return withStyles(styles)(<div className={(!project.inProgress ? "bg-primary-900 " : "bg-primary-800 ") + "max-w-lg rounded overflow-hidden shadow-lg"}>
+  return withStyles(styles)(
+    <div
+      className={(!project.inProgress ? "bg-primary-900 " : "bg-primary-800 ") +
+        "max-w-lg rounded overflow-hidden shadow-lg"}
+    >
       {/* <img className="w-full" src="/img/card-top.jpg" alt="Sunset in the mountains"></img> */}
       <div className="px-6 py-4">
-        <div className={(project.inProgress ? "flex justify-between items-center" : "") + "font-bold text-xl mb-2"}>
-          {project.inProgress ? (
-            <>
-              <div>{project.name}</div>
-              <div className="text-sm text-secondary">in progress</div>
-            </>
-          ) : project.name}
+        <div
+          className={(project.inProgress
+            ? "flex justify-between items-center"
+            : "") + "font-bold text-xl mb-2"}
+        >
+          {project.inProgress
+            ? (
+              <>
+                <div>{project.name}</div>
+                <div className="text-sm text-secondary">in progress</div>
+              </>
+            )
+            : project.name}
         </div>
         <p className="text-gray-700 text-base py-5">
           {project.description ?? (
@@ -40,7 +50,8 @@ const ProjectSummary: FC<{ project: Project }> = ({ project }) => {
           </Route>
         )}
       </div>
-    </div>);
-}
+    </div>,
+  );
+};
 
 export default ProjectSummary;

@@ -31,7 +31,9 @@ for await (
       pascalCase(relPath)
     } } from "./${relPath.replaceAll("\\", "\\\\")}";\n`;
   }
-  componentExportFileData += `export * from "./${relPath.replaceAll("\\", "\\\\")}";`;
+  componentExportFileData += `export * from "./${
+    relPath.replaceAll("\\", "\\\\")
+  }";`;
   componentExportFileData += "\n";
 }
 

@@ -20,14 +20,13 @@ module.exports = {
           "900": "#2f322f",
           "950": "#181b18",
         },
-        secondary: "#00FFB7"
+        secondary: "#00FFB7",
       },
-      
     },
     fontFamily: {
-      'atm': ["MyriadPro", "sans-serif"],
-      'atm-digits': ["OCR-B", "ui-monospace", "monospace"]
-    }
+      "atm": ["MyriadPro", "sans-serif"],
+      "atm-digits": ["OCR-B", "ui-monospace", "monospace"],
+    },
   },
   plugins: [],
 };
