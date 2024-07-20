@@ -1,4 +1,4 @@
-import { definePage } from "#client";
+import { definePage, Route } from "#client";
 import { Layout } from "#components";
 
 export default definePage({
@@ -27,12 +27,18 @@ export default definePage({
                 </p>
               </div>
               <div className="flex flex-row items-center justify-center space-x-6 pt-4">
-                <button 
-                  className="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg"
-                >Projects</button>
-                <button 
-                  className="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg"
-                >Blog</button>
+                <Route to="/projects">
+                  <button 
+                    className="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg"
+                  >Projects</button>
+                </Route>
+                
+                <Route to="/blog">
+                  <button 
+                    className="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg"
+                  >Blog</button>
+                </Route>
+                
               </div>
             </div>
           </div>

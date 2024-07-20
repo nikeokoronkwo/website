@@ -1,5 +1,6 @@
 import { withStyles } from "#client";
 import { links } from "../lib/links.jsx";
+import IconList from "~/components/iconList.tsx";
 
 const headerItems = [{
   name: "Homepage",
@@ -7,6 +8,9 @@ const headerItems = [{
 }, {
   name: "Projects",
   route: "/projects",
+}, {
+  name: "Blog",
+  route: "/blog"
 }];
 
 const layoutStyles = {
@@ -30,6 +34,37 @@ const layoutCss = `
   font-optical-sizing: auto;
   font-style: normal;
 }
+
+@keyframes underline {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.underliner {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.underliner::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px; /* Adjust the thickness of the underline */
+  background-color: black; /* Use the text color */
+  transform: translate3d(-100%, 0, 0);
+  transition: transform 0.3s ease;
+}
+
+.underliner:hover::after {
+  transform: translate3d(0, 0, 0);
+}
 `;
 
 function Layout({ children }) {
@@ -52,8 +87,10 @@ function Header() {
     <div className="pt-5 h-16 w-[96vw] flex flex-row justify-between items-center space-x-10 mx-auto">
       <div className="highlight-font text-xl">nikechukwu</div>
       <div className="flex flex-row justify-center items-center space-x-7 mr-auto">
-        {headerItems.map((h) => (
-          <div className="text-center font-semibold">{h.name}</div>
+        {headerItems.map((h) => (          
+          <a href={h.route} className="underliner">
+            <div className="text-center font-semibold">{h.name}</div>
+          </a>
         ))}
       </div>
       <div className="text-transparent">
@@ -72,11 +109,7 @@ function Footer() {
           <span>All Rights Reserved.</span>
         </small>
         <div className="flex flex-row space-x-3">
-          {links.map((l) => (
-              <a href={l.url} target="_blank">
-                <img src={`/assets/svg/${l.id}.svg`} className="aspect-square h-10" />
-              </a>
-          ))}
+          <IconList list={links} />
         </div>
       </div>
     </footer>
