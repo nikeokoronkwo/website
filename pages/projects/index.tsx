@@ -30,6 +30,11 @@ const projects: Project[] = [{
 }, {
   name: "Scud",
   inProgress: true,
+  description: "Scud is a cross-language meta build system used for generating Makefiles for building single-language and multi-language projects (C/C++, D, Swift, Golang, Rust, Zig supported).",
+  directs: [
+    { id: "github", url: "https://github.com/nikeokoronkwo/scud" },
+  ],
+  languages: ["cplusplus"]
 }];
 
 export default definePage({
