@@ -69,7 +69,11 @@ const ProjectSummary: FC<{ project: Project }> = ({ project }) => {
         ? (
           <div className="flex flex-col px-3 py-3 space-y-3 justify-end border border-transparent border-l-1 border-l-primary-950 items-center">
             {project.languages.map((l) => (
-              <img src={`/assets/svg/${l}.svg`} className="aspect-square h-7" alt={l} />
+              <img
+                src={`/assets/svg/${l}.svg`}
+                className="aspect-square h-7"
+                alt={l}
+              />
             ))}
           </div>
         )

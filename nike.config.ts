@@ -5,7 +5,7 @@ export default defineConfig({
     title: "Nike Okoronkwo",
   },
   seo: {
-    description: "The personal homepage of Nikechukwu Okoronkwo."
+    description: "The personal homepage of Nikechukwu Okoronkwo.",
   },
   build: {
     singleBundle: false,

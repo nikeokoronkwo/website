@@ -16,6 +16,9 @@
   "lint": {
     "exclude": ["out/**", "private/**"]
   },
+  "fmt": {
+    "exclude": ["out/**", "private/**"]
+  },
   "imports": {
     "nano_jsx/jsx-runtime": "https://deno.land/x/nano_jsx@v0.1.0/jsx-runtime/index.ts",
     "#client": "./internal/exports/client.ts",

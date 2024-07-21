@@ -30,7 +30,6 @@ const projects: Project[] = [{
 }, {
   name: "Scud",
   inProgress: true,
-  
 }];
 
 export default definePage({

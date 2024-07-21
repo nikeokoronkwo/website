@@ -59,8 +59,8 @@ export default function serve(
             throw createError({
               name: err.name,
               message: err.message,
-              cause: err
-            })
+              cause: err,
+            });
           }
         } else {
           // serve client route with nanojsx
@@ -105,7 +105,7 @@ export default function serve(
       throw createError({
         statusCode: 404,
         name: "Page not Found",
-        message: "The path at " + pathname + " cannot be found."
+        message: "The path at " + pathname + " cannot be found.",
       });
     },
     onListen({ port, hostname }) {

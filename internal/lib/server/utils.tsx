@@ -57,17 +57,16 @@ export async function renderServerPage(
   let path;
   const reqObj = options.reqObj;
   if ("cwd" in options) {
-      path = toFileUrl(join(options.cwd, "pages", options.routeInfo.raw)).href;
+    path = toFileUrl(join(options.cwd, "pages", options.routeInfo.raw)).href;
   } else {
     // production
-      path = isAbsolute(options.routeInfo.fullPath)
-        ? relative(
-          options.options.outDir,
-          toFileUrl(options.routeInfo.fullPath).href,
-        )
-        : options.routeInfo.fullPath;
+    path = isAbsolute(options.routeInfo.fullPath)
+      ? relative(
+        options.options.outDir,
+        toFileUrl(options.routeInfo.fullPath).href,
+      )
+      : options.routeInfo.fullPath;
   }
-
 
   const resp = import(path)
     .then(async (pagefile: ServerModule) => {
@@ -123,7 +122,7 @@ async function renderClientPageFunc(
   const response = await import(path)
     .then((pagefile: ClientModule) => {
       const Page = pagefile.default.handler;
-      pageMeta = mergeMeta(pagefile.default.pageMeta ?? {}, pageMeta)
+      pageMeta = mergeMeta(pagefile.default.pageMeta ?? {}, pageMeta);
       const styles = (pagefile.default.overrideGlobal ? "" : pageCss) +
         (pagefile.default.style ?? "");
 
@@ -132,7 +131,9 @@ async function renderClientPageFunc(
     });
 
   const meta = pageMeta?.head?.meta ?? [];
-  if (config.seo?.description && !(meta.find(m => m.name === "description"))) {
+  if (
+    config.seo?.description && !(meta.find((m) => m.name === "description"))
+  ) {
     meta.push({
       name: "description",
       content: config.seo.description,
@@ -219,21 +220,37 @@ function mergeMeta(a: AppEntryOptions, b?: AppEntryOptions): AppEntryOptions {
     title: a?.title ?? b?.title,
     head: {
       meta: mergeRecords(a.head?.meta ?? [], b?.head?.meta ?? [], ["name"]),
-      link: mergeRecords(a.head?.link ?? [], b?.head?.link ?? [], ["rel", "href"]),
-      style: mergeRecords(a.head?.style ?? [], b?.head?.style ?? [], ["src", "children"]),
-      script: mergeRecords(a.head?.script ?? [], b?.head?.script ?? [], ["src", "children"]),
-      noscript: mergeRecords(a.head?.noscript ?? [], b?.head?.noscript ?? [], ["children"]),
+      link: mergeRecords(a.head?.link ?? [], b?.head?.link ?? [], [
+        "rel",
+        "href",
+      ]),
+      style: mergeRecords(a.head?.style ?? [], b?.head?.style ?? [], [
+        "src",
+        "children",
+      ]),
+      script: mergeRecords(a.head?.script ?? [], b?.head?.script ?? [], [
+        "src",
+        "children",
+      ]),
+      noscript: mergeRecords(a.head?.noscript ?? [], b?.head?.noscript ?? [], [
+        "children",
+      ]),
     },
-    bodyAttrs: {...a.bodyAttrs, ...b?.bodyAttrs},
+    bodyAttrs: { ...a.bodyAttrs, ...b?.bodyAttrs },
     script: mergeRecords(a.script ?? [], b?.script ?? [], ["src", "children"]),
-  }
+  };
 }
 
-function mergeRecords<T extends keyof any, U>(a: Record<T, U>[], b: Record<T, U>[], keys: T[]): Record<T, U>[] {
+function mergeRecords<T extends keyof any, U>(
+  a: Record<T, U>[],
+  b: Record<T, U>[],
+  keys: T[],
+): Record<T, U>[] {
   const base = [...a];
   const seen = new Set<string>();
 
-  const generateKey = (item: Record<T, U>) => keys.map(key => item[key]).join('|');
+  const generateKey = (item: Record<T, U>) =>
+    keys.map((key) => item[key]).join("|");
 
   // Populate the set with existing items in 'a'
   for (const item of a) {

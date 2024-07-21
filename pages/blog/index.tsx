@@ -53,7 +53,8 @@ export default definePage({
           <div className="text-3xl font-bold">Blog</div>
           <div className="flex flex-col">
             <p className="m-0">
-                Just a basic blog of myself, almost like any other blog you'd see out there I guess..
+              Just a basic blog of myself, almost like any other blog you'd see
+              out there I guess..
             </p>
           </div>
         </div>
@@ -86,12 +87,11 @@ export default definePage({
 
               {/* Read More */}
               <div className="justify-end flex flex-col items-end">
-                <a href={`/blog/${(m.name).replace(extname(m.name), "")}`}>
-                   <button className="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg">
+                <a href={`/blog/${m.name.replace(extname(m.name), "")}`}>
+                  <button className="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg">
                     Read
-                  </button> 
+                  </button>
                 </a>
-                  
               </div>
             </div>
           ))}
@@ -103,9 +103,9 @@ export default definePage({
     title: "Blog | Nike Okoronkwo",
     head: {
       meta: [{
-        name: "description", 
-        content: "The personal blog of Nike Okoronkwo"
-      }]
-    }
-  }
+        name: "description",
+        content: "The personal blog of Nike Okoronkwo",
+      }],
+    },
+  },
 });

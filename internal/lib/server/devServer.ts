@@ -73,8 +73,8 @@ export default function serveApp(
             throw createError({
               name: err.name,
               message: err.message,
-              cause: err
-            })
+              cause: err,
+            });
           }
         } else {
           // serve client route with nanojsx

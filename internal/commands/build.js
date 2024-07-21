@@ -18,9 +18,9 @@ import deno from "../../deno.json" with { type: "json" };
 import { delay } from "jsr:@std/async/delay";
 
 // @deno-types="https://deno.land/x/esbuild/mod.d.ts"
-import * as esbuild from "https://deno.land/x/esbuild/mod.js"
+import * as esbuild from "https://deno.land/x/esbuild/mod.js";
 import { denoPlugins } from "jsr:@luca/esbuild-deno-loader@^0.10.3";
-import commonjsPlugin from 'npm:@chialab/esbuild-plugin-commonjs';
+import commonjsPlugin from "npm:@chialab/esbuild-plugin-commonjs";
 
 import "../lib/meta/prod.js";
 
@@ -158,20 +158,21 @@ await Deno.mkdir(outClientDir, { recursive: true });
 
 if (!(config.build.singleBundle ?? false)) {
   await esbuild.build({
-    entryPoints: Array.from(routerMap.entries()).map(e => e[1].fullPath),
+    entryPoints: Array.from(routerMap.entries()).map((e) => e[1].fullPath),
     bundle: true,
     outdir: outClientDir,
     format: "esm",
-    jsx: 'automatic',
+    jsx: "automatic",
     jsxImportSource: deno.compilerOptions.jsxImportSource,
     plugins: [...denoPlugins({
-      configPath: join(cwd, "deno.json")
+      configPath: join(cwd, "deno.json"),
     })],
   });
 
-  for (const [k,v] of Array.from(routerMap.entries())) {
+  for (const [k, v] of Array.from(routerMap.entries())) {
     const newV = v;
-    newV.fullPath = relative(cwd, v.fullPath).replace("pages", "./client").replace(extname(v.fullPath), ".js");
+    newV.fullPath = relative(cwd, v.fullPath).replace("pages", "./client")
+      .replace(extname(v.fullPath), ".js");
     routerMap[k] = newV;
   }
 }
@@ -221,8 +222,8 @@ for await (
   );
 }
 
-logger.info("Bundling Assets")
-logger.warn("Assets are only copied at the moment")
+logger.info("Bundling Assets");
+logger.warn("Assets are only copied at the moment");
 await Deno.mkdir(join(outDir, "assets"));
 await Deno.mkdir(join(outDir, "assets", "svg"));
 await Deno.mkdir(join(outDir, "assets", "images"));
@@ -245,8 +246,8 @@ for await (
   );
 }
 
-logger.info("Bundling Content")
-logger.warn("Content are only copied at the moment")
+logger.info("Bundling Content");
+logger.warn("Content are only copied at the moment");
 await Deno.mkdir(join(outDir, "content"));
 await Deno.mkdir(join(outDir, "content", "blog"));
 for await (
@@ -277,18 +278,25 @@ await esbuild.build({
   outfile: join(outDir, "server.js"),
   bundle: true,
   format: "esm",
-  jsx: 'automatic',
+  jsx: "automatic",
   jsxImportSource: deno.compilerOptions.jsxImportSource,
-  plugins: [...denoPlugins({
-    configPath: join(cwd, "deno.json")
-  }), commonjsPlugin()]
-})
+  plugins: [
+    ...denoPlugins({
+      configPath: join(cwd, "deno.json"),
+    }),
+    commonjsPlugin(),
+  ],
+});
 
 Deno.writeTextFileSync(
-  join(outDir, "server.js"), Deno.readTextFileSync(
-    join(outDir, "server.js")
-  ).replaceAll('from "fs"', 'from "node:fs"').replaceAll('from "path"', 'from "node:path"')
-)
+  join(outDir, "server.js"),
+  Deno.readTextFileSync(
+    join(outDir, "server.js"),
+  ).replaceAll('from "fs"', 'from "node:fs"').replaceAll(
+    'from "path"',
+    'from "node:path"',
+  ),
+);
 
 logger.fine(`Server built at ${join(outDir, "server.js")}`);
 Deno.exit(0);

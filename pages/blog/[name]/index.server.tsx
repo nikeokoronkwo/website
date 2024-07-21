@@ -17,11 +17,12 @@ import remarkFrontmatter from "https://esm.sh/remark-frontmatter";
 import remarkMdxFrontmatter from "https://esm.sh/remark-mdx-frontmatter@^4";
 import { renderSSR } from "https://deno.land/x/nano_jsx@v0.1.0/ssr.ts";
 // @deno-types="npm:@types/dompurify"
-import DOMPurify from 'npm:dompurify';
+import DOMPurify from "npm:dompurify";
 
-
-const _primer = "https://cdnjs.cloudflare.com/ajax/libs/Primer/21.1.1/primer.css";
-const gmin = "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.6.1/github-markdown.min.css"
+const _primer =
+  "https://cdnjs.cloudflare.com/ajax/libs/Primer/21.1.1/primer.css";
+const gmin =
+  "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.6.1/github-markdown.min.css";
 
 /** @todo make server routes easier to deal with when incorporating things like styles */
 // deno-lint-ignore no-explicit-any
@@ -43,8 +44,13 @@ const html = (body: string, meta: any, tailwind?: string) => `
             font-style: normal;
         }
     </style>
-    ${tailwind ? `<link href="${tailwind}" rel="stylesheet">` : `<script src="https://cdn.twind.style" crossorigin></script>` }
-    ${tailwind ? "" : `<script>
+    ${
+  tailwind
+    ? `<link href="${tailwind}" rel="stylesheet">`
+    : `<script src="https://cdn.twind.style" crossorigin></script>`
+}
+    ${
+  tailwind ? "" : `<script>
         twind.install({
             presets: [
                 {
@@ -56,7 +62,8 @@ const html = (body: string, meta: any, tailwind?: string) => `
                 },
             ],
         });
-    </script>`}
+    </script>`
+}
     <title>${meta.title} | Nike's Blog </title>
 </head>
 <body>
@@ -103,89 +110,96 @@ const contentDir = "content";
 export default defineRoute(async (req) => {
   try {
     // supported extensions are .md and .mdx
-  const fileExt: Extension | undefined = extensions.find((e) =>
-    existsSync(join(contentDir, "blog", `${req.params.name}${e}`))
-  );
+    const fileExt: Extension | undefined = extensions.find((e) =>
+      existsSync(join(contentDir, "blog", `${req.params.name}${e}`))
+    );
 
-  if (!fileExt) {
-    throw createError({
-      statusCode: 405,
-      name: "Not Found Error",
-      message:
-        "The blog post at the given route cannot be found. It may have been deleted, or there may be an error with the URL",
+    if (!fileExt) {
+      throw createError({
+        statusCode: 405,
+        name: "Not Found Error",
+        message:
+          "The blog post at the given route cannot be found. It may have been deleted, or there may be an error with the URL",
+      });
+    }
+
+    const filePath = join(
+      Deno.cwd(),
+      contentDir,
+      "blog",
+      `${req.params.name}${fileExt}`,
+    );
+
+    const file = readSync(filePath);
+
+    let src: string = "foo";
+    let metadata;
+
+    switch (fileExt) {
+      case ".md":
+        {
+          matter(file, {});
+
+          metadata = file.data.matter;
+
+          const mdx = await compile(file, {
+            remarkPlugins: [
+              remarkedGfm,
+              remarkFrontmatter,
+              remarkMdxFrontmatter,
+            ],
+            jsxImportSource: "nano_jsx",
+          });
+
+          const mdxFile = await import(`data:text/javascript, ${mdx}`);
+          metadata = mdxFile.frontmatter;
+
+          const Component = mdxFile.default;
+          // nano jsx render
+          src = DOMPurify.sanitize(renderSSR(() => <Component />));
+        }
+
+        break;
+      case ".mdx":
+        {
+          matter(file, {});
+
+          // metadata = file.data.matter;
+
+          // if .mdx render with mdx and serve as component
+          const mdx = await compile(file, {
+            remarkPlugins: [
+              remarkedGfm,
+              remarkFrontmatter,
+              remarkMdxFrontmatter,
+            ],
+            jsxImportSource: "nano_jsx",
+          });
+
+          const mdxFile = await import(`data:text/javascript, ${mdx}`);
+          metadata = mdxFile.frontmatter;
+
+          const Component = mdxFile.default;
+          // nano jsx render
+          src = DOMPurify.sanitize(renderSSR(() => <Component />));
+        }
+        break;
+      default:
+        src = "Content not found";
+        break;
+    }
+
+    // apply github css
+    const resp = html(src, metadata);
+
+    // serve
+    return new Response(resp, {
+      headers: {
+        "content-type": "text/html",
+      },
     });
-  }
-
-  const filePath = join(
-    Deno.cwd(),
-    contentDir,
-    "blog",
-    `${req.params.name}${fileExt}`,
-  );
-
-  const file = readSync(filePath);
-
-  let src: string = "foo";
-  let metadata;
-
-  switch (fileExt) {
-    case ".md":
-      {
-        matter(file, { });
-
-        metadata = file.data.matter;
-
-        const mdx = await compile(file, {
-          remarkPlugins: [remarkedGfm, remarkFrontmatter, remarkMdxFrontmatter],
-          jsxImportSource: "nano_jsx",
-        });
-
-        const mdxFile = await import(`data:text/javascript, ${mdx}`);
-        metadata = mdxFile.frontmatter;
-
-        const Component = mdxFile.default;
-        // nano jsx render
-        src = DOMPurify.sanitize(renderSSR(() => <Component />));
-      }
-
-      break;
-    case ".mdx":
-      {
-        matter(file, {});
-
-        // metadata = file.data.matter;
-
-        // if .mdx render with mdx and serve as component
-        const mdx = await compile(file, {
-          remarkPlugins: [remarkedGfm, remarkFrontmatter, remarkMdxFrontmatter],
-          jsxImportSource: "nano_jsx",
-        });
-
-        const mdxFile = await import(`data:text/javascript, ${mdx}`);
-        metadata = mdxFile.frontmatter;
-
-        const Component = mdxFile.default;
-        // nano jsx render
-        src = DOMPurify.sanitize(renderSSR(() => <Component />));
-      }
-      break;
-    default:
-      src = "Content not found";
-      break;
-  }
-
-  // apply github css
-  const resp = html(src, metadata);
-
-  // serve
-  return new Response(resp, {
-    headers: {
-      "content-type": "text/html",
-    },
-  });
   } catch (err) {
     console.error(err);
     return new Response(err.message, { status: 500 });
   }
-  
 });

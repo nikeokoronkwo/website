@@ -79,7 +79,7 @@ function Header() {
     <div className="sticky top-0 pt-5 h-16 w-screen flex flex-row justify-between items-center space-x-10 mx-auto bg-white pb-5 drop-shadow-sm">
       <div className="highlight-font text-xl pl-5">nikechukwu</div>
       <div className="flex flex-row justify-center items-center space-x-7 mr-auto">
-        {headerItems.map((h) => ( 
+        {headerItems.map((h) => (
           <a href={h.route} className="underliner">
             <div className="text-center font-semibold">{h.name}</div>
           </a>

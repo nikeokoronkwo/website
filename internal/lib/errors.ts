@@ -16,7 +16,7 @@ export class BaseError extends Error implements StatusError {
     super(options.message);
     this.statusCode = options.statusCode ?? 500;
     this.name = options.name ?? "Unknown Error";
-    this.cause = options.cause
+    this.cause = options.cause;
   }
 }
 
