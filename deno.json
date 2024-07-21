@@ -9,14 +9,12 @@
     "format": "deno fmt ."
   },
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "dom.asynciterable",
-      "deno.ns"
-    ],
+    "lib": ["dom", "dom.iterable", "dom.asynciterable", "deno.ns"],
     "jsx": "react-jsx",
     "jsxImportSource": "nano_jsx"
+  },
+  "lint": {
+    "exclude": ["out/**", "private/**"]
   },
   "imports": {
     "nano_jsx/jsx-runtime": "https://deno.land/x/nano_jsx@v0.1.0/jsx-runtime/index.ts",

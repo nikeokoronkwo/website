@@ -1,6 +1,7 @@
+// deno-lint-ignore-file no-explicit-any
 export interface APIRequest {
   req: Request;
-    /** The path of the given route */
+  /** The path of the given route */
   path: string;
   /**
    * The hash passed to the route
@@ -26,9 +27,8 @@ export interface APIRequest {
   fullPath: string;
 }
 
-
 export interface APIRoute {
-    (req: APIRequest): Promise<Response> | Response;
+  (req: APIRequest): Promise<Response> | Response;
 }
 
 export function defineRoute(options: APIRoute) {

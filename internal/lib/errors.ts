@@ -6,6 +6,7 @@ interface ErrorOptions {
   name?: string;
   message?: string;
   statusCode?: number;
+  cause?: unknown;
 }
 
 export class BaseError extends Error implements StatusError {
@@ -15,6 +16,7 @@ export class BaseError extends Error implements StatusError {
     super(options.message);
     this.statusCode = options.statusCode ?? 500;
     this.name = options.name ?? "Unknown Error";
+    this.cause = options.cause
   }
 }
 

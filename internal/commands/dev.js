@@ -10,7 +10,6 @@ import { Logger } from "../lib/logger.ts";
 import "../lib/meta/dev.js";
 
 const cwd = Deno.cwd();
-const dev = true;
 const logger = new Logger();
 const runner = new Runner(logger);
 
@@ -24,14 +23,14 @@ const config = await watchConfig({
   onWatch: (event) => {
     console.log("[watcher]", event.type, event.path);
   },
-  acceptHMR({ oldConfig, newConfig, getDiff }) {
+  acceptHMR({ oldConfig: _, newConfig: _, getDiff }) {
     const diff = getDiff();
     if (diff.length === 0) {
       console.log("No config changed detected!");
       return true; // No changes!
     }
   },
-  onUpdate({ oldConfig, newConfig, getDiff }) {
+  onUpdate({ oldConfig: _, newConfig, getDiff }) {
     const diff = getDiff();
     config = mergeConfig(newConfig.config, defaultConfig(), "a");
     console.log("Config updated:\n" + diff.map((i) => i.toJSON()).join("\n"));
@@ -66,7 +65,8 @@ const cmd = new Deno.Command(Deno.execPath(), {
     "--watch",
   ],
 });
-const process = cmd.spawn();
+
+cmd.spawn();
 
 // run server
 server = serve(cwd, config.config, routerMap);

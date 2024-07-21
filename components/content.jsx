@@ -1,23 +1,32 @@
-import { Component, FC, Suspense } from "#client";
+import { Suspense } from "#client";
 import { compile } from "https://esm.sh/@mdx-js/mdx";
 import remarkedGfm from "https://esm.sh/remark-gfm";
 
 const getMdxComponent = async (file) => {
-  const mdx = String(await compile(file, { remarkPlugins: [remarkedGfm], jsxImportSource: "nano_jsx" }));
+  const mdx = String(
+    await compile(file, {
+      remarkPlugins: [remarkedGfm],
+      jsxImportSource: "nano_jsx",
+    }),
+  );
   return (await import(`data:text/javascript, ${mdx}`)).default;
-} 
+};
 
 const MDX = ({ children }) => {
   <div>
     {children}
-  </div>
-}
+  </div>;
+};
 
 const Content = ({ file }) => (
-  <Suspense children={getMdxComponent(`/content/${file}.mdx`)} cache fallback={<div>Loading....</div>}>
+  <Suspense
+    children={getMdxComponent(`/content/${file}.mdx`)}
+    cache
+    fallback={<div>Loading....</div>}
+  >
     <MDX />
   </Suspense>
-)
+);
 
 // class Content extends Component {
 //   async didMount() {

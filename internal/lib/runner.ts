@@ -1,4 +1,4 @@
-import { italic, red } from "jsr:@std/fmt/colors";
+import { italic } from "jsr:@std/fmt/colors";
 import { Logger, VerboseLogger } from "./logger.ts";
 
 export class Runner {

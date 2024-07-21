@@ -10,16 +10,8 @@ const headerItems = [{
   route: "/projects",
 }, {
   name: "Blog",
-  route: "/blog"
+  route: "/blog",
 }];
-
-const layoutStyles = {
-  layout: {
-    "background-image": "url(/assets/svg/bg.svg)",
-    "background-attachment": "fixed",
-    "background-position": "center",
-  },
-};
 
 const layoutCss = `
 @import url('https://fonts.googleapis.com/css2?family=Beiruti:wght@200..900&display=swap');
@@ -84,16 +76,16 @@ export default Layout;
 
 function Header() {
   return (
-    <div className="pt-5 h-16 w-[96vw] flex flex-row justify-between items-center space-x-10 mx-auto">
-      <div className="highlight-font text-xl">nikechukwu</div>
+    <div className="sticky top-0 pt-5 h-16 w-screen flex flex-row justify-between items-center space-x-10 mx-auto bg-white pb-5 drop-shadow-sm">
+      <div className="highlight-font text-xl pl-5">nikechukwu</div>
       <div className="flex flex-row justify-center items-center space-x-7 mr-auto">
-        {headerItems.map((h) => (          
+        {headerItems.map((h) => ( 
           <a href={h.route} className="underliner">
             <div className="text-center font-semibold">{h.name}</div>
           </a>
         ))}
       </div>
-      <div className="text-transparent">
+      <div className="text-transparent text-xl pl-5">
         nikechukwu
       </div>
     </div>
@@ -102,7 +94,7 @@ function Header() {
 
 function Footer() {
   return (
-    <footer className="flex flex-col">
+    <footer className="flex flex-col mt-auto">
       <div className="flex flex-row justify-between items-center px-10 py-5">
         <small className="flex flex-col text-gray-700">
           <span>(C) Nikechukwu Okoronkwo 2024</span>
@@ -115,4 +107,3 @@ function Footer() {
     </footer>
   );
 }
-

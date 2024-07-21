@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 import { toFileUrl } from "jsr:@std/path/to-file-url";
-import { getRouterParams, RouteInfo } from "../router.ts";
+import { RouteInfo } from "../router.ts";
 import { ServerProdOptions } from "./options.ts";
 import { join } from "jsr:@std/path/join";
 import { isAbsolute } from "jsr:@std/path/is-absolute";
@@ -26,7 +26,7 @@ body {
 
 interface ServerPageOptions {
   routeInfo: RouteInfo;
-  reqObj: APIRequest
+  reqObj: APIRequest;
 }
 
 interface DevServerPageOptions extends ServerPageOptions {
@@ -54,22 +54,27 @@ interface ProdClientPageOptions extends ClientPageOptions {
 export async function renderServerPage(
   options: DevServerPageOptions | ProdServerPageOptions,
 ) {
+  let path;
+  const reqObj = options.reqObj;
   if ("cwd" in options) {
-    return await renderServerPageFunc(
-      toFileUrl(join(options.cwd, "pages", options.routeInfo.raw)).href,
-      options.reqObj,
-    );
+      path = toFileUrl(join(options.cwd, "pages", options.routeInfo.raw)).href;
   } else {
-    return await renderServerPageFunc(
-      isAbsolute(options.routeInfo.fullPath)
+    // production
+      path = isAbsolute(options.routeInfo.fullPath)
         ? relative(
           options.options.outDir,
           toFileUrl(options.routeInfo.fullPath).href,
         )
-        : options.routeInfo.fullPath,
-      options.reqObj,
-    );
+        : options.routeInfo.fullPath;
   }
+
+
+  const resp = import(path)
+    .then(async (pagefile: ServerModule) => {
+      return await Promise.resolve(pagefile.default(reqObj));
+    });
+
+  return await resp;
 }
 
 export async function renderClientPage(
@@ -95,20 +100,10 @@ export async function renderClientPage(
         : options.routeInfo.fullPath,
       options.reqObj,
       options.config,
-      join(options.options.outDir, "client", options.options.tailwind),
+      join(options.options.outDir, options.options.tailwind),
       options.options.pages.main,
     );
   }
-}
-
-async function renderServerPageFunc(
-  path: string,
-  reqObj: APIRequest
-): Promise<Response> {
-  return await import(path)
-    .then((pagefile: ServerModule) => {
-      return pagefile.default(reqObj);
-    });
 }
 
 async function renderClientPageFunc(
@@ -125,23 +120,24 @@ async function renderClientPageFunc(
   ejs: string,
 ) {
   let pageMeta: AppEntryOptions | undefined = config.app;
-  const response = import(path)
+  const response = await import(path)
     .then((pagefile: ClientModule) => {
       const Page = pagefile.default.handler;
-      pageMeta = {...pageMeta, ...(pagefile.default.pageMeta)};
+      pageMeta = mergeMeta(pagefile.default.pageMeta ?? {}, pageMeta)
       const styles = (pagefile.default.overrideGlobal ? "" : pageCss) +
         (pagefile.default.style ?? "");
 
       const pageOut = renderSSR(() => withStyles(styles)(<Page {...reqObj} />));
-
       return pageOut;
     });
 
-  const meta = (pageMeta?.head?.meta ?? []);
-  if (config.seo?.description) meta.push({
-    name: "description",
-    content: config.seo.description
-  });
+  const meta = pageMeta?.head?.meta ?? [];
+  if (config.seo?.description && !(meta.find(m => m.name === "description"))) {
+    meta.push({
+      name: "description",
+      content: config.seo.description,
+    });
+  }
 
   const mainTemplateOptions: MainTemplate = {
     title: pageMeta?.title ?? "My App",
@@ -152,7 +148,7 @@ async function renderClientPageFunc(
     noscript: pageMeta?.head?.noscript ?? [],
     bodyAttrs: pageMeta?.bodyAttrs ?? {},
     bodyScript: pageMeta?.script ?? [],
-    body: await response,
+    body: response,
     tailwind: tailwindPath,
   };
 
@@ -202,7 +198,7 @@ export function errorHandler(ejs: string):
     });
 
     const resp = ejsRender(ejs, {
-      error
+      error,
     });
 
     return new Response(resp, {
@@ -210,7 +206,48 @@ export function errorHandler(ejs: string):
       statusText: error.name,
       headers: {
         "content-type": "text/html",
-      }
+      },
     });
   };
+}
+
+/**
+ * A takes precedence over B
+ */
+function mergeMeta(a: AppEntryOptions, b?: AppEntryOptions): AppEntryOptions {
+  return {
+    title: a?.title ?? b?.title,
+    head: {
+      meta: mergeRecords(a.head?.meta ?? [], b?.head?.meta ?? [], ["name"]),
+      link: mergeRecords(a.head?.link ?? [], b?.head?.link ?? [], ["rel", "href"]),
+      style: mergeRecords(a.head?.style ?? [], b?.head?.style ?? [], ["src", "children"]),
+      script: mergeRecords(a.head?.script ?? [], b?.head?.script ?? [], ["src", "children"]),
+      noscript: mergeRecords(a.head?.noscript ?? [], b?.head?.noscript ?? [], ["children"]),
+    },
+    bodyAttrs: {...a.bodyAttrs, ...b?.bodyAttrs},
+    script: mergeRecords(a.script ?? [], b?.script ?? [], ["src", "children"]),
+  }
+}
+
+function mergeRecords<T extends keyof any, U>(a: Record<T, U>[], b: Record<T, U>[], keys: T[]): Record<T, U>[] {
+  const base = [...a];
+  const seen = new Set<string>();
+
+  const generateKey = (item: Record<T, U>) => keys.map(key => item[key]).join('|');
+
+  // Populate the set with existing items in 'a'
+  for (const item of a) {
+    seen.add(generateKey(item));
+  }
+
+  // Add items from 'b' that are not in 'a'
+  for (const item of b) {
+    const itemKey = generateKey(item);
+    if (!seen.has(itemKey)) {
+      seen.add(itemKey);
+      base.push(item);
+    }
+  }
+
+  return base;
 }

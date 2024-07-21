@@ -59,7 +59,10 @@ export class Logger {
     console.log(magenta("[CMD]"), msg);
   }
 
-  verbose(msg: string) {}
+  verbose(msg: string) {
+    const _ignore = msg;
+    return;
+  }
 }
 
 export class VerboseLogger extends Logger {

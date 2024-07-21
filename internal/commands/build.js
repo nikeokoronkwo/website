@@ -5,7 +5,7 @@
 import { join } from "jsr:@std/path/join";
 import { Logger } from "../lib/logger.ts";
 import { Runner } from "../lib/runner.ts";
-import { blue, bold, dim, green } from "jsr:@std/fmt/colors";
+import { bold, dim } from "jsr:@std/fmt/colors";
 import { relative } from "jsr:@std/path/relative";
 import { exists } from "jsr:@std/fs/exists";
 import { walk } from "jsr:@std/fs/walk";
@@ -15,18 +15,14 @@ import { defaultConfig } from "../lib/config.ts";
 import renderEjs from "../scripts/render_ejs.js";
 import { buildRouter } from "../lib/router.ts";
 import deno from "../../deno.json" with { type: "json" };
-import { bundle } from /* "https://deno.land/x/emit/mod.ts" */ "jsr:@deno/emit";
 import { delay } from "jsr:@std/async/delay";
-import { encodeHex } from "jsr:@std/encoding/hex";
 
-import "../lib/meta/dev.js";
+// @deno-types="https://deno.land/x/esbuild/mod.d.ts"
+import * as esbuild from "https://deno.land/x/esbuild/mod.js"
+import { denoPlugins } from "jsr:@luca/esbuild-deno-loader@^0.10.3";
+import commonjsPlugin from 'npm:@chialab/esbuild-plugin-commonjs';
 
-async function hash(message) {
-  const data = new TextEncoder().encode(message);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  const hashHex = encodeHex(hashBuffer);
-  return hashHex;
-}
+import "../lib/meta/prod.js";
 
 const logger = new Logger();
 const runner = new Runner(logger);
@@ -37,10 +33,10 @@ logger.info("Setting up");
 const cwd = Deno.cwd();
 const outDir = join(cwd, "out");
 const outClientDir = join(outDir, "client");
-const filePath = import.meta.filename ??
-  join(cwd, "internal", "commands", "build.js");
+// const filePath = import.meta.filename ??
+//   join(cwd, "internal", "commands", "build.js");
 
-const scriptsDir = join(cwd, "internal", "scripts");
+// const scriptsDir = join(cwd, "internal", "scripts");
 const templateDir = join(cwd, "internal", "templates");
 
 // setting up output
@@ -106,7 +102,7 @@ logger.fine("EJS Rendered!");
 // tailwind
 logger.info("Bundling Tailwind Classes");
 logger.warn("NOTE: Future uses of this tool will make use of PostCSS");
-let tailwindOutput = "./styles/output.min.css";
+const tailwindOutput = join(outDir, "client", "output.css");
 await runner.run(Deno.execPath(), [
   "run",
   "-A",
@@ -117,12 +113,6 @@ await runner.run(Deno.execPath(), [
   tailwindOutput,
   "--minify",
 ]);
-const newTailwindOutput = `${(await hash(tailwindOutput)).slice(0, 10)}.css`;
-Deno.copyFileSync(
-  join(cwd, tailwindOutput),
-  join(outClientDir, newTailwindOutput),
-);
-tailwindOutput = newTailwindOutput;
 
 // build production options
 const stringProdOptions = `{
@@ -139,7 +129,7 @@ const stringProdOptions = `{
   ).map((e) => `${e[0]}: ${e[1]}`).join(", ")
 }},
     outDir: ".",
-    tailwind: "${tailwindOutput}"
+    tailwind: "./${relative(outDir, tailwindOutput)}"
 }`;
 
 // write to files
@@ -166,50 +156,27 @@ const routerMap = buildRouter(cwd);
 
 await Deno.mkdir(outClientDir, { recursive: true });
 
-let totalSize = 0;
-
 if (!(config.build.singleBundle ?? false)) {
-  // prerender
-  logger.info("Bundling Page Chunks");
-  for (const [k, v] of Array.from(routerMap.entries())) {
-    const path = v.fullPath;
-    const { code, map } = await bundle(path, {
-      minify: true,
-      compilerOptions: deno.compilerOptions,
-      importMap: {
-        baseUrl: cwd,
-        imports: deno.imports,
-      },
-    });
-    const newFileName = (await hash(v.fullPath)).slice(0, 10);
-    // get file size in kilobytes for logging
-    const fileSize = new Blob([code], { type: "application/javascript" }).size /
-      1024;
+  await esbuild.build({
+    entryPoints: Array.from(routerMap.entries()).map(e => e[1].fullPath),
+    bundle: true,
+    outdir: outClientDir,
+    format: "esm",
+    jsx: 'automatic',
+    jsxImportSource: deno.compilerOptions.jsxImportSource,
+    plugins: [...denoPlugins({
+      configPath: join(cwd, "deno.json")
+    })],
+  });
 
-    logger.info(
-      green(
-        `${newFileName}.js -- ${
-          fileSize < 0.5
-            ? `${fileSize.toFixed(2)}KB`
-            : `${(fileSize * 1024).toFixed(2)}B`
-        }`,
-      ),
-      "--",
-      blue("page route"),
-    );
-
-    totalSize += fileSize;
-
-    await Deno.writeTextFile(join(outClientDir, `${newFileName}.js`), code);
+  for (const [k,v] of Array.from(routerMap.entries())) {
     const newV = v;
-    newV.fullPath = join(".", "client", `${newFileName}.js`);
-    routerMap.set(k, newV);
-
-    // v.fullPath = `${join(".", "client", `${newFileName}.js`)}`;
+    newV.fullPath = relative(cwd, v.fullPath).replace("pages", "./client").replace(extname(v.fullPath), ".js");
+    routerMap[k] = newV;
   }
 }
+
 logger.fine("Bundled Pages!");
-logger.info(green(`Total Size -- ${bold(totalSize.toFixed(2))}KB`));
 // if not then create imports and import into server file
 
 // build router map
@@ -254,18 +221,74 @@ for await (
   );
 }
 
+logger.info("Bundling Assets")
+logger.warn("Assets are only copied at the moment")
+await Deno.mkdir(join(outDir, "assets"));
+await Deno.mkdir(join(outDir, "assets", "svg"));
+await Deno.mkdir(join(outDir, "assets", "images"));
+for await (
+  const item of walk(join(cwd, "assets"), {
+    includeDirs: false,
+    includeSymlinks: false,
+  })
+) {
+  logger.info(
+    dim(
+      `Copying ${item.path} to ${
+        join(outClientDir, "public", basename(item.path))
+      }`,
+    ),
+  );
+  await Deno.copyFile(
+    item.path,
+    join(outDir, relative(cwd, item.path)),
+  );
+}
+
+logger.info("Bundling Content")
+logger.warn("Content are only copied at the moment")
+await Deno.mkdir(join(outDir, "content"));
+await Deno.mkdir(join(outDir, "content", "blog"));
+for await (
+  const item of walk(join(cwd, "content"), {
+    includeDirs: false,
+    includeSymlinks: false,
+  })
+) {
+  logger.info(
+    dim(
+      `Copying ${item.path} to ${
+        join(outClientDir, "public", basename(item.path))
+      }`,
+    ),
+  );
+  await Deno.copyFile(
+    item.path,
+    join(outDir, relative(cwd, item.path)),
+  );
+}
+
 // build server
 logger.info("Building Server");
 const serverFile = join(runnersDir, "prod_server.js");
-const { code } = await bundle(serverFile, {
-  minify: true,
-  compilerOptions: deno.compilerOptions,
-  importMap: {
-    imports: {
-      "npm:ejs": "https://unpkg.com/ejs@3.1.10/ejs.min.js",
-    },
-  },
-});
 
-await Deno.writeTextFile(join(outDir, "server.js"), code);
+await esbuild.build({
+  entryPoints: [serverFile],
+  outfile: join(outDir, "server.js"),
+  bundle: true,
+  format: "esm",
+  jsx: 'automatic',
+  jsxImportSource: deno.compilerOptions.jsxImportSource,
+  plugins: [...denoPlugins({
+    configPath: join(cwd, "deno.json")
+  }), commonjsPlugin()]
+})
+
+Deno.writeTextFileSync(
+  join(outDir, "server.js"), Deno.readTextFileSync(
+    join(outDir, "server.js")
+  ).replaceAll('from "fs"', 'from "node:fs"').replaceAll('from "path"', 'from "node:path"')
+)
+
 logger.fine(`Server built at ${join(outDir, "server.js")}`);
+Deno.exit(0);

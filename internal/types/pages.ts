@@ -6,5 +6,5 @@ export interface ClientModule {
 }
 
 export interface ServerModule {
-  default: (req: APIRequest) => PromiseLike<Response>;
+  default: (req: APIRequest) => Promise<Response> | Response;
 }

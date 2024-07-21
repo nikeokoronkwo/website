@@ -1,3 +1,5 @@
+export { createError } from "~/internal/lib/errors.ts";
+
 export { Component } from "https://deno.land/x/nano_jsx@v0.1.0/component.ts";
 export { definePage } from "../lib/client.ts";
 export { defineRoute } from "~/internal/lib/api.ts";
@@ -9,4 +11,4 @@ export {
   Switch as RouteSwitch,
   to as navigateTo,
 } from "https://deno.land/x/nano_jsx@v0.1.0/components/router.ts";
-export {Suspense} from "https://deno.land/x/nano_jsx@v0.1.0/components/suspense.ts"
+export { Suspense } from "https://deno.land/x/nano_jsx@v0.1.0/components/suspense.ts";

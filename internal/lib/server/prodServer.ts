@@ -4,7 +4,7 @@ import { ServerProdOptions } from "./options.ts";
 import { getRouterParams } from "../router.ts";
 import { RouterMap } from "../RouterMap.ts";
 import { existsSync } from "jsr:@std/fs/exists";
-import { serveDir } from "jsr:@std/http/file-server";
+import { serveDir, serveFile } from "jsr:@std/http/file-server";
 import {
   convertSearchParams,
   errorHandler,
@@ -43,10 +43,25 @@ export default function serve(
         if (routeInfo.server) {
           const serverReqObj = {
             req,
-            ...reqObj
-          }
+            ...reqObj,
+          };
           // serve server route
-          return await renderServerPage({ routeInfo, options, reqObj: serverReqObj });
+          try {
+            const v = await renderServerPage({
+              routeInfo,
+              options,
+              reqObj: serverReqObj,
+            });
+            return v;
+          } catch (e) {
+            const err = e as Error;
+            console.error(err);
+            throw createError({
+              name: err.name,
+              message: err.message,
+              cause: err
+            })
+          }
         } else {
           // serve client route with nanojsx
           return await renderClientPage({ routeInfo, options, reqObj, config });
@@ -70,14 +85,27 @@ export default function serve(
         });
       }
 
-      // if (pathname.replace("/", "").endsWith(".css")) {
-      //   const path = pathname.replace("/", "");
-
-      // }
+      if (
+        existsSync(
+          join(
+            options.outDir ?? ".",
+            pathname.startsWith("/") ? pathname.replace("/", "") : pathname,
+          ),
+        )
+      ) {
+        return await serveFile(
+          req,
+          join(
+            options.outDir ?? ".",
+            pathname.startsWith("/") ? pathname.replace("/", "") : pathname,
+          ),
+        );
+      }
 
       throw createError({
         statusCode: 404,
-        message: "Page not Found",
+        name: "Page not Found",
+        message: "The path at " + pathname + " cannot be found."
       });
     },
     onListen({ port, hostname }) {

@@ -4,7 +4,7 @@ export interface NikeConfig {
   app?: AppEntryOptions;
   seo?: {
     description?: string;
-  }
+  };
   server?: {
     host?: string;
     port?: number;
@@ -39,24 +39,24 @@ export function defaultConfig(): NikeConfig {
           {
             rel: "icon",
             type: "image/svg+xml",
-            href: "/favicon.svg"
+            href: "/favicon.svg",
           },
           {
             rel: "icon",
             type: "image/png",
-            href: "/favicon.png"
+            href: "/favicon.png",
           },
           {
             rel: "apple-touch-icon",
             type: "image/svg+xml",
-            href: "/favicon.svg"
+            href: "/favicon.svg",
           },
           {
             rel: "apple-touch-icon",
             type: "image/png",
-            href: "/favicon.png"
+            href: "/favicon.png",
           },
-        ]
+        ],
       },
     },
     server: {

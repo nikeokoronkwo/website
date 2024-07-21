@@ -45,7 +45,7 @@ await Deno.writeTextFile(componentExportFile, componentExportFileData);
 function pascalCase(src) {
   return normalize(src).replace(extname(src), "").split(SEPARATOR).filter((p) =>
     p !== ".." && p !== "."
-  ).map((segment, index) => {
+  ).map((segment) => {
     const v = segment.split("");
     v[0] = v[0].toUpperCase();
     return v.join("");

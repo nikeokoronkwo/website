@@ -1,5 +1,5 @@
 import { join } from "jsr:@std/path/join";
-import { walk, walkSync } from "jsr:@std/fs/walk";
+import { walkSync } from "jsr:@std/fs/walk";
 import { globToRegExp } from "jsr:@std/path/glob-to-regexp";
 import { extname } from "jsr:@std/path/extname";
 import { relative } from "jsr:@std/path/relative";

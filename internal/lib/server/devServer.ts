@@ -30,7 +30,10 @@ export default function serveApp(
       const pathname = url.pathname;
 
       // serve tailwind css
-      if (pathname === tailwind || pathname === `/${tailwind}` || pathname === `./${tailwind}`) {
+      if (
+        pathname === tailwind || pathname === `/${tailwind}` ||
+        pathname === `./${tailwind}`
+      ) {
         return new Response(await Deno.readTextFile("./styles/output.css"), {
           headers: { "content-type": "text/css" },
         });
@@ -54,14 +57,28 @@ export default function serveApp(
         if (routeInfo.server) {
           const serverReqObj: APIRequest = {
             req,
-            ...reqObj
-          }
+            ...reqObj,
+          };
           // serve server route
-          return await renderServerPage({ cwd, routeInfo, reqObj: serverReqObj });
+          try {
+            const v = await renderServerPage({
+              cwd,
+              routeInfo,
+              reqObj: serverReqObj,
+            });
+            return v;
+          } catch (e) {
+            const err = e as Error;
+            console.error(err);
+            throw createError({
+              name: err.name,
+              message: err.message,
+              cause: err
+            })
+          }
         } else {
           // serve client route with nanojsx
           const v = await renderClientPage({ cwd, routeInfo, reqObj, config });
-          console.log(v.body);
           return v;
         }
       }
@@ -108,6 +125,8 @@ export default function serveApp(
     onListen({ port, hostname }) {
       console.log(`Server started at http://${hostname}:${port}`);
     },
-    onError: errorHandler(Deno.readTextFileSync("./internal/templates/error.ejs")),
+    onError: errorHandler(
+      Deno.readTextFileSync("./internal/templates/error.ejs"),
+    ),
   });
 }

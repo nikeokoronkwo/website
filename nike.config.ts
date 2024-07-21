@@ -1,9 +1,11 @@
-import { NikeConfig } from "#module";
+import { defineConfig } from "./internal/exports/module.ts";
 
-/** @type {NikeConfig} */
-export default {
+export default defineConfig({
   app: {
     title: "Nike Okoronkwo",
+  },
+  seo: {
+    description: "The personal homepage of Nikechukwu Okoronkwo."
   },
   build: {
     singleBundle: false,
@@ -12,4 +14,4 @@ export default {
   server: {
     host: "localhost",
   },
-};
+});
