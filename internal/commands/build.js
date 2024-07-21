@@ -93,6 +93,8 @@ if (
   }
 }
 
+
+
 // await runner.run(Deno.execPath(), ["run", "-A", "./internal/scripts/render_ejs.js"]);
 const ejsMap = await renderEjs(false);
 logger.fine("EJS Rendered!");
@@ -129,7 +131,7 @@ const stringProdOptions = `{
   ).map((e) => `${e[0]}: ${e[1]}`).join(", ")
 }},
     outDir: ".",
-    tailwind: "./${relative(outDir, tailwindOutput)}"
+    tailwind: "./${relative(cwd, tailwindOutput)}"
 }`;
 
 // write to files
@@ -166,7 +168,7 @@ if (!(config.build.singleBundle ?? false)) {
     jsxImportSource: deno.compilerOptions.jsxImportSource,
     plugins: [...denoPlugins({
       configPath: join(cwd, "deno.json"),
-    })],
+    }), commonjsPlugin()],
   });
 
   for (const [k, v] of Array.from(routerMap.entries())) {
@@ -176,6 +178,14 @@ if (!(config.build.singleBundle ?? false)) {
     routerMap[k] = newV;
   }
 }
+
+// TODO: Exclude all these specific file rendering and do it in a configurable way
+Deno.writeTextFileSync(
+  join(outDir, "client/blog/[name]/index.server.js"),
+  Deno.readTextFileSync(
+    join(outDir, "client/blog/[name]/index.server.js"),
+  ).replaceAll('from "url"', 'from "node:url"').replaceAll('from "fs"', 'from "node:fs"').replaceAll('from "path"', 'from "node:path"')
+);
 
 logger.fine("Bundled Pages!");
 // if not then create imports and import into server file

@@ -131,12 +131,11 @@ async function renderClientPageFunc(
     });
 
   const meta = pageMeta?.head?.meta ?? [];
-  if (
-    config.seo?.description && !(meta.find((m) => m.name === "description"))
-  ) {
-    meta.push({
-      name: "description",
-      content: config.seo.description,
+
+  for (const [k, v] of Object.entries(config.seo ?? {})) {
+    if (!(meta.find(m => m.name === k))) meta.push({
+      name: camelToColonCase(k),
+      content: typeof v === "string" ? v : v.join(", ")
     });
   }
 
@@ -267,4 +266,8 @@ function mergeRecords<T extends keyof any, U>(
   }
 
   return base;
+}
+
+function camelToColonCase(str: string): string {
+  return str.replace(/([A-Z])/g, (match) => ':' + match.toLowerCase());
 }

@@ -4,6 +4,9 @@ export interface NikeConfig {
   app?: AppEntryOptions;
   seo?: {
     description?: string;
+    keywords?: string[];
+    ogTitle?: string;
+    ogDescription?: string;
   };
   server?: {
     host?: string;

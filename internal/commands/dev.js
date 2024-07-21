@@ -23,7 +23,7 @@ const config = await watchConfig({
   onWatch: (event) => {
     console.log("[watcher]", event.type, event.path);
   },
-  acceptHMR({ oldConfig: _, newConfig: _, getDiff }) {
+  acceptHMR({ oldConfig: _, newConfig: __, getDiff }) {
     const diff = getDiff();
     if (diff.length === 0) {
       console.log("No config changed detected!");

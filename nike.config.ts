@@ -6,6 +6,8 @@ export default defineConfig({
   },
   seo: {
     description: "The personal homepage of Nikechukwu Okoronkwo.",
+    keywords: ["Nikechukwu", "Nikechukwu Okoronkwo"],
+    ogTitle: "Nike Okoronkwo"
   },
   build: {
     singleBundle: false,

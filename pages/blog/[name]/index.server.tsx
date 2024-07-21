@@ -16,8 +16,8 @@ import remarkedGfm from "https://esm.sh/remark-gfm";
 import remarkFrontmatter from "https://esm.sh/remark-frontmatter";
 import remarkMdxFrontmatter from "https://esm.sh/remark-mdx-frontmatter@^4";
 import { renderSSR } from "https://deno.land/x/nano_jsx@v0.1.0/ssr.ts";
-// @deno-types="npm:@types/dompurify"
-import DOMPurify from "npm:dompurify";
+
+import sanitize from 'npm:sanitize-html';
 
 const _primer =
   "https://cdnjs.cloudflare.com/ajax/libs/Primer/21.1.1/primer.css";
@@ -33,6 +33,7 @@ const html = (body: string, meta: any, tailwind?: string) => `
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="${meta.description}">
+    <meta name="author" content="Nikechukwu Okoronkwo, nikechukwu@nugegroup.com">
     <link rel="stylesheet" href="${gmin}">
     <style>${""}</style>
     <style>
@@ -67,7 +68,7 @@ const html = (body: string, meta: any, tailwind?: string) => `
     <title>${meta.title} | Nike's Blog </title>
 </head>
 <body>
-    <div id="__app" class="px-5 h-full">
+    <div id="__app" class="px-5 h-full max-w-screen-2xl">
         <div class="sticky top-0 h-16 w-[96vw] flex flex-row justify-between items-center self-start space-x-10 mx-auto">
             <a href="/">
                 <div class="highlight-font text-xl -ml-[0.625rem]">nikechukwu</div>
@@ -156,7 +157,7 @@ export default defineRoute(async (req) => {
 
           const Component = mdxFile.default;
           // nano jsx render
-          src = DOMPurify.sanitize(renderSSR(() => <Component />));
+          src = sanitize(renderSSR(() => <Component />));
         }
 
         break;
@@ -181,7 +182,7 @@ export default defineRoute(async (req) => {
 
           const Component = mdxFile.default;
           // nano jsx render
-          src = DOMPurify.sanitize(renderSSR(() => <Component />));
+          src = sanitize(renderSSR(() => <Component />));
         }
         break;
       default:
