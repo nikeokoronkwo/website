@@ -1,7 +1,4 @@
-// import { assert } from "jsr:@std/assert/assert";
-import { assertEquals } from "jsr:@std/assert/assert-equals";
-// import { assertExists } from "jsr:@std/assert/assert-exists";
-// import { assertThrows } from "jsr:@std/assert/assert-throws";
+import { assertEquals } from "jsr:@std/assert/equals";
 
 import { format } from "npm:prettier";
 import * as ejs from "npm:ejs";
