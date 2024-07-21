@@ -71,7 +71,7 @@ export default definePage({
                   {m.created
                     ? <div>Created {m.created.toDateString()}</div>
                     : <></>}
-                  {m.edited
+                  {m.edited && m.created?.toDateString() !== m.edited.toDateString()
                     ? <div>Edited {m.edited.toDateString()}</div>
                     : <></>}
                 </div>

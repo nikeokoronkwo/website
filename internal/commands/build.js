@@ -238,7 +238,7 @@ await Deno.mkdir(join(outDir, "assets"));
 await Deno.mkdir(join(outDir, "assets", "svg"));
 await Deno.mkdir(join(outDir, "assets", "images"));
 for await (
-  const item of walk(join(cwd, "assets"), {
+  const item of walk(join(cwd, "assets", "images"), {
     includeDirs: false,
     includeSymlinks: false,
   })
@@ -255,6 +255,9 @@ for await (
     join(outDir, relative(cwd, item.path)),
   );
 }
+
+logger.info("Using SVGO to optimize SVGs")
+const res = await runner.run(Deno.execPath(), ["run", "-A", "npm:svgo", "-f", join(cwd, "assets", "svg") , "-o", join(outDir, "assets", "svg")])
 
 logger.info("Bundling Content");
 logger.warn("Content are only copied at the moment");
