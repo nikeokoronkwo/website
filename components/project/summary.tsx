@@ -71,7 +71,7 @@ const ProjectSummary: FC<{ project: Project }> = ({ project }) => {
             {project.languages.map((l) => (
               <img
                 src={`/assets/svg/${l}.svg`}
-                className="aspect-square h-7"
+                className={"aspect-square " + (l === "cplusplus" ? "h-10": "h-7")}
                 alt={l}
               />
             ))}

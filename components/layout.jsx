@@ -1,5 +1,5 @@
 import { withStyles } from "#client";
-import { links } from "../lib/links.jsx";
+import { links } from "../lib/links.ts";
 import IconList from "~/components/iconList.tsx";
 
 const headerItems = [{
