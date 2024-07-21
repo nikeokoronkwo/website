@@ -1,16 +1,6 @@
 import { FC, Route } from "#client";
-import IconList, { RedirectObject } from "../iconList.tsx";
-
-export interface Project {
-  name: string;
-  // deno-lint-ignore no-explicit-any
-  description?: string | (() => any);
-  img?: string;
-  route?: string;
-  inProgress?: boolean;
-  directs?: RedirectObject[];
-  languages?: string[];
-}
+import IconList from "../iconList.tsx";
+import { Project } from "../../lib/projects.tsx";
 
 const ProjectSummary: FC<{ project: Project }> = ({ project }) => {
   return (

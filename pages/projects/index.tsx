@@ -1,41 +1,6 @@
 import { definePage } from "#client";
-import { Layout, Project, ProjectSummary } from "#components";
-
-const projects: Project[] = [{
-  name: "Dyte",
-  description:
-    "Dyte is frontend tooling designed to meet the needs of JavaScript Developers working on Deno",
-  directs: [
-    { id: "github", url: "https://github.com/nikeokoronkwo/dyte" },
-  ],
-  languages: ["deno", "typescript"],
-}, {
-  name: "Pheasant",
-  description: () => (
-    <div>
-      A modern, progressive web framework implemented in the Dart that{" "}
-      <i>gets the job done</i>
-    </div>
-  ),
-  directs: [
-    { id: "github", url: "https://github.com/pheasantframework/pheasant" },
-    { id: "pub", url: "https://pub.dev/packages/pheasant" },
-  ],
-  languages: ["dart"],
-}, {
-  name: "Quetzal",
-  description:
-    "A powerful, easy to use and complete Web Component Framework/Library that can integrate with and make use of components from other web frameworks (as well as work on its own)",
-  inProgress: true,
-}, {
-  name: "Scud",
-  inProgress: true,
-  description: "Scud is a cross-language meta build system used for generating Makefiles for building single-language and multi-language projects (C/C++, D, Swift, Golang, Rust, Zig supported).",
-  directs: [
-    { id: "github", url: "https://github.com/nikeokoronkwo/scud" },
-  ],
-  languages: ["cplusplus"]
-}];
+import { Layout, ProjectSummary } from "#components";
+import { projects } from "../../lib/projects.tsx";
 
 export default definePage({
   handler: (_req) => (

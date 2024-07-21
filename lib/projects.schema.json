@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Project",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the project"
+    },
+    "description": {
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "A description of the project"
+        },
+        {
+          "type": "string",
+          "description": "A function that returns any value"
+        }
+      ],
+      "description": "A brief description of the project or a function returning description"
+    },
+    "img": {
+      "type": "string",
+      "format": "uri",
+      "description": "A URL to the project's image"
+    },
+    "route": {
+      "type": "string",
+      "description": "The route or path for the project"
+    },
+    "inProgress": {
+      "type": "boolean",
+      "description": "Indicates if the project is in progress"
+    },
+    "directs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "description": "The source URL for the redirect"
+          },
+          "destination": {
+            "type": "string",
+            "description": "The destination URL for the redirect"
+          }
+        },
+        "required": ["source", "destination"],
+        "additionalProperties": false
+      },
+      "description": "A list of redirect objects"
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "A programming language used in the project"
+      },
+      "description": "An array of programming languages used in the project"
+    }
+  },
+  "required": ["name"],
+  "additionalProperties": false
+}
