@@ -1,4 +1,5 @@
 {
+  "version": "0.0.1",
   "tasks": {
     "gen": "deno run -A internal/scripts/gen.js",
     "dev": "deno run -A --watch internal/commands/dev.js",
