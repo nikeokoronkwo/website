@@ -3,7 +3,9 @@
   "tasks": {
     "gen": "deno run -A internal/scripts/gen.js",
     "dev": "deno run -A --watch internal/commands/dev.js",
-    "deploy": "",
+    "deploy:dev": "deployctl deploy --project=nikechukwu --entrypoint=out/server.js --include=./out --dry-run",
+    "deploy": "deployctl deploy --project=nikechukwu --entrypoint=out/server.js --include=./out",
+    "deploy:prod": "deployctl deploy --project=nikechukwu --entrypoint=out/server.js --include=./out --prod",
     "build": "deno run -A internal/commands/build.js",
     "prod": "deno task build && deno run -A ./out/server.js",
     "test": "deno test --allow-read --allow-sys",

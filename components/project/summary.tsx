@@ -28,9 +28,7 @@ const ProjectSummary: FC<{ project: Project }> = ({ project }) => {
           </div>
           <p className="text-gray-700 text-base py-5">
             {project.description
-              ? (typeof project.description === "string"
-                ? project.description
-                : <project.description />)
+              ? (project.description)
               : (
                 <span className="text-gray-700 italic">
                   No Description Available
