@@ -32,13 +32,17 @@ Deno.test({
         bodyAttrs: [],
         bodyScript: [],
         body: "",
+        tailwind: "/output.css"
       }),
       `<!DOCTYPE html>
 <html lang="en">
 <head>
     <title></title>
+    
+    <link href="/output.css" rel="stylesheet">
 </head>
 <body>
+  <div id="__app"></div>
 </body>
 </html>`,
     );
