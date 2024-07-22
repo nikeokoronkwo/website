@@ -4,7 +4,6 @@ import { ServerProdOptions } from "./options.ts";
 import { getRouterParams } from "../router.ts";
 import { RouterMap } from "../RouterMap.ts";
 import { existsSync } from "jsr:@std/fs/exists";
-import { serveDir, serveFile } from "jsr:@std/http/file-server";
 import {
   convertSearchParams,
   errorHandler,
@@ -12,11 +11,14 @@ import {
   renderServerPage,
 } from "./utils.tsx";
 import { createError } from "../errors.ts";
+// @deno-types="npm:@types/mime-types"
+import { lookup } from 'npm:mime-types'
 
 export default function serve(
   options: ServerProdOptions,
   config: NikeConfig,
   routerMap: RouterMap,
+  components: Record<string, any>
 ) {
   return Deno.serve({
     hostname: config.server?.host ?? "localhost",
@@ -40,6 +42,8 @@ export default function serve(
           fullPath: pathname + url.search + url.hash,
         };
 
+        const component = components[routeInfo.original];
+
         if (routeInfo.server) {
           const serverReqObj = {
             req,
@@ -51,6 +55,7 @@ export default function serve(
               routeInfo,
               options,
               reqObj: serverReqObj,
+              component
             });
             return v;
           } catch (e) {
@@ -63,12 +68,24 @@ export default function serve(
             });
           }
         } else {
+          try {
+            return await renderClientPage({ routeInfo, options, reqObj, config, component });
+          } catch (e) {
+            const err = e as Error;
+            console.error(err);
+            throw createError({
+              name: err.name,
+              message: err.message,
+              cause: err,
+            });
+          }
           // serve client route with nanojsx
-          return await renderClientPage({ routeInfo, options, reqObj, config });
+          
         }
       }
 
       const publicDir = join(
+        "out",
         join(options.outDir, "client"),
         config.publicDir ?? "public",
       );
@@ -80,9 +97,16 @@ export default function serve(
           ),
         )
       ) {
-        return await serveDir(req, {
-          fsRoot: publicDir,
-        });
+        const publicFilePath = join(
+          publicDir,
+          pathname.startsWith("/") ? pathname.replace("/", "") : pathname
+        );
+
+        return new Response(Deno.readTextFileSync(publicFilePath), {
+          headers: {
+            "content-type": (lookup(publicFilePath) === false ? "text/plain" : lookup(publicFilePath)).toString(),
+          }
+        })
       }
 
       if (
@@ -93,13 +117,16 @@ export default function serve(
           ),
         )
       ) {
-        return await serveFile(
-          req,
-          join(
-            options.outDir ?? ".",
-            pathname.startsWith("/") ? pathname.replace("/", "") : pathname,
-          ),
+        const path = join(
+          options.outDir ?? ".",
+          pathname.startsWith("/") ? pathname.replace("/", "") : pathname,
         );
+
+        return new Response(Deno.readTextFileSync(path), {
+          headers: {
+            "content-type": (lookup(path) === false ? "text/plain" : lookup(path)).toString(),
+          }
+        })
       }
 
       throw createError({

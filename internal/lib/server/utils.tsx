@@ -13,7 +13,7 @@ import { MainTemplate } from "../../types/ejs.ts";
 import { render as ejsRender } from "npm:ejs";
 import { BaseError, InternalError } from "../errors.ts";
 import { ClientModule, ServerModule } from "../../types/pages.ts";
-import { ClientRequest } from "../../lib/client.ts";
+import { ClientRequest, ClientRoute } from "../../lib/client.ts";
 import { APIRequest } from "../../lib/api.ts";
 import { AppEntryOptions } from "~/internal/types/templates.ts";
 
@@ -35,6 +35,7 @@ interface DevServerPageOptions extends ServerPageOptions {
 
 interface ProdServerPageOptions extends ServerPageOptions {
   options: ServerProdOptions;
+  component?: (api: APIRequest) => Promise<Response> | Response;
 }
 
 interface ClientPageOptions {
@@ -49,6 +50,7 @@ interface DevClientPageOptions extends ClientPageOptions {
 
 interface ProdClientPageOptions extends ClientPageOptions {
   options: ServerProdOptions;
+  component?: ClientRoute;
 }
 
 export async function renderServerPage(
@@ -56,6 +58,7 @@ export async function renderServerPage(
 ) {
   let path;
   const reqObj = options.reqObj;
+
   if ("cwd" in options) {
     path = toFileUrl(join(options.cwd, "pages", options.routeInfo.raw)).href;
   } else {
@@ -66,6 +69,12 @@ export async function renderServerPage(
         toFileUrl(options.routeInfo.fullPath).href,
       )
       : options.routeInfo.fullPath;
+  }
+
+  if ("options" in options) {
+    if (options.component) {
+      return await options.component(reqObj);
+    }
   }
 
   const resp = import(path)
@@ -101,6 +110,7 @@ export async function renderClientPage(
       options.config,
       join(options.options.outDir, options.options.tailwind),
       options.options.pages.main,
+      options.component
     );
   }
 }
@@ -117,18 +127,11 @@ async function renderClientPageFunc(
   config: NikeConfig,
   tailwindPath: string,
   ejs: string,
+  component?: ClientRoute,
 ) {
   let pageMeta: AppEntryOptions | undefined = config.app;
-  const response = await import(path)
-    .then((pagefile: ClientModule) => {
-      const Page = pagefile.default.handler;
-      pageMeta = mergeMeta(pagefile.default.pageMeta ?? {}, pageMeta);
-      const styles = (pagefile.default.overrideGlobal ? "" : pageCss) +
-        (pagefile.default.style ?? "");
-
-      const pageOut = renderSSR(() => withStyles(styles)(<Page {...reqObj} />));
-      return pageOut;
-    });
+  const response = component ? renderPage(component) : await import(path)
+    .then((pagefile: ClientModule) => renderPage(pagefile.default));
 
   const meta = pageMeta?.head?.meta ?? [];
 
@@ -161,6 +164,16 @@ async function renderClientPageFunc(
       "content-type": "text/html",
     },
   });
+
+function renderPage(pagefile: ClientRoute) {
+  const Page = pagefile.handler;
+  pageMeta = mergeMeta(pagefile.pageMeta ?? {}, pageMeta);
+  const styles = (pagefile.overrideGlobal ? "" : pageCss) +
+    (pagefile.style ?? "");
+
+  const pageOut = renderSSR(() => withStyles(styles)(<Page {...reqObj} />));
+  return pageOut;
+}
 }
 
 export function convertSearchParams(searchParams: URLSearchParams) {

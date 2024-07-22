@@ -33,8 +33,7 @@ for await (
   }
   componentExportFileData += `export * from "./${
     relPath.replaceAll("\\", "\\\\")
-  }";`;
-  componentExportFileData += "\n";
+  }";\n`;
 }
 
 await Deno.writeTextFile(componentExportFile, componentExportFileData);

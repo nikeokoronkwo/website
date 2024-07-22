@@ -23,10 +23,15 @@ import { denoPlugins } from "jsr:@luca/esbuild-deno-loader@^0.10.3";
 import commonjsPlugin from "npm:@chialab/esbuild-plugin-commonjs";
 
 import "../lib/meta/prod.js";
+import { parseArgs } from "jsr:@std/cli@^0.224.7/parse-args";
 
 const logger = new Logger();
 const runner = new Runner(logger);
 console.log(bold("Building the Production Server"));
+const args = parseArgs(Deno.args, {
+  boolean: ["single"],
+  default: { single: true }
+})
 
 // set constants
 logger.info("Setting up");
@@ -68,6 +73,15 @@ await runner.run(Deno.execPath(), [
   "--allow-read",
   "--allow-write",
   "internal/scripts/gen_components.js",
+]);
+logger.fine("Done");
+
+logger.info("Pages...");
+await runner.run(Deno.execPath(), [
+  "run",
+  "--allow-read",
+  "--allow-write",
+  "internal/scripts/gen_routes.js",
 ]);
 logger.fine("Done");
 
@@ -158,7 +172,10 @@ const routerMap = buildRouter(cwd);
 
 await Deno.mkdir(outClientDir, { recursive: true });
 
-if (!(config.build.singleBundle ?? false)) {
+if (args.single) {
+  // skip
+  logger.info("Single Build -- Pages Not Rendered Separately ")
+} else {
   await esbuild.build({
     entryPoints: Array.from(routerMap.entries()).map((e) => e[1].fullPath),
     bundle: true,
@@ -177,17 +194,18 @@ if (!(config.build.singleBundle ?? false)) {
       .replace(extname(v.fullPath), ".js");
     routerMap[k] = newV;
   }
+
+  // TODO: Exclude all these specific file rendering and do it in a configurable way
+  Deno.writeTextFileSync(
+    join(outDir, "client/blog/[name]/index.server.js"),
+    Deno.readTextFileSync(
+      join(outDir, "client/blog/[name]/index.server.js"),
+    ).replaceAll('from "url"', 'from "node:url"').replaceAll('from "fs"', 'from "node:fs"').replaceAll('from "path"', 'from "node:path"')
+  );
+
+  logger.fine("Bundled Pages!");
 }
 
-// TODO: Exclude all these specific file rendering and do it in a configurable way
-Deno.writeTextFileSync(
-  join(outDir, "client/blog/[name]/index.server.js"),
-  Deno.readTextFileSync(
-    join(outDir, "client/blog/[name]/index.server.js"),
-  ).replaceAll('from "url"', 'from "node:url"').replaceAll('from "fs"', 'from "node:fs"').replaceAll('from "path"', 'from "node:path"')
-);
-
-logger.fine("Bundled Pages!");
 // if not then create imports and import into server file
 
 // build router map
@@ -232,6 +250,7 @@ for await (
   );
 }
 
+// bundling assets
 logger.info("Bundling Assets");
 logger.warn("Assets are only copied at the moment");
 await Deno.mkdir(join(outDir, "assets"));
@@ -256,9 +275,11 @@ for await (
   );
 }
 
+// bundling svgs
 logger.info("Using SVGO to optimize SVGs")
-const res = await runner.run(Deno.execPath(), ["run", "-A", "npm:svgo", "-f", join(cwd, "assets", "svg") , "-o", join(outDir, "assets", "svg")])
+await runner.run(Deno.execPath(), ["run", "-A", "npm:svgo", "-f", join(cwd, "assets", "svg") , "-o", join(outDir, "assets", "svg")])
 
+// bundling content
 logger.info("Bundling Content");
 logger.warn("Content are only copied at the moment");
 await Deno.mkdir(join(outDir, "content"));
@@ -308,8 +329,15 @@ Deno.writeTextFileSync(
   ).replaceAll('from "fs"', 'from "node:fs"').replaceAll(
     'from "path"',
     'from "node:path"',
-  ),
+  ).replaceAll('from "url"', 'from "node:url"'),
 );
+
+logger.info("Minifying Server")
+await esbuild.build({
+  entryPoints: [join(outDir, "server.js")],
+  outfile: join(outDir, "server.min.js"),
+  minify: true,
+});
 
 logger.fine(`Server built at ${join(outDir, "server.js")}`);
 Deno.exit(0);
