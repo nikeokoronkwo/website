@@ -4,23 +4,34 @@
     "gen": "deno run -A internal/scripts/gen.js",
     "dev": "deno run -A --watch internal/commands/dev.js",
     "deploy:dev": "deployctl deploy --project=nikechukwu --entrypoint=out/server.js --include=./out --dry-run",
-    "deploy": "deployctl deploy --project=nikechukwu --entrypoint=out/server.js --include=./out",
-    "deploy:prod": "deployctl deploy --project=nikechukwu --entrypoint=out/server.js --include=./out --prod",
+    "deploy": "deno task build && cd out && deployctl deploy --project=nikechukwu --entrypoint=./server.js --include=./client",
+    "deploy:prod": "deno task build && deployctl deploy --project=nikechukwu --entrypoint=out/server.js --include=./out --prod",
     "build": "deno run -A internal/commands/build.js",
     "prod": "deno task build && deno run -A ./out/server.js",
     "test": "deno test --allow-read --allow-sys",
     "format": "deno fmt ."
   },
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "dom.asynciterable", "deno.ns"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable",
+      "deno.ns"
+    ],
     "jsx": "react-jsx",
     "jsxImportSource": "nano_jsx"
   },
   "lint": {
-    "exclude": ["out/**", "private/**"]
+    "exclude": [
+      "out/**",
+      "private/**"
+    ]
   },
   "fmt": {
-    "exclude": ["out/**", "private/**"]
+    "exclude": [
+      "out/**",
+      "private/**"
+    ]
   },
   "imports": {
     "nano_jsx/jsx-runtime": "https://deno.land/x/nano_jsx@v0.1.0/jsx-runtime/index.ts",
