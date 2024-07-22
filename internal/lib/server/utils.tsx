@@ -1,21 +1,23 @@
 // deno-lint-ignore-file no-explicit-any
-import { toFileUrl } from "jsr:@std/path/to-file-url";
-import { RouteInfo } from "../router.ts";
-import { ServerProdOptions } from "./options.ts";
-import { join } from "jsr:@std/path/join";
-import { isAbsolute } from "jsr:@std/path/is-absolute";
-import { relative } from "jsr:@std/path/relative";
-import { NikeConfig } from "../config.ts";
-import { renderSSR } from "https://deno.land/x/nano_jsx@v0.1.0/ssr.ts";
-import { withStyles } from "https://deno.land/x/nano_jsx@v0.1.0/withStyles.ts";
-import { MainTemplate } from "../../types/ejs.ts";
-// @deno-types="npm:@types/ejs"
-import { render as ejsRender } from "npm:ejs";
+import {
+  ejsRender,
+  isAbsolute,
+  join,
+  relative,
+  renderSSR,
+  toFileUrl,
+  withStyles,
+} from "../../deps.ts";
+
 import { BaseError, InternalError } from "../errors.ts";
 import { ClientModule, ServerModule } from "../../types/pages.ts";
 import { ClientRequest, ClientRoute } from "../../lib/client.ts";
 import { APIRequest } from "../../lib/api.ts";
-import { AppEntryOptions } from "~/internal/types/templates.ts";
+import { AppEntryOptions } from "../../types/templates.ts";
+import { RouteInfo } from "../router.ts";
+import { ServerProdOptions } from "./options.ts";
+import { MainTemplate } from "../../types/ejs.ts";
+import { NikeConfig } from "../config.ts";
 
 const pageCss = `
 body {
@@ -110,7 +112,7 @@ export async function renderClientPage(
       options.config,
       join(options.options.outDir, options.options.tailwind),
       options.options.pages.main,
-      options.component
+      options.component,
     );
   }
 }
@@ -136,10 +138,12 @@ async function renderClientPageFunc(
   const meta = pageMeta?.head?.meta ?? [];
 
   for (const [k, v] of Object.entries(config.seo ?? {})) {
-    if (!(meta.find(m => m.name === k))) meta.push({
-      name: camelToColonCase(k),
-      content: typeof v === "string" ? v : v.join(", ")
-    });
+    if (!(meta.find((m) => m.name === k))) {
+      meta.push({
+        name: camelToColonCase(k),
+        content: typeof v === "string" ? v : v.join(", "),
+      });
+    }
   }
 
   const mainTemplateOptions: MainTemplate = {
@@ -165,15 +169,15 @@ async function renderClientPageFunc(
     },
   });
 
-function renderPage(pagefile: ClientRoute) {
-  const Page = pagefile.handler;
-  pageMeta = mergeMeta(pagefile.pageMeta ?? {}, pageMeta);
-  const styles = (pagefile.overrideGlobal ? "" : pageCss) +
-    (pagefile.style ?? "");
+  function renderPage(pagefile: ClientRoute) {
+    const Page = pagefile.handler;
+    pageMeta = mergeMeta(pagefile.pageMeta ?? {}, pageMeta);
+    const styles = (pagefile.overrideGlobal ? "" : pageCss) +
+      (pagefile.style ?? "");
 
-  const pageOut = renderSSR(() => withStyles(styles)(<Page {...reqObj} />));
-  return pageOut;
-}
+    const pageOut = renderSSR(() => withStyles(styles)(<Page {...reqObj} />));
+    return pageOut;
+  }
 }
 
 export function convertSearchParams(searchParams: URLSearchParams) {
@@ -282,5 +286,5 @@ function mergeRecords<T extends keyof any, U>(
 }
 
 function camelToColonCase(str: string): string {
-  return str.replace(/([A-Z])/g, (match) => ':' + match.toLowerCase());
+  return str.replace(/([A-Z])/g, (match) => ":" + match.toLowerCase());
 }

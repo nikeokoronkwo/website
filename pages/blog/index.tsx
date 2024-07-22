@@ -1,11 +1,11 @@
 import { definePage } from "#client";
-import { walkSync } from "jsr:@std/fs/walk";
-import { join } from "jsr:@std/path/join";
+import { walkSync } from "@std/fs/walk";
+import { join } from "@std/path/join";
 import { Layout } from "#components";
 
-import { matter } from "https://esm.sh/vfile-matter";
-import { readSync } from "https://esm.sh/to-vfile";
-import { extname } from "jsr:@std/path@1.0.1/extname";
+import { matter } from "vfile-matter";
+import { readSync } from "to-vfile";
+import { extname } from "@std/path/extname";
 
 /**
  * @todo Pass the blog directory as prop for this component,

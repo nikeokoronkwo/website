@@ -1,5 +1,5 @@
 import { ClientRoute } from "../lib/client.ts";
-import { APIRequest } from "~/internal/lib/api.ts";
+import { APIRequest } from "../lib/api.ts";
 
 export interface ClientModule {
   default: ClientRoute;

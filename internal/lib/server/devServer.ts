@@ -1,8 +1,5 @@
-import { existsSync } from "jsr:@std/fs/exists";
+import { existsSync, join, serveDir, serveFile } from "../../deps.ts";
 import { createError } from "../errors.ts";
-import { join } from "jsr:@std/path";
-import { serveDir } from "jsr:@std/http";
-
 import { getRouterParams } from "../router.ts";
 import { NikeConfig } from "../config.ts";
 import { RouterMap } from "../RouterMap.ts";
@@ -12,7 +9,6 @@ import {
   renderClientPage,
   renderServerPage,
 } from "./utils.tsx";
-import { serveFile } from "jsr:@std/http/file-server";
 import { ClientRequest } from "../../lib/client.ts";
 import { APIRequest } from "../../lib/api.ts";
 

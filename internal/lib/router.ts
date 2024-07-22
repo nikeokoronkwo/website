@@ -1,10 +1,12 @@
-import { join } from "jsr:@std/path/join";
-import { walkSync } from "jsr:@std/fs/walk";
-import { globToRegExp } from "jsr:@std/path/glob-to-regexp";
-import { extname } from "jsr:@std/path/extname";
-import { relative } from "jsr:@std/path/relative";
-import { SEPARATOR } from "jsr:@std/path/constants";
-import { basename } from "jsr:@std/path/basename";
+import {
+  basename,
+  extname,
+  globToRegExp,
+  join,
+  relative,
+  SEPARATOR,
+  walkSync,
+} from "../deps.ts";
 
 export interface RouteInfo {
   /** The name of the file/path route */

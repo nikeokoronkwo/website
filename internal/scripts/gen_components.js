@@ -1,11 +1,13 @@
-import { join } from "jsr:@std/path/join";
-import { walk } from "jsr:@std/fs/walk";
-import { relative } from "jsr:@std/path/relative";
-import { normalize } from "jsr:@std/path/normalize";
-import { SEPARATOR } from "jsr:@std/path/constants";
-import { extname } from "jsr:@std/path/extname";
-import { basename } from "jsr:@std/path@^0.225.1/basename";
-import { exists } from "jsr:@std/fs/exists";
+import {
+  basename,
+  exists,
+  extname,
+  join,
+  normalize,
+  relative,
+  SEPARATOR,
+  walk,
+} from "../deps.ts";
 
 const cwd = Deno.cwd();
 const componentDir = join(cwd, "components");

@@ -9,7 +9,10 @@
     "build": "deno run -A internal/commands/build.js",
     "prod": "deno task build && deno run -A ./out/server.js",
     "test": "deno test --allow-read --allow-sys",
-    "format": "deno fmt ."
+    "format": "deno fmt .",
+    "esm:add": "deno run -A https://esm.sh/v135 add",
+    "esm:update": "deno run -A https://esm.sh/v135 update",
+    "esm:remove": "deno run -A https://esm.sh/v135 remove"
   },
   "compilerOptions": {
     "lib": [
@@ -34,11 +37,21 @@
     ]
   },
   "imports": {
-    "nano_jsx/jsx-runtime": "https://deno.land/x/nano_jsx@v0.1.0/jsx-runtime/index.ts",
     "#client": "./internal/exports/client.ts",
+    "#components": "./components/index.tsx",
     "#lib": "./lib/index.ts",
     "#module": "./internal/exports/module.ts",
-    "#components": "./components/index.tsx",
+    "@std/fs": "jsr:@std/fs@^0.229.3",
+    "@std/path": "jsr:@std/path@^1.0.1",
+    "nano_jsx/jsx-runtime": "https://deno.land/x/nano_jsx@v0.1.0/jsx-runtime/index.ts",
+    "to-vfile": "https://esm.sh/v135/*to-vfile@8.0.0",
+    "vfile-matter": "https://esm.sh/v135/*vfile-matter@5.0.0",
     "~/": "./"
+  },
+  "scopes": {
+    "https://esm.sh/v135/": {
+      "vfile": "https://esm.sh/v135/vfile@6.0.2",
+      "yaml": "https://esm.sh/v135/yaml@2.4.5"
+    }
   }
 }

@@ -1,6 +1,4 @@
-import { assert } from "jsr:@std/assert@1/assert";
-import { assertEquals } from "jsr:@std/assert@1/equals";
-import { assertThrows } from "jsr:@std/assert@1/throws";
+import { assert, assertEquals, assertThrows } from "../test_deps.ts";
 
 // test
 import { getRouterParams, resolvePath } from "../lib/router.ts";

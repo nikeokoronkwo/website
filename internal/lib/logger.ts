@@ -1,12 +1,4 @@
-import {
-  blue,
-  bold,
-  gray,
-  green,
-  magenta,
-  red,
-  yellow,
-} from "jsr:@std/fmt/colors";
+import { blue, bold, gray, green, magenta, red, yellow } from "../deps.ts";
 
 type LogMode = "info" | "warn" | "error" | "fine" | "cmd";
 

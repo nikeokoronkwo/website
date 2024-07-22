@@ -1,9 +1,5 @@
-import { join } from "jsr:@std/path";
-import { NikeConfig } from "../config.ts";
-import { ServerProdOptions } from "./options.ts";
-import { getRouterParams } from "../router.ts";
-import { RouterMap } from "../RouterMap.ts";
-import { existsSync } from "jsr:@std/fs/exists";
+import { existsSync, join, lookup } from "../../deps.ts";
+
 import {
   convertSearchParams,
   errorHandler,
@@ -11,14 +7,16 @@ import {
   renderServerPage,
 } from "./utils.tsx";
 import { createError } from "../errors.ts";
-// @deno-types="npm:@types/mime-types"
-import { lookup } from 'npm:mime-types'
+import { NikeConfig } from "../config.ts";
+import { ServerProdOptions } from "./options.ts";
+import { getRouterParams } from "../router.ts";
+import { RouterMap } from "../RouterMap.ts";
 
 export default function serve(
   options: ServerProdOptions,
   config: NikeConfig,
   routerMap: RouterMap,
-  components: Record<string, any>
+  components: Record<string, any>,
 ) {
   return Deno.serve({
     hostname: config.server?.host ?? "localhost",
@@ -55,7 +53,7 @@ export default function serve(
               routeInfo,
               options,
               reqObj: serverReqObj,
-              component
+              component,
             });
             return v;
           } catch (e) {
@@ -69,7 +67,13 @@ export default function serve(
           }
         } else {
           try {
-            return await renderClientPage({ routeInfo, options, reqObj, config, component });
+            return await renderClientPage({
+              routeInfo,
+              options,
+              reqObj,
+              config,
+              component,
+            });
           } catch (e) {
             const err = e as Error;
             console.error(err);
@@ -80,7 +84,6 @@ export default function serve(
             });
           }
           // serve client route with nanojsx
-          
         }
       }
 
@@ -99,14 +102,16 @@ export default function serve(
       ) {
         const publicFilePath = join(
           publicDir,
-          pathname.startsWith("/") ? pathname.replace("/", "") : pathname
+          pathname.startsWith("/") ? pathname.replace("/", "") : pathname,
         );
 
         return new Response(Deno.readTextFileSync(publicFilePath), {
           headers: {
-            "content-type": (lookup(publicFilePath) === false ? "text/plain" : lookup(publicFilePath)).toString(),
-          }
-        })
+            "content-type": (lookup(publicFilePath) === false
+              ? "text/plain"
+              : lookup(publicFilePath)).toString(),
+          },
+        });
       }
 
       if (
@@ -124,9 +129,10 @@ export default function serve(
 
         return new Response(Deno.readTextFileSync(path), {
           headers: {
-            "content-type": (lookup(path) === false ? "text/plain" : lookup(path)).toString(),
-          }
-        })
+            "content-type":
+              (lookup(path) === false ? "text/plain" : lookup(path)).toString(),
+          },
+        });
       }
 
       throw createError({

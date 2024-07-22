@@ -1,7 +1,4 @@
-import { assertEquals } from "jsr:@std/assert/equals";
-
-import { format } from "npm:prettier";
-import * as ejs from "npm:ejs";
+import { assertEquals, ejs, format } from "../test_deps.ts";
 
 async function assertMLSEquals(actual, expected, parser, msg) {
   parser ??= "html";
@@ -29,7 +26,7 @@ Deno.test({
         bodyAttrs: [],
         bodyScript: [],
         body: "",
-        tailwind: "/output.css"
+        tailwind: "/output.css",
       }),
       `<!DOCTYPE html>
 <html lang="en">

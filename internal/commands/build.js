@@ -2,36 +2,38 @@
 // 1. Bundle as single file
 // 2. Perform dynamic import for page files (code splitting)
 
-import { join } from "jsr:@std/path/join";
+import {
+  basename,
+  bold,
+  commonjsPlugin,
+  delay,
+  denoPlugins,
+  dim,
+  esbuild,
+  exists,
+  extname,
+  join,
+  loadConfig,
+  parseArgs,
+  relative,
+  walk,
+} from "../deps.ts";
 import { Logger } from "../lib/logger.ts";
 import { Runner } from "../lib/runner.ts";
-import { bold, dim } from "jsr:@std/fmt/colors";
-import { relative } from "jsr:@std/path/relative";
-import { exists } from "jsr:@std/fs/exists";
-import { walk } from "jsr:@std/fs/walk";
-import { basename, extname } from "jsr:@std/path";
-import { loadConfig } from "npm:c12";
 import { defaultConfig } from "../lib/config.ts";
 import renderEjs from "../scripts/render_ejs.js";
 import { buildRouter } from "../lib/router.ts";
 import deno from "../../deno.json" with { type: "json" };
-import { delay } from "jsr:@std/async/delay";
-
-// @deno-types="https://deno.land/x/esbuild/mod.d.ts"
-import * as esbuild from "https://deno.land/x/esbuild/mod.js";
-import { denoPlugins } from "jsr:@luca/esbuild-deno-loader@^0.10.3";
-import commonjsPlugin from "npm:@chialab/esbuild-plugin-commonjs";
 
 import "../lib/meta/prod.js";
-import { parseArgs } from "jsr:@std/cli@^0.224.7/parse-args";
 
 const logger = new Logger();
 const runner = new Runner(logger);
 console.log(bold("Building the Production Server"));
 const args = parseArgs(Deno.args, {
   boolean: ["single"],
-  default: { single: true }
-})
+  default: { single: true },
+});
 
 // set constants
 logger.info("Setting up");
@@ -107,8 +109,6 @@ if (
   }
 }
 
-
-
 // await runner.run(Deno.execPath(), ["run", "-A", "./internal/scripts/render_ejs.js"]);
 const ejsMap = await renderEjs(false);
 logger.fine("EJS Rendered!");
@@ -174,7 +174,7 @@ await Deno.mkdir(outClientDir, { recursive: true });
 
 if (args.single) {
   // skip
-  logger.info("Single Build -- Pages Not Rendered Separately ")
+  logger.info("Single Build -- Pages Not Rendered Separately ");
 } else {
   await esbuild.build({
     entryPoints: Array.from(routerMap.entries()).map((e) => e[1].fullPath),
@@ -183,9 +183,12 @@ if (args.single) {
     format: "esm",
     jsx: "automatic",
     jsxImportSource: deno.compilerOptions.jsxImportSource,
-    plugins: [...denoPlugins({
-      configPath: join(cwd, "deno.json"),
-    }), commonjsPlugin()],
+    plugins: [
+      ...denoPlugins({
+        configPath: join(cwd, "deno.json"),
+      }),
+      commonjsPlugin(),
+    ],
   });
 
   for (const [k, v] of Array.from(routerMap.entries())) {
@@ -200,7 +203,10 @@ if (args.single) {
     join(outDir, "client/blog/[name]/index.server.js"),
     Deno.readTextFileSync(
       join(outDir, "client/blog/[name]/index.server.js"),
-    ).replaceAll('from "url"', 'from "node:url"').replaceAll('from "fs"', 'from "node:fs"').replaceAll('from "path"', 'from "node:path"')
+    ).replaceAll('from "url"', 'from "node:url"').replaceAll(
+      'from "fs"',
+      'from "node:fs"',
+    ).replaceAll('from "path"', 'from "node:path"'),
   );
 
   logger.fine("Bundled Pages!");
@@ -276,8 +282,16 @@ for await (
 }
 
 // bundling svgs
-logger.info("Using SVGO to optimize SVGs")
-await runner.run(Deno.execPath(), ["run", "-A", "npm:svgo", "-f", join(cwd, "assets", "svg") , "-o", join(outDir, "assets", "svg")])
+logger.info("Using SVGO to optimize SVGs");
+await runner.run(Deno.execPath(), [
+  "run",
+  "-A",
+  "npm:svgo",
+  "-f",
+  join(cwd, "assets", "svg"),
+  "-o",
+  join(outDir, "assets", "svg"),
+]);
 
 // bundling content
 logger.info("Bundling Content");
@@ -332,14 +346,14 @@ Deno.writeTextFileSync(
   ).replaceAll('from "url"', 'from "node:url"'),
 );
 
-logger.info("Minifying Server")
+logger.info("Minifying Server");
 await esbuild.build({
   entryPoints: [join(outDir, "server.js")],
   outfile: join(outDir, "server.min.js"),
   minify: true,
   plugins: [...denoPlugins({
     configPath: join(cwd, "deno.json"),
-  })]
+  })],
 });
 
 logger.fine(`Server built at ${join(outDir, "server.js")}`);

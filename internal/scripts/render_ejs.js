@@ -1,11 +1,13 @@
 #!/usr/bin/env deno
 
-import { extname } from "jsr:@std/path/extname";
-import { walkSync } from "jsr:@std/fs/walk";
-import { join } from "jsr:@std/path/join";
-import { relative } from "jsr:@std/path/relative";
-import { SEPARATOR } from "jsr:@std/path/constants";
-import { format } from "npm:prettier";
+import {
+  extname,
+  format,
+  join,
+  relative,
+  SEPARATOR,
+  walkSync,
+} from "../deps.ts";
 
 /**
  * @param {boolean} [mkjsFile] Make the javascript files
