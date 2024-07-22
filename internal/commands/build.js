@@ -145,7 +145,7 @@ const stringProdOptions = `{
   ).map((e) => `${e[0]}: ${e[1]}`).join(", ")
 }},
     outDir: ".",
-    tailwind: "./${relative(cwd, tailwindOutput)}"
+    tailwind: "./${relative(outDir, tailwindOutput)}"
 }`;
 
 // write to files
@@ -337,6 +337,9 @@ await esbuild.build({
   entryPoints: [join(outDir, "server.js")],
   outfile: join(outDir, "server.min.js"),
   minify: true,
+  plugins: [...denoPlugins({
+    configPath: join(cwd, "deno.json"),
+  })]
 });
 
 logger.fine(`Server built at ${join(outDir, "server.js")}`);
