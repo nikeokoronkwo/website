@@ -20,3 +20,5 @@ styles/output.*.css
 components/index.tsx
 
 pages/main.*
+
+node_modules

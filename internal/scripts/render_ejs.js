@@ -2,7 +2,7 @@
 
 import {
   extname,
-  format,
+  // format,
   join,
   relative,
   SEPARATOR,
@@ -40,11 +40,11 @@ async function renderEjs(mkjsFile) {
       `;
 
       try {
-        await format(fileContents, { semi: true, parser: "babel" }).then(
-          (formatted) => {
-            Deno.writeTextFileSync(file.path.replace(".ejs", ".js"), formatted);
-          },
-        );
+        // await format(fileContents, { semi: true, parser: "babel" }).then(
+        //   (formatted) => {
+            Deno.writeTextFileSync(file.path.replace(".ejs", ".js"), /* formatted */ fileContents);
+          // },
+        // );
       } catch (_) {
         Deno.writeTextFileSync(file.path.replace(".ejs", ".js"), fileContents);
       }

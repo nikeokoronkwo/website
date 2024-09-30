@@ -1,4 +1,5 @@
-import { existsSync, join, serveDir, serveFile } from "../../deps.ts";
+import { existsSync, join } from "../../deps.ts";
+import { serveDir, serveFile } from "../../dev_deps.ts";
 import { createError } from "../errors.ts";
 import { getRouterParams } from "../router.ts";
 import { NikeConfig } from "../config.ts";

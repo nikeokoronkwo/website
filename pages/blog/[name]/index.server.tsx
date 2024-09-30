@@ -1,3 +1,5 @@
+/** @jsxImportSource https://esm.sh/preact */
+
 /// <reference no-default-lib="true" />
 /// <reference lib="dom" />
 /// <reference lib="dom.iterable" />
@@ -15,7 +17,11 @@ import { compile } from "https://esm.sh/@mdx-js/mdx";
 import remarkedGfm from "https://esm.sh/remark-gfm";
 import remarkFrontmatter from "https://esm.sh/remark-frontmatter";
 import remarkMdxFrontmatter from "https://esm.sh/remark-mdx-frontmatter@^4";
-import { renderSSR } from "https://deno.land/x/nano_jsx@v0.1.0/ssr.ts";
+import {
+  // renderToString,
+  // renderToStringAsync,
+  render
+} from "https://esm.sh/preact-render-to-string";
 
 import sanitize from 'npm:sanitize-html';
 
@@ -149,7 +155,7 @@ export default defineRoute(async (req) => {
               remarkFrontmatter,
               remarkMdxFrontmatter,
             ],
-            jsxImportSource: "nano_jsx",
+            jsxImportSource: "https://esm.sh/preact",
           });
 
           const mdxFile = await import(`data:text/javascript, ${mdx}`);
@@ -157,7 +163,7 @@ export default defineRoute(async (req) => {
 
           const Component = mdxFile.default;
           // nano jsx render
-          src = sanitize(renderSSR(() => <Component />));
+          src = sanitize(render(<Component />));
         }
 
         break;
@@ -174,7 +180,7 @@ export default defineRoute(async (req) => {
               remarkFrontmatter,
               remarkMdxFrontmatter,
             ],
-            jsxImportSource: "nano_jsx",
+            jsxImportSource: "https://esm.sh/preact",
           });
 
           const mdxFile = await import(`data:text/javascript, ${mdx}`);
@@ -182,7 +188,7 @@ export default defineRoute(async (req) => {
 
           const Component = mdxFile.default;
           // nano jsx render
-          src = sanitize(renderSSR(() => <Component />));
+          src = sanitize(render(<Component />));
         }
         break;
       default:

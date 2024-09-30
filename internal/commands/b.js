@@ -23,11 +23,12 @@ import { Runner } from "../lib/runner.ts";
 import { defaultConfig } from "../lib/config.ts";
 import renderEjs from "../scripts/render_ejs.js";
 import { buildRouter } from "../lib/router.ts";
-import ignorePlugin from "npm:esbuild-plugin-ignore";
-import { builtinModules } from "node:module"
 import deno from "../../deno.json" with { type: "json" };
 
+import { builtinModules } from "node:module";
+
 import "../lib/meta/prod.js";
+
 
 const args = parseArgs(Deno.args, {
   boolean: ["single", "verbose"],
@@ -38,13 +39,11 @@ const logger = args.verbose ? Logger.verbose() : new Logger();
 const runner = new Runner(logger);
 console.log(bold("Building the Production Server"));
 
-
 // set constants
 logger.info("Setting up");
 const cwd = Deno.cwd();
 const outDir = join(cwd, "out");
 const outClientDir = join(outDir, "client");
-
 
 // const scriptsDir = join(cwd, "internal", "scripts");
 const templateDir = join(cwd, "internal", "templates");
@@ -188,7 +187,7 @@ if (args.single) {
       ...denoPlugins({
         configPath: join(cwd, "deno.json"),
       }),
-      // commonjsPlugin(),
+      commonjsPlugin(),
     ],
   });
 
@@ -322,63 +321,75 @@ for await (
 logger.info("Building Server");
 const serverFile = join(runnersDir, "prod_server.js");
 
-await esbuild.build({
+/**
+ * @todo export this to dyte
+ * @see {@link https://github.com/nikeokoronkwo/dyte}
+ * 
+ * @type {string[]}
+ */
+const builtins = builtinModules;
+
+const filter = new RegExp(`^(${builtins.join('|')})$`) ;
+
+/** @type {esbuild.Plugin} */
+const nodeImportPlugin = {
+    name: "node-import-resolver",
+    setup(build) {
+      build.onResolve({ filter: /^node:/ }, (args) => {
+        // console.log(args);
+        return { path: args.path, external: true };
+      });
+
+      
+        // build.onResolve({ filter: /^crypto/ }, (args) => {
+        //   console.log(args, args.path);
+        //   return { path: "node:" + args.path, external: true };
+        // });
+    }    
+}
+
+const output = await esbuild.build({
   entryPoints: [serverFile],
   outfile: join(outDir, "server.js"),
+  metafile: true,
   bundle: true,
   format: "esm",
   jsx: "automatic",
-  // target: 'esnext',
+  loader: {
+    ".node": "file",
+  },
+  external: ['esbuild', 'https://deno.land/x/esbuild/mod.js', "npm:esbuild"],
   jsxImportSource: deno.compilerOptions.jsxImportSource,
   plugins: [
     ...denoPlugins({
       configPath: join(cwd, "deno.json"),
-    }),
-    // commonjsPlugin(),
+    }), nodeImportPlugin
   ],
 });
 
-let serverFilee = Deno.readTextFileSync(
-  join(outDir, "server.js"),
+Deno.writeTextFileSync("./foo.json", JSON.stringify(output.metafile));
+
+logger.info("Resolving node imports")
+let newLocal = Deno.readTextFileSync(
+  join(outDir, "server.js")
 );
 
-
-for (const imp of [...builtinModules]) {
-  serverFilee = serverFilee.replaceAll(`from "${imp}"`, `from "node:${imp}"`)
-  .replaceAll(`import "${imp}"`, `import "node:${imp}"`);
+for (const b of builtinModules) {
+  newLocal = newLocal.replaceAll(`from "${b}"`, `from "node:${b}"`)
 }
 
 Deno.writeTextFileSync(
   join(outDir, "server.js"),
-  serverFilee
+  newLocal
 );
 
-// logger.info("Minifying Server");
-// await esbuild.build({
-//   entryPoints: [join(outDir, "server.js")],
-//   outfile: join(outDir, "server.min.js"),
-//   minify: true,
-//   plugins: [...denoPlugins({
-//     configPath: join(cwd, "deno.json"),
-//   })],
-// });
-
-// const nodeImports = ["fs", "url", "path", "crypto", "process"];
-// let serverMinFile = Deno.readTextFileSync(
-//   join(outDir, "server.min.js"),
-// );
-
-// console.log(builtinModules, nodeImports)
-
-// for (const imp of [...builtinModules]) {
-//   serverMinFile = serverMinFile.replaceAll(`from"${imp}"`, `from"node:${imp}"`)
-//   .replaceAll(`import"${imp}"`, `import"node:${imp}"`);
-// }
-
-// Deno.writeTextFileSync(
-//   join(outDir, "server.min.js"),
-//   serverMinFile
-// );
+logger.info("Minifying Server");
+await esbuild.build({
+  entryPoints: [join(outDir, "server.js")],
+  outfile: join(outDir, "server.min.js"),
+  minify: true,
+  plugins: [nodeImportPlugin],
+});
 
 logger.fine(`Server built at ${join(outDir, "server.js")}`);
 Deno.exit(0);

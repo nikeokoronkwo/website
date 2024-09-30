@@ -11,7 +11,6 @@ export { isAbsolute } from "jsr:@std/path/is-absolute";
 export { toFileUrl } from "jsr:@std/path/to-file-url";
 export { delay } from "jsr:@std/async/delay";
 export { parseArgs } from "jsr:@std/cli/parse-args";
-export { serveDir, serveFile } from "jsr:@std/http/file-server";
 export {
   blue,
   bold,
@@ -27,13 +26,11 @@ export { denoPlugins } from "jsr:@luca/esbuild-deno-loader";
 
 export { renderSSR } from "https://deno.land/x/nano_jsx@v0.1.0/ssr.ts";
 export { withStyles } from "https://deno.land/x/nano_jsx@v0.1.0/withStyles.ts";
-// @deno-types="https://deno.land/x/esbuild/mod.d.ts"
-export * as esbuild from "https://deno.land/x/esbuild/mod.js";
 
-export { format } from "npm:prettier";
-// @deno-types="npm:@types/ejs"
-export { render as ejsRender } from "npm:ejs";
-// @deno-types="npm:@types/mime-types"
-export { lookup } from "npm:mime-types";
-export { loadConfig, watchConfig } from "npm:c12";
-export { default as commonjsPlugin } from "npm:@chialab/esbuild-plugin-commonjs";
+export { format } from "https://esm.run/prettier";
+// @deno-types="https://esm.sh/@types/ejs"
+export { render as ejsRender } from "https://esm.sh/ejs";
+// @deno-types="https://esm.sh/@types/mime-types"
+export { lookup } from "https://esm.sh/mime-types";
+export { loadConfig, watchConfig } from "https://esm.sh/c12";
+// export { default as commonjsPlugin } from "npm:@chialab/esbuild-plugin-commonjs";
