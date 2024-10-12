@@ -14,18 +14,37 @@ const headerItems = [
   },
 ];
 
+const { isDesktopOrTablet, isDesktop, isApple, isTablet, isMobile } = useDevice();
+
 function Header() {
   return (
     <div class="sticky top-0 pt-5 h-16 w-screen flex flex-row justify-between items-center space-x-10 mx-auto bg-white pb-5 drop-shadow-sm">
-      <div class="highlight-font text-xl pl-5">nikechukwu</div>
-      <div class="flex flex-row justify-center items-center space-x-7 mr-auto">
-        {headerItems.map((h) => (
-          <a href={h.route} class="underliner">
-            <div class="text-center font-semibold">{h.name}</div>
-          </a>
-        ))}
-      </div>
-      <div class="text-transparent text-xl pl-5">nikechukwu</div>
+      {
+        isDesktopOrTablet ? 
+          <>
+            <div class="highlight-font text-xl pl-5">nikechukwu</div>
+            <div class="flex flex-row justify-center items-center space-x-7 mr-auto">
+              {headerItems.map((h) => (
+                <a href={h.route} class="underliner">
+                  <div class="text-center font-semibold">{h.name}</div>
+                </a>
+              ))}
+            </div>
+            <div class="text-transparent text-xl pl-5">nikechukwu</div>
+          </> :
+          <>
+            <div class="dropdown">
+              <div class="highlight-font text-xl pl-5 flex items-center justify-center">nikechukwu</div>
+              <div class="dropdown-content">
+                {headerItems.map((h) => (
+                  <a href={h.route} class="underliner">
+                    <div class="text-center font-semibold">{h.name}</div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </>
+      }
     </div>
   );
 }
@@ -36,7 +55,7 @@ function Footer() {
       <div class="flex flex-row justify-between items-center px-10 py-5">
         <small class="flex flex-col text-gray-700">
           <span>(C) Nikechukwu Okoronkwo 2024</span>
-          <span>All Rights Reserved.</span>
+          <FootNote />
         </small>
         <div class="flex flex-row space-x-3">
           <IconList list={links} />
@@ -45,6 +64,10 @@ function Footer() {
     </footer>
   );
 }
+
+onMounted(() => {
+  console.log(isDesktopOrTablet, isDesktop, isApple, isTablet, isMobile)
+})
 </script>
 
 <template>
@@ -101,4 +124,29 @@ function Footer() {
 .underliner:hover::after {
   transform: translate3d(0, 0, 0);
 }
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f6f7f6;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: #2f322f;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #c6cac5;}
+
+.dropdown:hover .dropdown-content {display: block;}
 </style>

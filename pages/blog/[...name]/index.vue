@@ -3,12 +3,23 @@ definePageMeta({
   layout: 'blog'
 })
 
+useHead({
+  titleTemplate(title) {
+      return `${data.value?.title}`
+  },
+})
+
 const route = useRoute();
 
 const colorMode = useColorMode();
 
 const { data } = await useAsyncData('hello', () => queryContent(`/${typeof route.params.name === 'string' ? route.params.name : route.params.name.join('/')}`).findOne())
 const { data: views } = await useFetch(`/api/${data.value?.title}`);
+
+useSeoMeta({
+  title: data.value?.title,
+  description: data.value?.description
+})
 
 onMounted(async () => {
   await useFetch(`/api/${data.value?.title}/views`, {
@@ -20,7 +31,7 @@ onMounted(async () => {
 <template>
   <div class="h-full flex flex-col justify-between">
     <main class="markdown-body">
-      <ContentRenderer :value="data">
+      <ContentRenderer :value="data ?? {}">
         <template #empty>
           <p>No content found.</p>
         </template>

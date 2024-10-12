@@ -33,6 +33,7 @@ const getImageAbsolutePath = (assetId: string): string => {
       :src="getImageAbsolutePath(l.id)"
       :class="'aspect-square py-1 ' + (props.iconSize ?? 'h-10')"
       :alt="l.id"
+      :title="l.name"
     />
   </a>
 </template>

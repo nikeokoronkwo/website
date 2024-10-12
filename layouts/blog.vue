@@ -3,17 +3,17 @@ const colorMode = useColorMode();
 </script>
 
 <template>
-    <div :class="`flex flex-col justify-center items-center w-full h-screen ${colorMode.value === 'light' ? 'light-mode' : 'light-mode'}`">
+    <div :class="`flex flex-col justify-center items-center w-full min-h-screen ${colorMode.value === 'light' ? 'light-mode' : 'light-mode'}`">
         <div class="h-14 py-5 flex flex-row justify-between">
             <NuxtLink to="/">
                 <div class="highlight-font text-2xl pl-5 ">nikechukwu</div>
             </NuxtLink>
         </div>
         <slot class="h-full" />
-        <footer class="flex flex-col mt-auto justify-center items-center">
+        <footer class="flex flex-col justify-center items-center bottom-0">
             <small :class="`flex flex-col justify-center items-center ${colorMode.value === 'light' ? 'text-gray-700' : 'text-gray-700'}`">
                 <span>(C) Nikechukwu Okoronkwo 2024</span>
-                <span>All Rights Reserved.</span>
+                <FootNote />
             </small>
             <div :class="`flex flex-row space-x-3 ${colorMode.value === 'light' ? '' : /*'filter-to-dark'*/ ''}`">
                 <IconList :list="links" />

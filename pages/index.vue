@@ -4,12 +4,12 @@
       class="flex flex-col items-center justify-center min-h-screen w-screen"
     >
       <div
-        class="flex flex-col items-center justify-center text-center px-5 content-center"
+        class="flex flex-col items-center justify-center text-center align-middle px-5 content-center"
       >
-        <div class="font-bold font-mono text-5xl py-6 anim-typewriter">What is this?</div>
+        <div class="font-bold font-mono min-[375px]:text-3xl md:text-5xl lg:text-6xl md:py-6 anim-typewriter">What is this?</div>
         <div>
           <div class="text-gray-700 text-base max-w-screen-md pb-5 border-b-2">
-            <p class="m-0 flex flex-col space-y-1">
+            <p class="m-0 flex flex-col space-y-1 items-center justify-center align-middle">
               <span>
                 This is the personal website of Nikechukwu Okoronkwo, a
                 solo-developer enjoying what he does. I'm inspired by seeing
@@ -62,23 +62,22 @@
 <style lang="css" scoped>
 
 .anim-typewriter{
-    /* position: relative;
-    top: 50%;  
-    width: 24em;
-    margin: 0 auto;
-    border-right: 2px solid rgba(255,255,255,.75);
-    font-size: 180%;
-    text-align: center; */
     white-space: nowrap;
     overflow: hidden;
     transform: translateY(-50%);  
-    animation: typewriter 4s steps(44) 1s 1 normal both,
-             blinkTextCursor 500ms steps(44) infinite normal;  
+    animation: typewriter 2s steps(15) 1s 1 normal both,
+             blinkTextCursor 500ms steps(14) infinite normal;  
+}
+
+@media (min-width: 375px) {
+  .anim-typewriter {
+    margin-top: 2rem;
+  }
 }
 
 @keyframes typewriter{
   from{width: 0;}
-  to{width: 27em;}
+  to{width: 9em;}
 }
 
 @keyframes blinkTextCursor{
