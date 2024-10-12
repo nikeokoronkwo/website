@@ -6,10 +6,12 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxtjs/tailwindcss",
     "@nuxtjs/color-mode",
+    "@nuxtjs/device",
   ],
 
   routeRules: {
     "/blog/*": { prerender: true },
+    '/rss.xml': { prerender: true }
   },
 
   postcss: {
