@@ -1,8 +1,12 @@
-/** @type {import('npm:tailwindcss').Config} */
-module.exports = {
+/** @type {import('tailwindcss').Config} */
+export default {
   content: [
-    "./pages/**/*.{html,js,ts,jsx,tsx}",
-    "./components/**/*.{html,js,ts,jsx,tsx}",
+    "./components/**/*.{js,vue,ts}",
+    "./layouts/**/*.vue",
+    "./pages/**/*.vue",
+    "./plugins/**/*.{js,ts}",
+    "./app.vue",
+    "./error.vue",
   ],
   theme: {
     extend: {
@@ -22,10 +26,6 @@ module.exports = {
         },
         secondary: "#00FFB7",
       },
-    },
-    fontFamily: {
-      "atm": ["MyriadPro", "sans-serif"],
-      "atm-digits": ["OCR-B", "ui-monospace", "monospace"],
     },
   },
   plugins: [],

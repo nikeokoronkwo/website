@@ -1,6 +1,0 @@
-- [ ] Scaffold frontend UI
-- [ ] Make Project List Page with mock data
-- [ ] Set up project list (not much, so we do not really need a database)
-- [ ] Get documentation for pages
-- [ ] Perfect Styling
-- [ ] Routing
