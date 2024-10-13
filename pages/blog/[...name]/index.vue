@@ -29,11 +29,14 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="h-full flex flex-col justify-between">
+  <div class="min-h-full flex flex-col justify-between">
     <main class="markdown-body">
       <ContentRenderer :value="data ?? {}">
         <template #empty>
-          <p>No content found.</p>
+          <div class="flex flex-col items-center justify-center text-center min-h-fit">
+            <p>There's no content here</p>
+            <NuxtLink class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg no-underline" to="/blog">Blog Home</NuxtLink>
+          </div>
         </template>
       </ContentRenderer>
     </main>

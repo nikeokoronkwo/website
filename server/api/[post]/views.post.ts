@@ -10,8 +10,6 @@ export default defineEventHandler(async (event) => {
     const visitorKey = ["visitor", ip]; // Use the IP address as the key
     const uniqueCountKey = [post, 'views'];
 
-    console.info(visitorKey, uniqueCountKey);
-
     const res = await kv.atomic()
     .check({ key: visitorKey, versionstamp: null })
     .set(visitorKey, { timestamp: Date.now() })
