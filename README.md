@@ -1,14 +1,42 @@
-# My site
+# Content v2 Minimal Starter
 
-This is the source code to my website, containing its core contents.
+Look at the [Content documentation](https://content.nuxt.com/) to learn more.
 
-The site is a Deno native application hosted on [**Deno Deploy**]().
+## Setup
 
-To get it running:
+Make sure to install the dependencies:
+
 ```bash
-git clone https://github.com/nikeokoronkwo/website.git site
-cd site
-deno task dev
+# yarn
+yarn install
+
+# npm
+npm install
+
+# pnpm
+pnpm install
 ```
 
-Production builds can be run with similar commands using `deno task build` (build only) or `deno task prod` (build and serve).
+## Development Server
+
+Start the development server on http://localhost:3000
+
+```bash
+npm run dev
+```
+
+## Production
+
+Build the application for production:
+
+```bash
+npm run build
+```
+
+Locally preview production build:
+
+```bash
+npm run preview
+```
+
+Checkout the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

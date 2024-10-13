@@ -1,24 +1,20 @@
+node_modules
+*.log*
+.nuxt
+.nitro
+.cache
+.output
+.data
 .env
 .env.*
 !.env.example
 
 **/*.lock
 private/
-internal/templates/**/*.js
-error
-errors
 
-**/out
-**/build
+dist
 
-internal/runners
-!internal/runners/prod_server.js
+**/.DS_Store
 
-styles/output.css
-styles/output.*.css
-
-components/index.tsx
-
-pages/main.*
-
-node_modules
+kv.db
+kv.db-**

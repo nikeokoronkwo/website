@@ -1,6 +1,0 @@
-#303030 - dark
-#000000 - NO
-#e6e6e6 - light
-#f2f2f2
-#cfcfcf
-#303030
