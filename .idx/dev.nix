@@ -17,6 +17,7 @@
   # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
   idx.extensions = [
     "Nuxtr.nuxt-vscode-extentions"
+    "bradlc.vscode-tailwindcss"
   ];
 
   idx.workspace.onCreate = {
@@ -38,7 +39,6 @@
         command = [
           "pnpm"
           "dev"
-          "--"
           "--port"
           "$PORT"
           "--host"
