@@ -1,10 +1,16 @@
+<script setup lang="ts">
+const dialog = ref<HTMLDialogElement>();
+
+// onMounted(() => dialog.value?.close());
+</script>
+
 <template>
   <div>
     <section
       class="flex flex-col items-center justify-center min-h-screen w-screen"
     >
       <div
-        class="flex flex-col items-center justify-center text-center align-middle px-5 content-center"
+        class="flex flex-col items-center justify-center text-center align-middle px-5 content-center py-2"
       >
         <div class="font-bold font-mono -z-10 min-[375px]:text-3xl md:text-5xl lg:text-6xl md:py-6 anim-typewriter">What is this?</div>
         <div>
@@ -28,25 +34,63 @@
               <span>In the meantime, have fun! :)</span>
             </p>
           </div>
-          <div class="flex flex-row items-center justify-center space-x-6 pt-4">
-            <NuxtLink to="/projects">
-              <button
-                class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg"
-              >
-                Projects
-              </button>
-            </NuxtLink>
+          <div class="flex flex-col items-center justify-center space-y-3">
+            <div class="flex flex-row items-center justify-center space-x-6 pt-4">
+              <NuxtLink to="/projects">
+                <button
+                  class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg"
+                >
+                  Projects
+                </button>
+              </NuxtLink>
 
-            <NuxtLink to="/blog">
-              <button
-                class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg"
-              >
-                Blog
-              </button>
-            </NuxtLink>
+              <NuxtLink to="/blog">
+                <button
+                  class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg"
+                >
+                  Blog
+                </button>
+              </NuxtLink>
+            </div>
+            <button 
+              class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-md"
+              @click="dialog?.showModal()"
+            >
+              Download Resume
+            </button>
           </div>
+          
         </div>
       </div>
+      <dialog
+        ref="dialog"
+        class="open:min-w-28 open:min-h-40 open:aspect-square open:flex open:flex-col open:items-center open:justify-center open:space-y-3"
+      >
+        <div class="p-6 bg-white flex flex-col items-center justify-center align-middle rounded-lg shadow-lg">
+          <div class="font-bold text-lg border-b-2">Download Type</div>
+          <br />
+        <div class="flex flex-col items-center justify-center space-y-2 pb-2">
+          <button
+                  class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg"
+                >
+                  PDF
+                </button>
+                <button
+                  class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg"
+                >
+                  Rich Text
+                </button>
+        </div> 
+        <button 
+          @click="dialog?.close()"
+          class="text-sm transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-3 py-1"
+        >
+          Close
+        </button>
+        
+        </div>
+        
+      </dialog>
     </section>
   </div>
 </template>
