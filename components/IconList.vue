@@ -7,8 +7,8 @@ const props = defineProps({
   },
   mode: {
     type: Boolean,
-    optional: true
-  }
+    optional: true,
+  },
 });
 
 const glob = import.meta.glob("~/assets/svg/*", {

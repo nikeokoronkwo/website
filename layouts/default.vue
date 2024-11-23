@@ -14,37 +14,40 @@ const headerItems = [
   },
 ];
 
-const { isDesktopOrTablet, isDesktop, isApple, isTablet, isMobile } = useDevice();
+const { isDesktopOrTablet, isDesktop, isApple, isTablet, isMobile } =
+  useDevice();
 
 function Header() {
   return (
     <div class="sticky top-0 pt-5 h-16 w-screen flex flex-row justify-between items-center space-x-10 mx-auto bg-white pb-5 drop-shadow-sm">
-      {
-        isDesktopOrTablet ? 
-          <>
-            <div class="highlight-font text-xl pl-5">nikechukwu</div>
-            <div class="flex flex-row justify-center items-center space-x-7 mr-auto">
+      {isDesktopOrTablet ? (
+        <>
+          <div class="highlight-font text-xl pl-5">nikechukwu</div>
+          <div class="flex flex-row justify-center items-center space-x-7 mr-auto">
+            {headerItems.map((h) => (
+              <a href={h.route} class="underliner">
+                <div class="text-center font-semibold">{h.name}</div>
+              </a>
+            ))}
+          </div>
+          <div class="text-transparent text-xl pl-5">nikechukwu</div>
+        </>
+      ) : (
+        <>
+          <div class="dropdown">
+            <div class="highlight-font text-xl pl-5 flex items-center justify-center">
+              nikechukwu
+            </div>
+            <div class="dropdown-content">
               {headerItems.map((h) => (
                 <a href={h.route} class="underliner">
                   <div class="text-center font-semibold">{h.name}</div>
                 </a>
               ))}
             </div>
-            <div class="text-transparent text-xl pl-5">nikechukwu</div>
-          </> :
-          <>
-            <div class="dropdown">
-              <div class="highlight-font text-xl pl-5 flex items-center justify-center">nikechukwu</div>
-              <div class="dropdown-content">
-                {headerItems.map((h) => (
-                  <a href={h.route} class="underliner">
-                    <div class="text-center font-semibold">{h.name}</div>
-                  </a>
-                ))}
-              </div>
-            </div>
-          </>
-      }
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -66,8 +69,8 @@ function Footer() {
 }
 
 onMounted(() => {
-  console.log(isDesktopOrTablet, isDesktop, isApple, isTablet, isMobile)
-})
+  console.log(isDesktopOrTablet, isDesktop, isApple, isTablet, isMobile);
+});
 </script>
 
 <template>
@@ -135,7 +138,7 @@ onMounted(() => {
   position: absolute;
   background-color: #f6f7f6;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
 
@@ -146,7 +149,11 @@ onMounted(() => {
   display: block;
 }
 
-.dropdown-content a:hover {background-color: #c6cac5;}
+.dropdown-content a:hover {
+  background-color: #c6cac5;
+}
 
-.dropdown:hover .dropdown-content {display: block;}
+.dropdown:hover .dropdown-content {
+  display: block;
+}
 </style>

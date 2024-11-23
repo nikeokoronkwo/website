@@ -14,8 +14,11 @@ const getImageAbsolutePath = (assetId: string): string => {
 
 <template>
   <div
-    :class="!props.inProgress ? 'w-[70vw] border border-primary-900 rounded overflow-hidden shadow-sm flex flex-row justify-between py-2' 
-    : 'bg-primary-50 w-[70vw] border border-primary-900 rounded overflow-hidden shadow-sm flex flex-row justify-between py-2'"
+    :class="
+      !props.inProgress
+        ? 'w-[70vw] border border-primary-900 rounded overflow-hidden shadow-sm flex flex-row justify-between py-2'
+        : 'bg-primary-50 w-[70vw] border border-primary-900 rounded overflow-hidden shadow-sm flex flex-row justify-between py-2'
+    "
   >
     <div class="w-full">
       <div class="px-6 py-2">
@@ -25,10 +28,13 @@ const getImageAbsolutePath = (assetId: string): string => {
             ' font-bold text-xl mb-2'
           "
         >
-            <div>{{ props.name }}</div>
-            <div class="self-end text-sm text-primary-950 italic mt-auto pb-1" v-if="props.inProgress">
-              in progress
-            </div>
+          <div>{{ props.name }}</div>
+          <div
+            class="self-end text-sm text-primary-950 italic mt-auto pb-1"
+            v-if="props.inProgress"
+          >
+            in progress
+          </div>
         </div>
         <div class="text-gray-700 text-base py-5">
           <p v-if="props.description">{{ props.description }}</p>

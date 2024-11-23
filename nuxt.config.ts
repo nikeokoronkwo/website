@@ -11,7 +11,7 @@ export default defineNuxtConfig({
 
   routeRules: {
     "/blog/*": { isr: true },
-    '/rss.xml': { prerender: true }
+    "/rss.xml": { prerender: true },
   },
 
   postcss: {
@@ -23,8 +23,8 @@ export default defineNuxtConfig({
 
   content: {
     navigation: {
-      fields: ['description', 'date']
-    }
+      fields: ["description", "date"],
+    },
   },
 
   css: ["~/assets/css/main.css"],
