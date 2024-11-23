@@ -6,7 +6,7 @@ const colorMode = useColorMode();
   <div
     :class="`flex flex-col justify-center items-center w-full min-h-screen ${colorMode.value === 'light' ? 'light-mode' : 'light-mode'}`"
   >
-    <div class="h-14 py-5 flex flex-row justify-between">
+    <div class="h-14 py-5 pb-3 flex flex-row justify-between">
       <NuxtLink to="/" class="pb-5">
         <div class="highlight-font text-2xl pl-5">nikechukwu</div>
       </NuxtLink>
