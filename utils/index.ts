@@ -13,7 +13,7 @@ const links: RedirectObject[] = [
   { name: "Email", id: "email", url: "nikechukwu@gmail.com", email: true },
 ];
 
-interface Project {
+export interface Project {
   name: string;
   description?: string;
   img?: string;
@@ -26,4 +26,4 @@ interface Project {
 const projects: Project[] = p;
 
 export { links, projects };
-export type { RedirectObject, Project };
+export type { RedirectObject };

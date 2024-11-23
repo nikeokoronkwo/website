@@ -1,7 +1,18 @@
 <script setup lang="ts">
+// import type { ParsedContentMeta } from '@nuxt/content';
+
+// interface JSONParsedContent<T> extends ParsedContentMeta {
+//   body: T;
+// }
+
+// type ParsedContent = JSONParsedContent<Project[]>;
+
+// const { data } = useAsyncData(() => queryContent<ParsedContent>(`projects`).findOne());
+// const projects: Project[] = data.value?.body ?? [];
+
 useHead({
-    title: 'Projects'
-})
+  title: "Projects",
+});
 </script>
 
 <template>

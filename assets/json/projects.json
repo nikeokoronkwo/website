@@ -3,7 +3,8 @@
     "name": "Spurte",
     "description": "Spurte is frontend tooling designed to meet the needs of Dart and Flutter Developers",
     "directs": [{ "id": "github", "url": "https://github.com/spurte/spurte" }],
-    "languages": ["dart", "typescript"]
+    "languages": ["dart", "typescript"],
+    "route": "spurte"
   },
   {
     "name": "Pheasant",
@@ -15,7 +16,8 @@
       },
       { "id": "pub", "url": "https://pub.dev/packages/pheasant" }
     ],
-    "languages": ["dart"]
+    "languages": ["dart"],
+    "route": "pheasant"
   },
   {
     "name": "Scud",
@@ -24,6 +26,7 @@
     "directs": [
       { "id": "github", "url": "https://github.com/nikeokoronkwo/scud" }
     ],
-    "languages": ["cplusplus"]
+    "languages": ["cplusplus"],
+    "route": "scud"
   }
 ]

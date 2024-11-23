@@ -1,14 +1,14 @@
 import { Kv } from "@deno/kv";
 
 export default defineEventHandler(async (event) => {
-    // collect params
-    const post = getRouterParam(event, 'post') ?? '';
+  // collect params
+  const post = getRouterParam(event, "post") ?? "";
 
-    const kv: Kv = await useKv();
+  const kv: Kv = await useKv();
 
-    // get info
-    const data = await kv.get<number>([post, 'views']);
-    return {
-        views: data.value
-    }
-})
+  // get info
+  const data = await kv.get<number>([post, "views"]);
+  return {
+    views: data.value,
+  };
+});
