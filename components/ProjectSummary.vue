@@ -50,12 +50,18 @@ const getImageAbsolutePath = (assetId: string): string => {
           <IconList :list="project.directs" />
         </div>
         <NuxtLink
-          v-if="!props.route"
-          :to="`/projects/${project.route}`"
+          v-if="props.route"
+          :to="`/projects/${project.route ?? project.name}`"
           class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1"
         >
           Check Out More
         </NuxtLink>
+        <a
+          v-else
+          class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1"
+        >
+          Check Out More
+        </a>
       </div>
     </div>
     <div

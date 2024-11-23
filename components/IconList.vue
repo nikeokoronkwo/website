@@ -5,7 +5,7 @@ const props = defineProps({
     type: String,
     optional: true,
   },
-  mode: {
+  darkMode: {
     type: Boolean,
     optional: true,
   },
@@ -31,9 +31,15 @@ const getImageAbsolutePath = (assetId: string): string => {
   >
     <img
       :src="getImageAbsolutePath(l.id)"
-      :class="'aspect-square py-1 ' + (props.iconSize ?? 'h-10')"
+      :class="'aspect-square py-1 ' + (props.iconSize ?? 'h-10') + (props.darkMode ? ' dark' : '')"
       :alt="l.id"
       :title="l.name"
     />
   </a>
 </template>
+
+<style lang="css" scoped>
+.dark {
+  filter: invert(92%) sepia(4%) saturate(30%) hue-rotate(71deg) brightness(106%) contrast(96%);
+}
+</style>

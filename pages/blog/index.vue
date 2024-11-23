@@ -69,7 +69,7 @@ const items = computed(() =>
 
         <div class="justify-end flex flex-col items-end">
           <NuxtLink
-            :to="`/blog${m._path}`"
+            :to="`${m._path}`"
             class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg"
           >
             Read

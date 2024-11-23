@@ -12,6 +12,7 @@ export default defineNuxtConfig({
   routeRules: {
     "/blog/*": { isr: true },
     "/rss.xml": { prerender: true },
+    "/projects/*": { prerender: true },
   },
 
   postcss: {

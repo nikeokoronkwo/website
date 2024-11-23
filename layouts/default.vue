@@ -1,8 +1,8 @@
 <script setup lang="tsx">
 const headerItems = [
   {
-    name: "Homepage",
-    route: "/",
+    name: "Apps",
+    route: "/apps",
   },
   {
     name: "Projects",
@@ -35,9 +35,11 @@ function Header() {
       ) : (
         <>
           <div class="dropdown">
-            <div class="highlight-font text-xl pl-5 flex items-center justify-center">
-              nikechukwu
-            </div>
+            <NuxtLink to="/">
+              <div class="highlight-font text-xl pl-5 flex items-center justify-center">
+                nikechukwu
+              </div>
+            </NuxtLink>
             <div class="dropdown-content">
               {headerItems.map((h) => (
                 <a href={h.route} class="underliner">
