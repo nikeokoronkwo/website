@@ -3,21 +3,13 @@ useHead({
   title: "Blog",
 });
 
+const queryBuilder = queryContent('blog').sort({ date: 1 });
 const { data: navigation } = await useAsyncData("navigation", () =>
-  fetchContentNavigation(),
+  fetchContentNavigation(queryBuilder),
 );
 
 const items = computed(() =>
-  navigation.value?.sort((a, b) => {
-    if (a.date && b.date) return 0;
-    else {
-      const A = new Date(a.date);
-      const B = new Date(b.date);
-      if (A <= B) return -1;
-      else if (A === B) return 0;
-      else return 1;
-    }
-  }),
+  navigation.value?.[0].children,
 );
 </script>
 

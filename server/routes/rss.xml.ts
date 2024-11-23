@@ -8,11 +8,10 @@ const url = process.env.NODE_ENV
 
 export default defineEventHandler(async (event) => {
   try {
-    const docs = await serverQueryContent(event)
+    const blogPosts = await serverQueryContent(event)
       .sort({ date: -1 })
       .where({ _partial: false })
       .find();
-    const blogPosts = docs;
 
     const feed = new RSS({
       title: "Nike Okoronkwo",
@@ -20,10 +19,10 @@ export default defineEventHandler(async (event) => {
       feed_url: `${url}/rss.xml`,
     });
 
-    for (const doc of blogPosts) {
+    for (const doc of blogPosts.filter(b => b._path?.startsWith('/blog'))) {
       feed.item({
         title: doc.title ?? "-",
-        url: `${url}/blog${doc._path}`,
+        url: `${url}${doc._path}`,
         date: new Date(doc.date),
         description: doc.description,
       });

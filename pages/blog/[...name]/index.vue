@@ -13,11 +13,15 @@ const route = useRoute();
 
 const colorMode = useColorMode();
 
+const contentRoute = typeof route.params.name === "string" ? route.params.name : route.params.name.join("/");
 // Fetch content
-const { data } = await useAsyncData("hello", () =>
+const { data } = await useAsyncData("blog", () =>
   queryContent(
-    `/${typeof route.params.name === "string" ? route.params.name : route.params.name.join("/")}`,
-  ).findOne(),
+    `/blog`,
+  )
+  .where({ _path: `/blog/${contentRoute}` })
+  .sort({ date: 1 })
+  .findOne(),
 );
 
 // Backend for views
