@@ -10,7 +10,7 @@ export default defineNuxtConfig({
   ],
 
   routeRules: {
-    "/blog/*": { prerender: true },
+    "/blog/*": { isr: true },
     '/rss.xml': { prerender: true }
   },
 
