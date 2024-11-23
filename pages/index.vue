@@ -1,7 +1,5 @@
 <script setup lang="ts">
 const dialog = ref<HTMLDialogElement>();
-
-// onMounted(() => dialog.value?.close());
 </script>
 
 <template>
@@ -64,7 +62,7 @@ const dialog = ref<HTMLDialogElement>();
       </div>
       <dialog
         ref="dialog"
-        class="open:min-w-28 open:min-h-40 open:aspect-square open:flex open:flex-col open:items-center open:justify-center open:space-y-3"
+        class="open:min-w-28 open:min-h-40 open:aspect-square open:flex open:flex-col open:items-center open:justify-center open:space-y-3 rounded-xl"
       >
         <div class="p-6 bg-white flex flex-col items-center justify-center align-middle rounded-lg shadow-lg">
           <div class="font-bold text-lg border-b-2">Download Type</div>
