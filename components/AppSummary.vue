@@ -8,7 +8,7 @@ const glob = import.meta.glob("~/assets/svg/*", {
 });
 
 const getImageAbsolutePath = (assetId: string): string => {
-  return glob[`/assets/svg/${assetId}.svg`]["default"];
+  return (glob[`/assets/svg/${assetId}.svg`] ?? {"default": ""})["default"];
 };
 </script>
 
@@ -51,7 +51,7 @@ const getImageAbsolutePath = (assetId: string): string => {
         </div>
         <NuxtLink
           v-if="props.route"
-          :to="`/projects/${app.route ?? app.name}`"
+          :to="`/apps/${app.route ?? app.name}`"
           class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1"
         >
           Check Out More
