@@ -1,6 +1,6 @@
 <script setup lang="ts">
 useHead({
-  title: "Projects",
+  title: "Applications",
 });
 </script>
 
@@ -9,14 +9,10 @@ useHead({
     <div
       class="items-center justify-center text-center py-8 text-3xl font-semibold"
     >
-      Projects
+      Applications
     </div>
     <div class="flex flex-col w-screen px-5 space-y-5 items-center">
-      <ProjectSummary
-        v-for="project in projects"
-        :key="project.name"
-        :project="project"
-      />
+      <AppSummary v-for="app in apps" :key="app.name" :app="app" />
     </div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const { project: props } = defineProps<{
-  project: Project;
+const { app: props } = defineProps<{
+  app: Application;
 }>();
 
 const glob = import.meta.glob("~/assets/svg/*", {
@@ -8,7 +8,7 @@ const glob = import.meta.glob("~/assets/svg/*", {
 });
 
 const getImageAbsolutePath = (assetId: string): string => {
-  return glob[`/assets/svg/${assetId}.svg`]["default"];
+  return (glob[`/assets/svg/${assetId}.svg`] ?? { default: "" })["default"];
 };
 
 function getIconId(id: string) {
@@ -51,11 +51,11 @@ function getIconId(id: string) {
         class="flex flex-row px-5 py-5 items-center justify-between self-start"
       >
         <div v-if="props.directs">
-          <IconList :list="project.directs" />
+          <IconList :list="app.directs" />
         </div>
         <NuxtLink
           v-if="props.route"
-          :to="`/projects/${project.route ?? project.name}`"
+          :to="`/apps/${app.route ?? app.name}`"
           class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1"
         >
           Check Out More
@@ -69,10 +69,10 @@ function getIconId(id: string) {
       </div>
     </div>
     <div
-      v-if="props.languages"
+      v-if="props.platforms"
       class="flex flex-col px-3 py-3 space-y-3 justify-end border border-transparent border-l-1 border-l-primary-950 items-center"
     >
-      <div v-for="l in props.languages" :key="l">
+      <div v-for="l in props.platforms" :key="l">
         <Icon v-if="getIconId(l)" :name="getIconId(l)!" class="scale-150" />
         <img
           v-else

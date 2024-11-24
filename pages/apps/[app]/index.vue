@@ -3,14 +3,14 @@ const route = useRoute();
 
 const colorMode = useColorMode();
 
-const project = route.params.project as string;
-const projectInfo = projects.find((p) => p.route === project);
+const app = route.params.app as string;
+const appInfo = apps.find((p) => p.route === app);
 
 const { data, status, error, refresh, clear } = await useAsyncData(
   "project",
   () =>
-    queryContent(`/projects`)
-      .where({ _path: `/projects/${project.toLowerCase()}` })
+    queryContent(`/apps`)
+      .where({ _path: `/apps/${app.toLowerCase()}` })
       .sort({ date: 1 })
       .findOne(),
 );
@@ -19,9 +19,9 @@ const glob = import.meta.glob("~/assets/svg/*", {
   eager: true,
 });
 
-const getImageAbsolutePath = (assetId: string): string => {
-  return glob[`/assets/svg/${assetId}.svg`]["default"];
-};
+function getIconId(id: string) {
+  return iconMap.get(id);
+}
 
 definePageMeta({
   layout: "content",
@@ -29,13 +29,13 @@ definePageMeta({
 
 useHead({
   titleTemplate(title) {
-    return `${projectInfo?.name} -- Projects by Nike Okoronkwo`;
+    return `${appInfo?.name} -- Apps by Nike Okoronkwo`;
   },
 });
 
 useSeoMeta({
-  ogTitle: project,
-  description: projectInfo?.description,
+  ogTitle: app,
+  description: appInfo?.description,
 });
 </script>
 
@@ -45,28 +45,28 @@ useSeoMeta({
       class="flex flex-row justify-between items-center pl-2 bg-primary-950 w-lvw text-primary-50 py-5"
     >
       <div class="flex flex-col items-start text-start space-y-5 px-5 py-6">
-        <div class="py-5 text-5xl font-semibold">{{ projectInfo?.name }}</div>
+        <div class="py-5 text-5xl font-semibold">{{ appInfo?.name }}</div>
         <div class="text-gray-300">
-          {{ projectInfo?.description ?? "No description available" }}
+          {{ appInfo?.description ?? "No description available" }}
         </div>
       </div>
       <div class="flex flex-col items-end text-start space-y-5 px-5">
         <div
           class="items-center justify-center grid grid-cols-2 text-primary-50"
         >
-          <IconList :list="projectInfo?.directs" dark-mode />
+          <IconList :list="appInfo?.directs" dark-mode />
         </div>
         <div class="self-end align-bottom">
           <div
             class="font-medium text-sm whitespace-nowrap overflow-hidden pb-3"
           >
-            Languages Used
+            Downloads
           </div>
           <div class="grid grid-cols-2">
-            <div v-for="l in projectInfo?.languages ?? []" :key="l">
-              <img
-                :src="getImageAbsolutePath(l)"
-                :class="'aspect-square h-10 dark'"
+            <div v-for="l in appInfo?.platforms ?? []" :key="l" class="p-3">
+              <Icon
+                :name="getIconId(l) ?? 'line-md:question'"
+                class="scale-150 text-primary-50 px-2 py-2"
                 :alt="l"
                 data-tooltip-target="tooltip-default"
               />
@@ -96,8 +96,8 @@ useSeoMeta({
               <p>There's no content here</p>
               <NuxtLink
                 class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg no-underline"
-                to="/projects"
-                >Projects</NuxtLink
+                to="/apps"
+                >Apps</NuxtLink
               >
             </div>
           </template>
@@ -135,8 +135,8 @@ useSeoMeta({
             </div>
             <NuxtLink
               class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg no-underline"
-              to="/projects"
-              >Projects</NuxtLink
+              to="/apps"
+              >Apps</NuxtLink
             >
             <button
               class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg no-underline"

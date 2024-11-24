@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
       feed_url: `${url}/rss.xml`,
     });
 
-    for (const doc of blogPosts.filter(b => b._path?.startsWith('/blog'))) {
+    for (const doc of blogPosts.filter((b) => b._path?.startsWith("/blog"))) {
       feed.item({
         title: doc.title ?? "-",
         url: `${url}${doc._path}`,
