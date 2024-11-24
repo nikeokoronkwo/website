@@ -18,7 +18,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      dropboxToken: ''
+      dropboxToken: "",
     },
   },
 

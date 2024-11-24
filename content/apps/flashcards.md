@@ -4,7 +4,7 @@ name: FlashCards
 
 # FlashCards
 
-FlashCards is a flashcards application for mkaing powerful flashcards
+FlashCards is a flashcards application for making powerful flashcards
 
 ## Why this one
 

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import {Dropbox} from "dropbox";
+import { Dropbox } from "dropbox";
+import path from "path-browserify";
 
 const route = useRoute();
 
 const colorMode = useColorMode();
-const storage = useStorage();
+const storage = useFileStorage();
 
 const app = route.params.app as string;
 const appInfo = apps.find((p) => p.route === app);
@@ -18,16 +19,33 @@ const { data, status, error, refresh, clear } = await useAsyncData(
       .findOne(),
 );
 
-const { data: links } = useAsyncData("links", () =>
-  Object.fromEntries(appInfo.platforms.map(m => [m, storage.installLink(`${app}/${m}`)]))
-);
-
 const glob = import.meta.glob("~/assets/svg/*", {
   eager: true,
 });
 
 function getIconId(id: string) {
   return iconMap.get(id);
+}
+
+/** @todo make toast components as Vue elements */
+const toastMessage = ref("");
+const toastActive = ref(false);
+const toastDuration = ref(5000);
+
+function installFile(l: string) {
+  storage.install(l)
+  .then(v => {
+    if (!v) toastMessage.value = `The app build for the platform ${path.basename(l)} isn't available at the moment.`;
+    toastActive.value = true;
+
+    setTimeout(() => (toastActive.value = false), toastDuration.value);
+  })
+  .catch((e) => {
+    toastMessage.value = `The app build for the platform ${path.basename(l)} isn't available at the moment.`;
+    toastActive.value = true;
+
+    setTimeout(() => (toastActive.value = false), toastDuration.value);
+  });
 }
 
 definePageMeta({
@@ -67,16 +85,19 @@ useSeoMeta({
           <div
             class="font-medium text-sm whitespace-nowrap overflow-hidden pb-3"
           >
-            Downloads
+            Download App
           </div>
           <div class="grid grid-cols-2">
             <div v-for="l in appInfo?.platforms ?? []" :key="l" class="p-3">
-              <Icon
-                :name="getIconId(l) ?? 'line-md:question'"
-                class="scale-150 text-primary-50 px-2 py-2"
-                :alt="l"
-                data-tooltip-target="tooltip-default"
-              />
+              <button @click="installFile(`${app}/${l}`)">
+                <Icon
+                  :name="getIconId(l) ?? 'line-md:question'"
+                  class="scale-150 text-primary-50 px-2 py-2"
+                  :alt="l"
+                  data-tooltip-target="tooltip-default"
+                />
+              </button>
+
               <div
                 ref="tooltip"
                 id="tooltip-default"
@@ -156,6 +177,59 @@ useSeoMeta({
         <div v-else-if="status === 'idle'">Loading...</div>
       </main>
     </div>
+    <Transition>
+      <div class="fixed bottom-10 right-10" v-show="toastActive">
+        <div
+          id="toast-danger"
+          class="flex items-center w-full max-w-xs p-4 mb-4 text-primary-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-primary-800"
+          role="alert"
+        >
+          <div
+            class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200"
+          >
+            <svg
+              class="w-5 h-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"
+              />
+            </svg>
+            <span class="sr-only">Error icon</span>
+          </div>
+          <div class="ms-3 text-sm font-normal">
+            {{ toastMessage }}
+          </div>
+          <button
+            type="button"
+            class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-background-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+            data-dismiss-target="#toast-danger"
+            aria-label="Close"
+            @click="toastActive = false"
+          >
+            <span class="sr-only">Close</span>
+            <svg
+              class="w-3 h-3"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 14"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -188,5 +262,16 @@ useSeoMeta({
 .dark {
   filter: invert(92%) sepia(4%) saturate(30%) hue-rotate(71deg) brightness(106%)
     contrast(96%);
+}
+
+/* we will explain what these classes do next! */
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>
