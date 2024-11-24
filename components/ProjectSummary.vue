@@ -10,6 +10,10 @@ const glob = import.meta.glob("~/assets/svg/*", {
 const getImageAbsolutePath = (assetId: string): string => {
   return glob[`/assets/svg/${assetId}.svg`]["default"];
 };
+
+function getIconId(id: string) {
+  return iconMap.get(id);
+}
 </script>
 
 <template>
@@ -68,13 +72,17 @@ const getImageAbsolutePath = (assetId: string): string => {
       v-if="props.languages"
       class="flex flex-col px-3 py-3 space-y-3 justify-end border border-transparent border-l-1 border-l-primary-950 items-center"
     >
-      <img
-        v-for="l in props.languages"
-        :key="l"
-        :src="getImageAbsolutePath(l)"
-        :class="'aspect-square h-10'"
-        :alt="l"
-      />
+      <div v-for="l in props.languages"
+        :key="l">
+        <Icon v-if="getIconId(l)" :name="getIconId(l)!" class=" scale-150" />
+        <img
+        v-else
+          :src="getImageAbsolutePath(l)"
+          :class="'aspect-square h-10'"
+          :alt="l"
+        />
+      </div>
+      
     </div>
   </div>
 </template>

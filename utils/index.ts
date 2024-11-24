@@ -13,6 +13,25 @@ const links: RedirectObject[] = [
   { name: "Email", id: "email", url: "nikechukwu@gmail.com", email: true },
 ];
 
+/**
+ * Map ids to icons
+ */
+export const iconMap = new Map([
+  // languages
+  ["dart", "simple-icons:dart"],
+  ["cplusplus", "simple-icons:cplusplus"],
+  ["typescript", "akar-icons:typescript"],
+  ["deno", "simple-icons:deno"],
+
+  // operating systems
+  ["macos", "simple-icons:macos"],
+  ["ios", "simple-icons:ios"],
+  ["windows", "bi:windows"],
+  ["linux", "ant-design:linux-outlined"],
+  ["android", "ic:baseline-android"],
+  ["embedded", "carbon:chip"]
+]);
+
 export interface Project {
   name: string;
   description?: string;
