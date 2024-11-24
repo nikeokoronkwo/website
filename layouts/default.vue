@@ -22,7 +22,7 @@ function Header() {
     <div class="sticky top-0 pt-5 h-16 w-screen flex flex-row justify-between items-center space-x-10 mx-auto bg-white pb-5 drop-shadow-sm">
       {isDesktopOrTablet ? (
         <>
-          <div class="highlight-font text-xl pl-5">nikechukwu</div>
+          <NuxtLink to="/"><div class="highlight-font text-xl pl-5">nikechukwu</div></NuxtLink>
           <div class="flex flex-row justify-center items-center space-x-7 mr-auto">
             {headerItems.map((h) => (
               <a href={h.route} class="underliner">
