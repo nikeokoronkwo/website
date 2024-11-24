@@ -33,12 +33,22 @@ jobs:
         with:
           cache: pnpm
       - run: pnpm install
+      - name: 'Create env file'
+        run: |
+          touch .env
+          echo NUXT_PUBLIC_DROPBOX_TOKEN=${{ secrets.NUXT_PUBLIC_DROPBOX_TOKEN }} >> .env
+          cat .env
       - run: pnpm build
         env:
           NITRO_PRESET: deno_deploy
+          NUXT_PUBLIC_DROPBOX_TOKEN: |
+            ${{ secrets.NUXT_PUBLIC_DROPBOX_TOKEN }}
       - name: Deploy to Deno Deploy
         uses: denoland/deployctl@v1
         with:
           project: nikechukwu
           entrypoint: server/index.ts
           root: .output
+          env: |
+            NUXT_PUBLIC_DROPBOX_TOKEN=${{ secrets.NUXT_PUBLIC_DROPBOX_TOKEN }}
+          
