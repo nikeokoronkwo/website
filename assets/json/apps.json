@@ -2,6 +2,6 @@
     "name": "Flashcards",
     "description": "A flashcards app for making flashcards easily with markdown",
     "directs": [],
-    "platforms": [],
+    "platforms": ["windows", "macos", "linux"],
     "route": "flashcards"
   }]
