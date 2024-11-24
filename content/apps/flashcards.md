@@ -8,7 +8,7 @@ FlashCards is a flashcards application for making powerful flashcards
 
 ## Why this one
 
-- Powerful formatting and Math: With this app, you can make flashcards that can incorporate mathematical symbols and epxressions easily with the power of [LaTeX]() and [Markdown]().
+- Powerful formatting and Math: With this app, you can make flashcards that can incorporate mathematical symbols and epxressions easily with the power of [LaTeX](https://www.latex-project.org/get/) and [Markdown](https://www.markdownguide.org/).
 - Desktop Support: This app can run on your desktop, making it easy to use even offline.
 
 ## Using this app
