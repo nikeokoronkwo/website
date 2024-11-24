@@ -1,5 +1,6 @@
 <script setup lang="ts">
-const dialog = ref<HTMLDialogElement>();
+/** Next update */
+// const dialog = ref<HTMLDialogElement>();
 </script>
 
 <template>
@@ -59,16 +60,16 @@ const dialog = ref<HTMLDialogElement>();
                 </button>
               </NuxtLink>
             </div>
-            <button
+            <!-- <button
               class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-md"
               @click="dialog?.showModal()"
             >
               Download Resume
-            </button>
+            </button> -->
           </div>
         </div>
       </div>
-      <dialog
+      <!-- <dialog
         ref="dialog"
         class="open:min-w-28 open:min-h-40 open:aspect-square open:flex open:flex-col open:items-center open:justify-center open:space-y-3 rounded-xl"
       >
@@ -96,7 +97,7 @@ const dialog = ref<HTMLDialogElement>();
             Close
           </button>
         </div>
-      </dialog>
+      </dialog> -->
     </section>
   </div>
 </template>
