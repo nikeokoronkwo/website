@@ -16,6 +16,12 @@ export default defineNuxtConfig({
     "/projects/*": { prerender: true },
   },
 
+  runtimeConfig: {
+    public: {
+      dropboxToken: ''
+    },
+  },
+
   postcss: {
     plugins: {
       tailwindcss: {},

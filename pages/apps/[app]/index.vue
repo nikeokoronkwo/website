@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import {Dropbox} from "dropbox";
+
 const route = useRoute();
 
 const colorMode = useColorMode();
+const storage = useStorage();
 
 const app = route.params.app as string;
 const appInfo = apps.find((p) => p.route === app);
@@ -13,6 +16,10 @@ const { data, status, error, refresh, clear } = await useAsyncData(
       .where({ _path: `/apps/${app.toLowerCase()}` })
       .sort({ date: 1 })
       .findOne(),
+);
+
+const { data: links } = useAsyncData("links", () =>
+  Object.fromEntries(appInfo.platforms.map(m => [m, storage.installLink(`${app}/${m}`)]))
 );
 
 const glob = import.meta.glob("~/assets/svg/*", {

@@ -16,11 +16,14 @@
     "@nuxtjs/color-mode": "^3.5.1",
     "@nuxtjs/device": "^3.2.4",
     "@nuxtjs/tailwindcss": "^6.12.1",
+    "dropbox": "^10.34.0",
     "github-markdown-css": "^5.7.0",
     "nuxt": "^3.13.0",
+    "path-browserify": "^1.0.1",
     "rss": "^1.2.2"
   },
   "devDependencies": {
+    "@types/path-browserify": "^1.0.3",
     "@types/rss": "^0.0.32",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
