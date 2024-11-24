@@ -31,21 +31,31 @@ function getIconId(id: string) {
 const toastMessage = ref("");
 const toastActive = ref(false);
 const toastDuration = ref(5000);
+const toastGood = ref(true);
 
 function installFile(l: string) {
-  storage.install(l)
-  .then(v => {
-    if (!v) toastMessage.value = `The app build for the platform ${path.basename(l)} isn't available at the moment.`;
-    toastActive.value = true;
+  storage
+    .install(l)
+    .then((v) => {
+      if (!v) {
+        toastMessage.value = `The app build for the platform ${path.basename(l)} isn't available at the moment.`;
+        toastActive.value = true;
+      }
 
-    setTimeout(() => (toastActive.value = false), toastDuration.value);
-  })
-  .catch((e) => {
-    toastMessage.value = `The app build for the platform ${path.basename(l)} isn't available at the moment.`;
-    toastActive.value = true;
+      setTimeout(() => {
+        toastMessage.value = "";
+        toastActive.value = false;
+      }, toastDuration.value);
+    })
+    .catch((e) => {
+      toastMessage.value = `The app build for the platform ${path.basename(l)} isn't available at the moment.`;
+      toastActive.value = true;
 
-    setTimeout(() => (toastActive.value = false), toastDuration.value);
-  });
+      setTimeout(() => {
+        toastMessage.value = "";
+        toastActive.value = false;
+      }, toastDuration.value);
+    });
 }
 
 definePageMeta({

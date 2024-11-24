@@ -33,7 +33,7 @@ jobs:
         with:
           cache: pnpm
       - run: pnpm install
-      - name: 'Create env file'
+      - name: "Create env file"
         run: |
           touch .env
           echo NUXT_PUBLIC_DROPBOX_TOKEN=${{ secrets.NUXT_PUBLIC_DROPBOX_TOKEN }} >> .env
@@ -51,4 +51,3 @@ jobs:
           root: .output
           env: |
             NUXT_PUBLIC_DROPBOX_TOKEN=${{ secrets.NUXT_PUBLIC_DROPBOX_TOKEN }}
-          
