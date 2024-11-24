@@ -12,11 +12,7 @@ useHead({
       Applications
     </div>
     <div class="flex flex-col w-screen px-5 space-y-5 items-center">
-      <AppSummary
-        v-for="app in apps"
-        :key="app.name"
-        :app="app"
-      />
+      <AppSummary v-for="app in apps" :key="app.name" :app="app" />
     </div>
   </div>
 </template>

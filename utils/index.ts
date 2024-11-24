@@ -14,7 +14,6 @@ export const links: RedirectObject[] = [
   { name: "Email", id: "email", url: "nikechukwu@gmail.com", email: true },
 ];
 
-
 /**
  * Map ids to icons
  */
@@ -31,7 +30,7 @@ export const iconMap = new Map([
   ["windows", "bi:windows"],
   ["linux", "ant-design:linux-outlined"],
   ["android", "ic:baseline-android"],
-  ["embedded", "carbon:chip"]
+  ["embedded", "carbon:chip"],
 ]);
 
 interface BaseProject {

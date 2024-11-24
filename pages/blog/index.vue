@@ -3,14 +3,12 @@ useHead({
   title: "Blog",
 });
 
-const queryBuilder = queryContent('blog').sort({ date: 1 });
+const queryBuilder = queryContent("blog").sort({ date: 1 });
 const { data: navigation } = await useAsyncData("navigation", () =>
   fetchContentNavigation(queryBuilder),
 );
 
-const items = computed(() =>
-  navigation.value?.[0].children,
-);
+const items = computed(() => navigation.value?.[0].children);
 </script>
 
 <template>

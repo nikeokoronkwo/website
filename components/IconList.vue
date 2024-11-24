@@ -31,7 +31,11 @@ const getImageAbsolutePath = (assetId: string): string => {
   >
     <img
       :src="getImageAbsolutePath(l.id)"
-      :class="'aspect-square py-1 ' + (props.iconSize ?? 'h-10') + (props.darkMode ? ' dark' : '')"
+      :class="
+        'aspect-square py-1 ' +
+        (props.iconSize ?? 'h-10') +
+        (props.darkMode ? ' dark' : '')
+      "
       :alt="l.id"
       :title="l.name"
     />
@@ -40,6 +44,7 @@ const getImageAbsolutePath = (assetId: string): string => {
 
 <style lang="css" scoped>
 .dark {
-  filter: invert(92%) sepia(4%) saturate(30%) hue-rotate(71deg) brightness(106%) contrast(96%);
+  filter: invert(92%) sepia(4%) saturate(30%) hue-rotate(71deg) brightness(106%)
+    contrast(96%);
 }
 </style>
