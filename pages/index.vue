@@ -1,6 +1,32 @@
 <script setup lang="ts">
 /** Next update */
-// const dialog = ref<HTMLDialogElement>();
+const dialog = ref<HTMLDialogElement>();
+
+const { data, pending, error, refresh } = await useAsyncData(
+    'resume',
+    () => queryContent('resume').findOne()
+);
+
+
+async function renderToPdf(html: string) {
+  const { jsPDF } = await import('jspdf');
+
+  const doc = new jsPDF();
+
+  console.log(html);
+
+  doc.html(html, {
+    callback: function (doc) {
+      doc.save()
+    },
+    x: 10,
+    y: 10
+  });
+
+  const blob = doc.output('blob','nikeokoronkwo_resume.pdf');
+}
+
+onMounted(() => console.log(data.value));
 </script>
 
 <template>
@@ -60,16 +86,16 @@
                 </button>
               </NuxtLink>
             </div>
-            <!-- <button
+            <button
               class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-md"
               @click="dialog?.showModal()"
             >
               Download Resume
-            </button> -->
+            </button>
           </div>
         </div>
       </div>
-      <!-- <dialog
+      <dialog
         ref="dialog"
         class="open:min-w-28 open:min-h-40 open:aspect-square open:flex open:flex-col open:items-center open:justify-center open:space-y-3 rounded-xl"
       >
@@ -81,13 +107,9 @@
           <div class="flex flex-col items-center justify-center space-y-2 pb-2">
             <button
               class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg"
+              @click="renderToPdf(data.body)"
             >
               PDF
-            </button>
-            <button
-              class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg"
-            >
-              Rich Text
             </button>
           </div>
           <button
@@ -97,7 +119,7 @@
             Close
           </button>
         </div>
-      </dialog> -->
+      </dialog>
     </section>
   </div>
 </template>

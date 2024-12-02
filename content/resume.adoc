@@ -1,0 +1,45 @@
+= Resume
+:nofooter:
+Nikechukwu Okoronkwo <nikechukwu@gmail.com>
++1 (540) 757-4391
+
+== Work Experience
+Solo Developer::
++
+--
+[.small]
+September 2023 - April 2024
+
+* Contributed to Open Source
+* Worked with other Dart Developers concerning Web Development in Dart
+--
+
+HR Assistant::
++
+--
+[.small]
+May - July 2024
+
+The Angelic Place, Fredericksburg, VA
+
+* Built database on workers information on Microsoft Excel
+* Sorted and took records on workers' information and documents
+--
+
+== Skills
+- Basic Programming Skills
+- Advanced Problem-Solving Skills
+- Multilingual with advanced knowledge in languages (C++, JavaScript/TypeScript, Dart, Swift)
+- Willingness to Learn and Adapt
+- Advanced Web Development and App Development (including embedded devices)
+- Familiarity with Modern Developer Tooling and Continuous Integration
+- Understanding of Software Development Life Cycle
+
+== Honors
+- Participated (made an entry) in the Google Summer of Code 2024 for https://dart.dev[Dart]. 
+
+== Projects
+. Personal Website with Static Blog and RSS: https://nikechukwu.deno.dev
+. Dart development tool for making websites (Spurte): https://github.com/spurte/spurte
+. Password Manager CLI: https://github.com/nikeokoronkwo/npsg
+. Rewrite of https://flutterwave.com/[Flutterwave] Vue Library in Vue 3: https://github.com/nikeokoronkwo/Vue-V3
