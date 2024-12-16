@@ -7,7 +7,7 @@ export default defineTransformer({
   //@ts-expect-error
   parse(_id: string, rawContent: string) {
     const parsed = typeof Asciidoctor().convert(rawContent) === 'string' 
-      ? Asciidoctor().convert(rawContent) : Asciidoctor().convert(rawContent);
+      ? Asciidoctor().convert(rawContent, { attributes: { showTitle: true } }) : Asciidoctor().convert(rawContent);
 
     return {
       _id,

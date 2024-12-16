@@ -23,7 +23,7 @@ async function renderToPdf(html: string) {
     y: 10
   });
 
-  const blob = doc.output('blob','nikeokoronkwo_resume.pdf');
+  const blob = doc.output('dataurlnewwindow', { filename: 'nikeokoronkwo_resume.pdf' });
 }
 
 onMounted(() => console.log(data.value));
@@ -107,7 +107,7 @@ onMounted(() => console.log(data.value));
           <div class="flex flex-col items-center justify-center space-y-2 pb-2">
             <button
               class="transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 py-1 text-lg"
-              @click="renderToPdf(data.body)"
+              @click="/* renderToPdf(data?.body) */ navigateTo('/resume')"
             >
               PDF
             </button>
