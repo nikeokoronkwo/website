@@ -1,7 +1,13 @@
 = Resume
 :nofooter:
 Nikechukwu Okoronkwo <nikechukwu@gmail.com>
-+1 (540) 757-4391
+:author: Nikechukwu Okoronkwo
+:email: nikechukwu@gmail.com
+
+
+[.lead]
+[.text-center]
+**Nikechukwu Okoronkwo -- nikechukwu@gmail.com**
 
 == Work Experience
 Solo Developer::
