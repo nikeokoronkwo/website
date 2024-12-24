@@ -20,7 +20,7 @@ function getIconId(id: string) {
   <div
     :class="
       !props.inProgress
-        ? 'w-[70vw] border border-primary-900 rounded overflow-hidden shadow-sm flex flex-row justify-between py-2'
+        ? `w-[70vw] border ${props.status ? 'border-primary-900' : 'border-red-500'} rounded overflow-hidden shadow-sm flex flex-row justify-between py-2`
         : 'bg-primary-50 w-[70vw] border border-primary-900 rounded overflow-hidden shadow-sm flex flex-row justify-between py-2'
     "
   >
@@ -38,6 +38,12 @@ function getIconId(id: string) {
             v-if="props.inProgress"
           >
             in progress
+          </div>
+          <div
+            class="self-end text-sm text-red-500 italic mt-auto pb-1"
+            v-else-if="!props.status"
+          >
+            app unavailable
           </div>
         </div>
         <div class="text-gray-700 text-base py-5">

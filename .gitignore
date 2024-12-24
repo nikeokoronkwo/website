@@ -18,3 +18,5 @@ dist
 
 kv.db
 kv.db-**
+
+*.pdf

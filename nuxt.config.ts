@@ -8,6 +8,8 @@ export default defineNuxtConfig({
     "@nuxtjs/color-mode",
     "@nuxtjs/device",
     "@nuxt/icon",
+    "@nuxtjs/robots",
+    "nuxt-og-image",
   ],
 
   routeRules: {

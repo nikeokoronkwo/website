@@ -31,6 +31,10 @@ export const iconMap = new Map([
   ["linux", "ant-design:linux-outlined"],
   ["android", "ic:baseline-android"],
   ["embedded", "carbon:chip"],
+
+  // others
+  ["api", "mdi:api"],
+  ["cli", "proicons:terminal"],
 ]);
 
 interface BaseProject {
@@ -40,6 +44,7 @@ interface BaseProject {
   route?: string;
   inProgress?: boolean;
   directs?: RedirectObject[];
+  status?: boolean
 }
 
 export interface Project extends BaseProject {

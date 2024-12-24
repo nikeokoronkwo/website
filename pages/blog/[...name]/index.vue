@@ -9,6 +9,17 @@ useHead({
   },
 });
 
+defineOgImageComponent('Frame', {
+  description: 'A blog post by Nike Okoronkwo',
+  bg: 'linear-gradient(to bottom right, #404540, #2f322f)',
+  username: 'nikeokoronkwo',
+  socials: [{
+    name: 'nikeokoronkwo', icon: 'iconoir:instagram',
+  }, {
+    name: 'nikeokoronkwo', icon: 'mdi:github'
+  }]
+});
+
 const route = useRoute();
 
 const colorMode = useColorMode();
