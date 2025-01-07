@@ -3,18 +3,6 @@ useHead({
   title: "Blog",
 });
 
-defineOgImageComponent('Frame', {
-  title: 'Nike Okoronkwo',
-  description: 'The personal blog of Nikechukwu Okoronkwo',
-  bg: 'linear-gradient(to bottom right, #404540, #2f322f)',
-  username: 'nikeokoronkwo',
-  socials: [{
-    name: 'nikeokoronkwo', icon: 'iconoir:instagram',
-  }, {
-    name: 'nikeokoronkwo', icon: 'mdi:github'
-  }]
-})
-
 const queryBuilder = queryContent("blog").sort({ date: 1 });
 const { data: navigation } = await useAsyncData("navigation", () =>
   fetchContentNavigation(queryBuilder),

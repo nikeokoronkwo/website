@@ -32,6 +32,8 @@ const getImageAbsolutePath = (assetId: string): string => {
     :key="l.id"
     :href="l.email ? `mailto:${l.url}` : l.url"
     target="_blank"
+    class="mx-auto py-1"
+    :title="`View${l.name || l.id ? ` on ${l.name ?? l.id}` : ''}`"
   >
     <img
       v-if="isAvailable(l.id)"
@@ -42,7 +44,6 @@ const getImageAbsolutePath = (assetId: string): string => {
         (props.darkMode ? ' dark' : '')
       "
       :alt="l.id"
-      :title="l.name"
     />
 
     <Icon 
@@ -51,7 +52,7 @@ const getImageAbsolutePath = (assetId: string): string => {
         'aspect-square py-1 ' +
         (props.iconSize ?? 'h-10 ') +
         (props.darkMode ? 'dark ' : '') + 
-        'scale-[1.8] ml-2'
+        'scale-[1.8] mx-auto ml-3'
       "
       :name="iconMap.get(l.id === 'pub' ? 'dart' : l.id)" 
     />
