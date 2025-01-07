@@ -1,7 +1,12 @@
 <script setup lang="ts">
+const r = useRoute();
+const url = r.query.url as string | undefined;
+const title = r.query.title as string | undefined;
+
 useHead({
-  title: "Contact Me",
+  title,
 });
+
 </script>
 
 <template>
@@ -9,11 +14,15 @@ useHead({
     <div
       class="items-center justify-center text-center py-8 text-3xl font-semibold"
     >
-      Contact
+      {{ title ?? 'Form' }}
     </div>
     <div class="py-4">
+      <div v-if="!url">
+        <div>No Form Available</div>
+      </div>
       <iframe
-        src="https://docs.google.com/forms/d/e/1FAIpQLSflNOacCkzR0A_K_AzTMcFPGCdEN9Hd8tomyogGDN5vpbijSA/viewform?embedded=true"
+        v-else
+        :src="url"
         width="640"
         height="640"
         frameborder="0"
