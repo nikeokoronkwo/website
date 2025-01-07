@@ -21,7 +21,7 @@ export const iconMap = new Map([
   // languages
   ["dart", "simple-icons:dart"],
   ["cplusplus", "simple-icons:cplusplus"],
-  ["typescript", "akar-icons:typescript"],
+  ["typescript", "akar-icons:typescript-fill"],
   ["deno", "simple-icons:deno"],
 
   // operating systems
@@ -31,6 +31,7 @@ export const iconMap = new Map([
   ["linux", "ant-design:linux-outlined"],
   ["android", "ic:baseline-android"],
   ["embedded", "carbon:chip"],
+  ["web", "mdi:web"],
 
   // others
   ["api", "mdi:api"],

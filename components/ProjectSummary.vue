@@ -70,10 +70,10 @@ function getIconId(id: string) {
     </div>
     <div
       v-if="props.languages"
-      class="flex flex-col px-3 py-3 space-y-3 justify-end border border-transparent border-l-1 border-l-primary-950 items-center"
+      class="flex flex-col px-5 py-3 space-y-3 justify-end border border-transparent border-l-1 border-l-primary-950 items-center"
     >
       <div v-for="l in props.languages" :key="l">
-        <Icon v-if="getIconId(l)" :name="getIconId(l)!" class="scale-150" />
+        <Icon v-if="getIconId(l)" :name="getIconId(l)!" class="scale-[2]" />
         <img
           v-else
           :src="getImageAbsolutePath(l)"

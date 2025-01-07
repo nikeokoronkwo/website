@@ -99,7 +99,15 @@ useSeoMeta({
           </div>
           <div class="grid grid-cols-2">
             <div v-for="l in appInfo?.platforms ?? []" :key="l" class="p-3">
-              <button @click="installFile(`${app}/${l}`)">
+              <a v-if="l === 'web'" :href="appInfo?.directs.find(m => m.id === 'web').url" target="_blank">
+                <Icon
+                  :name="getIconId(l) ?? 'line-md:question'"
+                  class="scale-150 text-primary-50 px-2 py-2"
+                  :alt="l"
+                  data-tooltip-target="tooltip-default"
+                />
+              </a>
+              <button v-else @click="installFile(`${app}/${l}`)">
                 <Icon
                   :name="getIconId(l) ?? 'line-md:question'"
                   class="scale-150 text-primary-50 px-2 py-2"

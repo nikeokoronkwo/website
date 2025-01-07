@@ -1,8 +1,21 @@
 <script setup lang="ts">
 import type { NuxtError } from "#app";
 
+const isDev = process.dev; // Nuxt provides this
+
 const props = defineProps({
   error: Object as () => NuxtError,
+});
+
+// Log error details to console in development
+onMounted(() => {
+  if (isDev && props.error) {
+    console.group("Error Details");
+    console.error("Status:", props.error.statusCode);
+    console.error("Message:", props.error.message);
+    console.error("Stack:", props.error.stack);
+    console.groupEnd();
+  }
 });
 </script>
 
@@ -15,6 +28,16 @@ const props = defineProps({
       <div class="status-name">{{ error?.name ?? "Unknown Error" }}</div>
       <div class="status-message">
         {{ error?.statusMessage ?? "An unknown error occured" }}
+      </div>
+      <div v-if="isDev && error?.stack" class="mt-8 text-left">
+        <details class="bg-gray-100 rounded-lg p-4">
+          <summary class="text-sm font-medium text-gray-900 cursor-pointer">
+            Error Details
+          </summary>
+          <pre class="mt-2 text-xs text-gray-600 overflow-auto">{{
+            error.stack
+          }}</pre>
+        </details>
       </div>
       <NuxtLink
         class="py-2 transition ease-in-out delay-150 duration-500 border rounded-lg border-transparent hover:border-primary-900 hover:shadow px-5 text-lg"
