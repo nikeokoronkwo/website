@@ -36,6 +36,20 @@ export default defineNuxtConfig({
     navigation: {
       fields: ["description", "date"],
     },
+    highlight: {
+      theme: {
+        default: 'github-light',
+        dark: 'github-dark',
+        sepia: 'monokai'
+      },
+      langs: [
+        'c',
+        'cpp',
+        'java',
+        'dart',
+        'diff'
+      ]
+    }
   },
 
   css: ["~/assets/css/main.css"],

@@ -23,13 +23,27 @@ What if there was a way to not just get started with extremely good templates, b
 
 Whether it is a SaaS Template for users to start making their own SaaS website, or a starter scaffolder following best design principles and libraries needed internally for websites your company makes, being able to get started quickly with any project is important, and it saves valuable time.
 
+::display
 This is where [Grayprint](/projects/grayprint) comes in! Grayprint is the only CLI tool you'll need to help access varieties of templates and get started with your dream application quickly and easily. Now you can focus on debugging your app, rather than debugging some ESLint integration.
 
 Making use of Grayprint is as easy as running `grayprint` on the terminal, and you are met with our own core scaffolder. Want to make use of a template? Pass the `--template` flag to reference templates from Github, NPM, JSR or even the one you made on your system. 
 
 Adopting grayprint is even easier. If you have a current template, all you need to do is run the `--unpack` comand and it will just "copy and paste" the template into your codebase.
 
-Want to make your own template? Use the `@grayprint/create` package to make a template that can be used by hundreds of users wanting to get started on your project.
+#right
+```diff
+- npm create vite@latest -- --template vue my-project
+- cd my-project
+- touch .prettierrc .prettierignore
+- echo "{}" >> .prettierrc
+- # more and more commands
+- npm install
++ npx grayprint my-project
+```
+
+::
+
+Want to make your own template? Use the [`@grayprint/create`](https://jsr.io/@grayprint/create) package to make a template that can be used by hundreds of users wanting to get started on your project.
 
 ## What makes it special?
 If you plan on making applications and need somewhere to get started, Grayprint can help you access templates from various sources like Github, NPM and JSR. Grayprint comes with a core scaffolder that can help you get started with your project as fast as possible. It acts as a wrapper for many `create-` scripts to allow in speeding up the scaffolding process, and integrations of such with your favourite tools. 
@@ -39,7 +53,9 @@ If you plan on making such templates and are looking for a way to distribute the
 - Programmatic by design: Grayprint allows you to not only make a static template that one can just "copy and paste" into their codebase (usally alongside some instructions), it allows you to easily scaffold the application with user inputs, therefore being able to skip the boring parts of following certain guidelines that may/may not work for everyone, but also allow you to make templates for users just getting started according to their own liking and style
 
 ### _What if I want to make money off of my template?_ 
-Not to worry, as plans for a marketplace are in development, where you can host and display your templates for others to use and purchase, just by running `grayprint` from the terminal (with support for integrating with hosting providers, so if you already have a template on a private Github Repository, it doesn't even need to leave).
+Not to worry, as plans for a marketplace are in development, where you can host and display your templates for others to use and purchase, just by running `grayprint` from the terminal (with support for integrating with hosting providers, so if you already have a template on a private Github Repository, it doesn't even need to leave). 
+
+In the meantime, you can [indicate interest](/forms?title=Grayprint%20Marketplace&url=https://docs.google.com/forms/d/e/1FAIpQLScYvKoipuonyFqOh_F06kbuYoOQKbPm9498iaQUTuevbNKfrg/viewform?embedded=true).
 
 ## How do I get started?
 Grayprint is available on [Github](https://github.com/nikeokoronkwo/grayprint): You can [check out the documentation](https://github.com/nikeokoronkwo/grayprint/docs) and get started, follow progress on Grayprint's development, and even try it out for yourself. 
