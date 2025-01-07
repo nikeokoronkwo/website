@@ -9,7 +9,6 @@ export default defineNuxtConfig({
     "@nuxtjs/device",
     "@nuxt/icon",
     "@nuxtjs/robots",
-    "nuxt-og-image",
   ],
 
   routeRules: {

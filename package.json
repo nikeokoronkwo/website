@@ -22,9 +22,7 @@
     "dropbox": "^10.34.0",
     "github-markdown-css": "^5.7.0",
     "nuxt": "^3.13.0",
-    "nuxt-og-image": "^4.0.2",
     "path-browserify": "^1.0.1",
-    "puppeteer": "^23.11.1",
     "rss": "^1.2.2"
   },
   "devDependencies": {
