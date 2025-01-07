@@ -3,12 +3,13 @@
     "name": "Grayprint",
     "description": "Getting started with your dream project doesn't have to be as hard or as stressful as it is. Easily scaffold your projects, and make use of templates from some of the best projects with Grayprint",
     "languages": ["typescript"],
+    "directs": [{ "id": "github", "url": "https://github.com/nikeokoronkwo/grayprint" }, { "id": "jsr", "url": "https://jsr.io/@grayprint" }],
     "route": "grayprint"
   },
   {
     "name": "Spurte",
     "description": "Spurte is frontend tooling designed to meet the needs of Dart and Flutter Developers",
-    "directs": [{ "id": "github", "url": "https://github.com/spurte/spurte" }],
+    "directs": [{ "id": "github", "url": "https://github.com/spurte/spurte" }, { "id": "pub", "url": "https://pub.dev/packages/spurte" }],
     "languages": ["dart"],
     "route": "spurte"
   },

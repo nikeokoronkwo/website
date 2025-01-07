@@ -36,6 +36,9 @@ export const iconMap = new Map([
   // others
   ["api", "mdi:api"],
   ["cli", "proicons:terminal"],
+
+  // directs
+  ["jsr", "simple-icons:jsr"]
 ]);
 
 interface BaseProject {

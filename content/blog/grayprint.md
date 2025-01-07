@@ -42,8 +42,8 @@ If you plan on making such templates and are looking for a way to distribute the
 Not to worry, as plans for a marketplace are in development, where you can host and display your templates for others to use and purchase, just by running `grayprint` from the terminal (with support for integrating with hosting providers, so if you already have a template on a private Github Repository, it doesn't even need to leave).
 
 ## How do I get started?
-Grayprint is available on [Github](): You can [check out the documentation]() and get started, follow progress on Grayprint's development, and even try it out for yourself. 
+Grayprint is available on [Github](https://github.com/nikeokoronkwo/grayprint): You can [check out the documentation](https://github.com/nikeokoronkwo/grayprint/docs) and get started, follow progress on Grayprint's development, and even try it out for yourself. 
 
 At the moment, I plan on having a set of "built-in" templates that will be fully supported by default on grayprint (via the `--template` flag and the name of the built in). These built-in templates are to span a large number of frameworks and/or tools for the needed use case. If you have suggestions, ideas or anything of value, feel free to make a contribution with your proposed idea and I would love to see what you have to share!
 
-If you have any feedback or issues, feel free to contact, or [make an issue]().
+If you have any feedback or issues, feel free to contact, or [make an issue](https://github.com/nikeokoronkwo/grayprint/issues).
