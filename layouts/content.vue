@@ -20,7 +20,7 @@ const colorMode = useColorMode();
         <FootNote />
       </small>
       <div
-        :class="`flex flex-row space-x-3 ${colorMode.value === 'light' ? '' : /*'filter-to-dark'*/ ''}`"
+        :class="`flex flex-row space-x-3 pb-4 ${colorMode.value === 'light' ? '' : /*'filter-to-dark'*/ ''}`"
       >
         <IconList :list="links" />
       </div>

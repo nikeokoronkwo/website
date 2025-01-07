@@ -141,3 +141,9 @@ onMounted(async () => {
   }
 }
 </style>
+
+<style lang="css">
+ul {
+  list-style-type: circle; /* Hollow circle bullet */
+}
+</style>

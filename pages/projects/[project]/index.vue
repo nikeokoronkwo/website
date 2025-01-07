@@ -64,7 +64,14 @@ useSeoMeta({
           </div>
           <div class="grid grid-cols-2">
             <div v-for="l in projectInfo?.languages ?? []" :key="l">
+              <Icon 
+                v-if="iconMap.get(l)"
+                :name="iconMap.get(l)"
+                class="aspect-square scale-[2]"
+                data-tooltip-target="tooltip-default"
+              />
               <img
+              v-else
                 :src="getImageAbsolutePath(l)"
                 :class="'aspect-square h-10 dark'"
                 :alt="l"
