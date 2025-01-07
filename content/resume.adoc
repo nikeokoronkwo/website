@@ -7,7 +7,7 @@ Nikechukwu Okoronkwo <nikechukwu@gmail.com>
 
 [.lead]
 [.text-center]
-**Nikechukwu Okoronkwo -- nikechukwu@gmail.com**
+**{author} -- {email}**
 
 == Work Experience
 Solo Developer::
