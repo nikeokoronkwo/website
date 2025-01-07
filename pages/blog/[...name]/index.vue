@@ -121,7 +121,7 @@ onMounted(async () => {
   box-sizing: border-box;
   min-width: 200px;
   margin: 0 auto;
-  padding: 45px;
+  padding: 6rem;
 }
 
 @media (max-width: 767px) {
@@ -138,4 +138,7 @@ ul {
   list-style-type: circle; /* Hollow circle bullet */
 }
 
+main.markdown-body {
+  font-size: large;
+}
 </style>
