@@ -2,9 +2,9 @@
   {
     "name": "Flashcards",
     "description": "A flashcards app for making flashcards easily with markdown",
-    "directs": [],
-    "platforms": ["windows", "macos", "linux"],
+    "directs": [{ "id": "web", "url": "https://neo-flashcards.web.app" }],
+    "platforms": ["windows", "macos", "linux", "web"],
     "route": "flashcards",
-    "status": false
+    "status": true
   }
 ]
