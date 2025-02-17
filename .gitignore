@@ -20,3 +20,5 @@ kv.db
 kv.db-**
 
 *.pdf
+
+--port
