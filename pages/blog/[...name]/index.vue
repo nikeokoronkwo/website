@@ -121,7 +121,7 @@ onMounted(async () => {
   box-sizing: border-box;
   min-width: 200px;
   margin: 0 auto;
-  padding: 6rem;
+  padding: 8rem;
 }
 
 @media (max-width: 767px) {
