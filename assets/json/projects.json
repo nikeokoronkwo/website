@@ -7,6 +7,12 @@
     "route": "grayprint"
   },
   {
+    "name": "Doclint",
+    "description": "Powerful collaboration and development with Doclint: Track development of Deno Code with TODOs and FIXMEs",
+    "directs": [{ "id": "github", "url": "https://github.com/nikeokoronkwo/doclint"}, {"id": "jsr", "url": "https://jsr.io/@nikechukwu/doclint" }],
+    "languages": ["typescript"]
+  },
+  {
     "name": "Spurte",
     "description": "Spurte is frontend tooling designed to meet the needs of Dart and Flutter Developers",
     "directs": [{ "id": "github", "url": "https://github.com/spurte/spurte" }, { "id": "pub", "url": "https://pub.dev/packages/spurte" }],

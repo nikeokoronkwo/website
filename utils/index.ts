@@ -23,6 +23,7 @@ export const iconMap = new Map([
   ["cplusplus", "simple-icons:cplusplus"],
   ["typescript", "akar-icons:typescript-fill"],
   ["deno", "simple-icons:deno"],
+  ["swift", "lineicons:swift"],
 
   // operating systems
   ["macos", "simple-icons:macos"],

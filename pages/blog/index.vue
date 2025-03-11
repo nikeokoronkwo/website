@@ -44,7 +44,7 @@ const items = computed(() => navigation.value?.[0].children);
     </div>
     <div class="flex flex-col max-w-screen-md pt-5 space-y-5">
       <div
-        v-for="m in items"
+        v-for="m in items?.reverse()"
         :key="m.title"
         class="px-5 flex flex-row justify-between py-5 border rounded-lg border-primary-900 overflow-hidden shadow-sm max-h-80"
       >

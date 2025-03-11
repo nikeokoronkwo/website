@@ -2,7 +2,7 @@
 name: Grayprint
 series: Product Launch
 description: A software product designed by Nike Okoronkwo
-date: "08/01/2025"
+date: "02/01/2025"
 ---
 
 # Grayprint

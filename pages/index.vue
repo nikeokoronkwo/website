@@ -1,3 +1,7 @@
+<script setup lang="ts">
+const langs = ['cplusplus', 'dart', 'swift', 'typescript']
+</script>
+
 <template>
   <div>
     <section
@@ -9,7 +13,7 @@
         <div
           class="font-bold font-mono -z-10 min-[375px]:text-3xl md:text-5xl lg:text-6xl md:py-6 anim-typewriter"
         >
-          What is this?
+          Nikechukwu Okoronkwo
         </div>
         <div>
           <div class="text-gray-700 text-base max-w-screen-md pb-5 border-b-2">
@@ -17,23 +21,20 @@
               class="m-0 flex flex-col space-y-1 items-center justify-center align-middle"
             >
               <span>
-                This is the personal website of Nikechukwu Okoronkwo, a
-                solo-developer enjoying what he does. Working on embedded
-                software, dart tools and everything in between.
+                Powerful Engineer by day, Innovative Developer by night
               </span>
-              <span>
-                On this website, you can find some of the projects I've done, as
-                well as the ones I'm currently working on. You can also find my
-                blog, where I'll share more of my experience in detail and also
-                topics that are important and are usually suitable for
-                discussion.
-              </span>
-              <span>
-                If you like what you see you can check this out on my GitHub and
-                support me (Patreon below).
-              </span>
-              <span>In the meantime, have fun! :)</span>
+              <!-- <span>
+                Working on
+              </span> -->
             </p>
+          </div>
+          <div class="flex flex-row justify-between items-center space-x-3 my-6">
+            <div v-for="lang in langs" :key="lang">
+              <Icon
+                class="scale-[3] px-5"
+                :name="iconMap.get(lang)"
+              />
+            </div>
           </div>
           <div class="flex flex-col items-center justify-center space-y-3">
             <div
@@ -69,7 +70,7 @@
   overflow: hidden;
   transform: translateY(-50%);
   animation:
-    typewriter 2s steps(15) 1s 1 normal both,
+    typewriter 3s steps(25) 1s 0.9 normal both,
     blinkTextCursor 500ms steps(14) infinite normal;
 }
 
@@ -84,7 +85,7 @@
     width: 0;
   }
   to {
-    width: 9em;
+    width: 15em;
   }
 }
 
