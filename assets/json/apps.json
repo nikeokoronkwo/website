@@ -6,5 +6,13 @@
     "platforms": ["windows", "macos", "linux", "web"],
     "route": "flashcards",
     "status": true
+  },
+  {
+    "name": "code.now",
+    "description": "Simple and Lightweight code editor for running and sharing code easy!",
+    "directs": [{ "id": "github", "url": "https://github.com/nikeokoronkwo/code.now" }],
+    "platforms": ["web"],
+    "route": "code-dot-now",
+    "inProgress": true
   }
 ]

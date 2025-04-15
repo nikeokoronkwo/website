@@ -22,3 +22,5 @@ kv.db-**
 *.pdf
 
 --port
+.vercel
+.env*.local

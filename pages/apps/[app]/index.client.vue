@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Dropbox } from "dropbox";
 import path from "path-browserify";
 
 const route = useRoute();
@@ -33,29 +32,57 @@ const toastActive = ref(false);
 const toastDuration = ref(5000);
 const toastGood = ref(true);
 
-function installFile(l: string) {
-  storage
-    .install(l)
-    .then((v) => {
-      if (!v) {
-        toastMessage.value = `The app build for the platform ${path.basename(l)} isn't available at the moment.`;
-        toastActive.value = true;
-      }
+function installFile(l: string, platform: 'windows' | 'macos' | 'linux') {
+  // const v = storage
+  //   .getDownloadFile(l, platform)
+  //   if (!v) {
+  //     toastMessage.value = `The app build for the platform ${path.basename(l)} isn't available at the moment.`;
+  //     toastActive.value = true;
 
-      setTimeout(() => {
-        toastMessage.value = "";
-        toastActive.value = false;
-      }, toastDuration.value);
-    })
-    .catch((e) => {
-      toastMessage.value = `The app build for the platform ${path.basename(l)} isn't available at the moment.`;
+  //     setTimeout(() => {
+  //       toastMessage.value = "";
+  //       toastActive.value = false;
+  //     }, toastDuration.value);
+
+  //     return;
+  //   }
+  let v = data.value.url[platform];
+  if (!v) {
+      toastMessage.value = `The app build for the platform ${platform} isn't available at the moment.`;
       toastActive.value = true;
 
       setTimeout(() => {
         toastMessage.value = "";
         toastActive.value = false;
       }, toastDuration.value);
-    });
+
+      return;
+  }
+  let downloadURL = new URL(v);
+  const newLocal = downloadURL.pathname.split('/');
+
+  try {
+    const link = document.createElement('a');
+    link.href = downloadURL.toString();
+    link.download = newLocal[newLocal.length];
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (e) {
+    console.error("an error occured in downloading the file")
+    console.error("download link:", downloadURL)
+  }
+
+    
+    // .catch((e) => {
+    //   toastMessage.value = `The app build for the platform ${path.basename(l)} isn't available at the moment.`;
+    //   toastActive.value = true;
+
+    //   setTimeout(() => {
+    //     toastMessage.value = "";
+    //     toastActive.value = false;
+    //   }, toastDuration.value);
+    // });
 }
 
 definePageMeta({
@@ -72,6 +99,10 @@ useSeoMeta({
   ogTitle: app,
   description: appInfo?.description,
 });
+
+onMounted(() => {
+  console.log(data.value)
+})
 </script>
 
 <template>
@@ -99,7 +130,7 @@ useSeoMeta({
           </div>
           <div class="grid grid-cols-2">
             <div v-for="l in appInfo?.platforms ?? []" :key="l" class="p-3">
-              <a v-if="l === 'web'" :href="appInfo?.directs.find(m => m.id === 'web').url" target="_blank">
+              <a v-if="l === 'web' && appInfo?.directs?.find(m => m.id === 'web')" :href="appInfo?.directs.find(m => m.id === 'web').url" target="_blank">
                 <Icon
                   :name="getIconId(l) ?? 'line-md:question'"
                   class="scale-150 text-primary-50 px-2 py-2"
@@ -107,7 +138,7 @@ useSeoMeta({
                   data-tooltip-target="tooltip-default"
                 />
               </a>
-              <button v-else @click="installFile(`${app}/${l}`)">
+              <button v-else @click="installFile(appInfo?.route!, l)">
                 <Icon
                   :name="getIconId(l) ?? 'line-md:question'"
                   class="scale-150 text-primary-50 px-2 py-2"

@@ -1,5 +1,7 @@
 ---
 name: FlashCards
+url: 
+  windows: https://ffpxs2tnngpmwgxy.public.blob.vercel-storage.com/flashcards_0.2.0_x64_en-US.msi
 ---
 
 # FlashCards
@@ -13,13 +15,13 @@ FlashCards is a flashcards application for making powerful flashcards
 
 ## Using this app
 
-When opening the app, you will be met with the editr, where you can type markdown (or switch to the text editor) to produce your flashcard. When you are done, you can click on "Save Flashcards" to save the flashcard.
+When opening the app, you will be met with the editor, where you can type markdown (or switch to the text editor) to produce your flashcard. When you are done, you can click on "Save Flashcards" to save the flashcard.
 
 After saving yor first flashcard, an icon will appear at the bottom left, where you can access all the flashcards you have. Once you enter the grid view, clicking on a flashcard will open the card up for you for you to practice with. You can click on the card to flip the answer open.
 
 ## Upcoming Features
 
 - More flashcard types: In an upcoming update of the application, there will be support for more flashcard types to make it easier to work with quiz settings for flashcards, like True/False cards, and list option cards.
-- Export: In a future update, there will be upcoming support for exporting your flashcards to be able to print them out or make use of in other platforms. The following formats will be supported, in order:
+- Export: In a future update, there will be upcoming support for exporting your flashcards to be able to print them out or make use of in other platforms. For now, you can export and import flashcards into the app using JSON. The following formats will be supported, in order:
   - PDF
   - Powerpoint (unstable)

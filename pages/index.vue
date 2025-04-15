@@ -21,11 +21,8 @@ const langs = ['cplusplus', 'dart', 'swift', 'typescript']
               class="m-0 flex flex-col space-y-1 items-center justify-center align-middle"
             >
               <span>
-                Powerful Engineer by day, Innovative Developer by night
+                Engineer by day, Developer by night
               </span>
-              <!-- <span>
-                Working on
-              </span> -->
             </p>
           </div>
           <div class="flex flex-row justify-between items-center space-x-3 my-6">
